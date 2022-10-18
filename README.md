@@ -1,2 +1,2 @@
-# ton_journal
+# ToN journal submission
 code for the transactions on networking journal paper.
