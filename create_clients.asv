@@ -14,7 +14,7 @@ for x = 1 : num_clients
     clients(x).lambda = lambdas(x);
     clients(x).p = p(x);
     clients(x).q = q(x); 
-    clients(x).packet_deadline_array = []; % holds info if there's a packet and its delay time. {'generation time', 'delay time'}.
+    clients(x).packet_deadline_array = []; % holds info if there's a packet and its delay time. {'generation time', 'delay time'}. It is zero 
     clients(x).mc = createmc(p(x), q(x));
 end
 

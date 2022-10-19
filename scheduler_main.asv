@@ -7,7 +7,7 @@
 clc, clear all
 
 global mu MS varChannel clientVars delay_total delays num_clients p q 
-global lambdas betas timeslots clients
+global lambdas betas timeslots
 
 
 %% Constants
@@ -42,8 +42,7 @@ end
 
 
 for current_run = 1 : RUNS
-    fprintf('++++++++++++++++++++++++++++++++++++++++++++++\n')
-    fprintf('RUN %d\n', current_run)
+    sprintf('RUN %d',num2str(current_run))
 
   rng(SEED + RUNS*10); % reseeding for each run
   
@@ -51,7 +50,7 @@ for current_run = 1 : RUNS
 
   clients = create_clients(clients, betas, delays, lambdas, p, q, num_clients);
   
-  %struct2table(clients) % to print the clients' structure
+  struct2table(clients) % to print the clients' structure
   
   %{
     if selected_policy == 1
