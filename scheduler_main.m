@@ -5,7 +5,7 @@
 %format long 
 
 clc, clear all
-
+warning('off','all')
 global mu MS varChannel clientVars delay_total delays num_clients p q 
 global lambdas betas tot_timesteps clients
 
@@ -17,19 +17,16 @@ num_clients = 2;
 tot_timesteps = 10;
 [betas, delays, lambdas, p, q] = get_client_values(num_clients, delay_total);
 selected_policy = 1; % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF.
-
+regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
 
 
 
 %% get theoretical mean and variance values
 
 % 3467823
-SEED = 8956935;
+SEED = 34535;
 
 rng(SEED);
-
-
-regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
 
 
 if (regime_selection == 1)
@@ -49,38 +46,48 @@ for current_run = 1 : RUNS
 
   rng(SEED + RUNS*10); % reseeding for each run
   
-  clients = repmat(struct('idx', {}, 'beta', {}, 'delay', {}, 'lambda', {}, 'p', {}, 'q', {}, 'packet_time_array', {}, 'delay_time_array', {}, 'mc', {}, 'current_channel_state', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {}), num_clients);
+  clients = repmat(struct('idx', {}, 'beta', {}, 'delay', {}, 'lambda', {}, 'p', {}, 'q', {}, 'packet_time_array', {}, 'delay_time_array', {}, ...
+  'mc', {}, 'channel_states', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {}, 'theoretical_interrupt_rate', {}), num_clients);
 
-  clients = create_clients(clients, betas, delays, lambdas, p, q, num_clients);
+  create_clients(clients, betas, delays, lambdas, p, q, num_clients);
   
+  %check_channel_state(clients, num_clients, tot_timesteps);
+  
+  %for x = 1 : num_clients
+  %   disp(clients(x).channel_states) 
+  %end
+
+  
+
   %struct2table(clients); % to print the clients' structure
   
-  %{
+  
     if selected_policy == 1
         
-        total_interrupt_rate = WLD(clients, num_clients, tot_timesteps);
+        WLD(clients, num_clients, tot_timesteps);
     
     elseif selected_policy == 2
      
-        total_interrupt_rate = WRand();
+       WRand();
     
     elseif selected_policy == 3
-        total_interrupt_rate = EDF();
+       EDF();
     
     elseif selected_policy == 4
-        total_interrupt_rate = DBLDF();
+        DBLDF();
   
     else
         disp("ERROR: selected policy not found.");
         
     end
-    
-    %}
+   
+   
     
 end
 
 
-
+struct2table(clients) % to print the clients' structure
+  
 
 %% save results
 
@@ -90,6 +97,7 @@ end
 filename = sprintf('results/num_clients_%d_timedate_%s', num_clients, datestr(now,'mm_dd_yyyy_HH_MM_SS'));
 
 writetable(struct2table(clients), filename);
+
 
 
 

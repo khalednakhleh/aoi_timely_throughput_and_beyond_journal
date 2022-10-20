@@ -14,14 +14,20 @@ scheduling.
 
 
 
-function packet_generator(clients, num_clients, current_timestep, tot_timesteps)
+function packet_generator(clients, num_clients, time_since_last_generation, tot_timesteps)
 
 
 for x = 1 : num_clients
     
-    packet_time = setArrivals(clients(x).lambda, current_timestep, tot_timesteps);
+    packet_time = setArrivals(clients(x).lambda, time_since_last_generation, tot_timesteps);
+    
+    if (packet_time ~= -1)
     clients(x).packet_deadline_array(end + 1) = packet_time;
-    clients(x).delay_time_array(end+1) = current_timestep + (clients(x).delay / clients(x).lambda);
+    clients(x).delay_time_array(end + 1) = packet_time + (clients(x).delay / clients(x).lambda);
+    else
+        % do nothing
+    end
+        
 
    
     
@@ -29,3 +35,8 @@ end
 
 
 end
+
+
+
+
+

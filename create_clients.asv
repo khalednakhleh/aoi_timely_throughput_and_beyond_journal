@@ -4,8 +4,8 @@
 
 function create_clients(clients, betas, delays, lambdas, p, q, num_clients)
 
-global delays num_clients p q 
-global lambdas betas clients
+global mu MS varChannel   delays num_clients p q 
+global lambdas betas tot_timesteps clients
 
 for x = 1 : num_clients
 

@@ -49,7 +49,8 @@ for current_run = 1 : RUNS
 
   rng(SEED + RUNS*10); % reseeding for each run
   
-  clients = repmat(struct('idx', {}, 'beta', {}, 'delay', {}, 'lambda', {}, 'p', {}, 'q', {}, 'packet_time_array', {}, 'delay_time_array', {}, 'mc', {}, 'current_channel_state', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}), num_clients);
+  clients = repmat(struct('idx', {}, 'beta', {}, 'delay', {}, 'lambda', {}, 'p', {}, 'q', {}, 'packet_time_array', {}, 'delay_time_array', {}, ...
+  'mc', {}, 'current_channel_state', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {}, 'theoretical_interrupt_rate',{}), num_clients);
 
   clients = create_clients(clients, betas, delays, lambdas, p, q, num_clients);
   
@@ -80,12 +81,14 @@ for current_run = 1 : RUNS
 end
 
 
+
+
 %% save results
 
-if ~exist( ,'results')
-mkdir();
+if not(isfolder('results'))
+    mkdir('results')
 end
-filename = sprintf('results');
+filename = sprintf('results/num_clients_%d_timedate_%s', num_clients, datestr(now,'mm_dd_yyyy_HH_MM_SS'));
 
 writetable(struct2table(clients), filename);
 

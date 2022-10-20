@@ -1,7 +1,10 @@
 
 
 
-function total_interrupt_rate = calculate_interrupt_rate(clients)
+function total_interrupt_rate = calculate_interrupt_rate(clients, num_clients, tot_timesteps)
+
+
+global num_clients tot_timesteps clients
 
 
 total_interrupt_rate = 0;

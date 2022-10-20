@@ -27,10 +27,8 @@ for time = 1 : tot_timesteps
     for x = index
         deficit_on(x) = (clients(x).lambda * time - (clients(x).A_t + clients(x).U_t)) / clients(x).beta;  % calculate deficit per ON client.
     end
-     
-    
-    [max_deficit, choice] = max(deficit_on);
-    choice
+       
+    [max_deficit, choice] = max(deficit_on)
     
     client_to_schedule = index(choice);
     end
