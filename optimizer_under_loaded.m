@@ -43,7 +43,7 @@ vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'Upper
 objectiveFunction = sum(exp((-2.*(mu - lambdas)./vars).*delays));
 
 
-prob.Objective = objectiveFunction
+prob.Objective = objectiveFunction;
 
 
 for i = 1 : length(C)

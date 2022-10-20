@@ -3,7 +3,7 @@
 % regime
 
 
-function [MS, varChannel, clientVars] = optimizer_over_loaded(num_clients, p, q, lambdas, delays)
+function [MS, varChannel, mu, clientVars] = optimizer_over_loaded(num_clients, p, q, lambdas, delays)
 
 % lambdas are the arrival rates
 kIterator = 100;
@@ -22,7 +22,7 @@ vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'Upper
 
 objectiveFunction = sum(vars ./ (2.*delays));
 
-prob.Objective = objectiveFunction
+prob.Objective = objectiveFunction;
 
 
 
@@ -41,6 +41,8 @@ fprintf("channel mean: %.16f\n", MS)
 fprintf("channel variance: %.16f\n", varChannel)
 
 clientVars = solution.vars;
+
+mu = lambdas;
 end
 
 %% functions 

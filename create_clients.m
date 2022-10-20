@@ -19,6 +19,7 @@ for x = 1 : num_clients
     clients(x).A_t = 0;
     clients(x).U_t = 0;
     clients(x).D_t = 0;
+    clients(x).tot_interrupt_rate = 0;
 end
 
 

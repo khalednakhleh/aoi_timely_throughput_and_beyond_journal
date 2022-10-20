@@ -12,8 +12,8 @@ p = (b-a).*rand(num_clients,1) + a;
 q = (b-a).*rand(num_clients,1) + a;
 
 
-betas = linspace(a,b, num_clients);
-%betas = repelem(1/num_clients, num_clients);
+%betas = linspace(a,b, num_clients);
+betas = repelem(1/num_clients, num_clients);
 
 delays = zeros(1,num_clients);
 
@@ -24,10 +24,10 @@ end
 lambdas = [0.2, 0.5]; % for two clients
 
 
-assert( length(p) == num_clients);
-assert( length(q) == num_clients);
-assert( length(betas) == num_clients);
-assert( length(delays) == num_clients);
-assert( length(lambdas) == num_clients);
+assert(length(p) == num_clients);
+assert(length(q) == num_clients);
+assert(length(betas) == num_clients);
+assert(length(delays) == num_clients);
+assert(length(lambdas) == num_clients);
 
 end
