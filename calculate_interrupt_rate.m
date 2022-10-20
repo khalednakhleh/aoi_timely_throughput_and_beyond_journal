@@ -1,7 +1,7 @@
 
 
 
-function total_interrupt_rate = calculate_interrupt_rate(clients, num_clients, tot_timesteps)
+function calculate_interrupt_rate(clients, num_clients, tot_timesteps)
 
 
 global num_clients tot_timesteps clients
@@ -16,4 +16,8 @@ end
 total_interrupt_rate = total_interrupt_rate / tot_timesteps;
 
 
+for i = 1 : num_clients
+    
+   clients(i).avg_tot_interrupt_rate =  total_interrupt_rate; 
+end
 end

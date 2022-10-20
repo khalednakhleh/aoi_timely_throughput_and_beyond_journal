@@ -14,7 +14,7 @@ global lambdas betas tot_timesteps clients
 RUNS = 1;
 delay_total = 10; % \delta in paper
 num_clients = 2; 
-tot_timesteps = 20;
+tot_timesteps = 10;
 [betas, delays, lambdas, p, q] = get_client_values(num_clients, delay_total);
 selected_policy = 1; % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF.
 regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
@@ -39,6 +39,7 @@ end
 
 %% Generate the channel sequences for the clients
 
+empirical_interrupt_rate = 0;
 
 for current_run = 1 : RUNS
     fprintf('++++++++++++++++++++++++++++++++++++++++++++++\n')
@@ -51,15 +52,8 @@ for current_run = 1 : RUNS
 
   create_clients(clients, betas, delays, lambdas, p, q, num_clients);
   
-  %check_channel_state(clients, num_clients, tot_timesteps);
-  
-  %for x = 1 : num_clients
-  %   disp(clients(x).channel_states) 
-  %end
 
-  
-
-  struct2table(clients) % to print the clients' structure
+  %struct2table(clients) % to print the clients' structure
   
   
     if selected_policy == 1
@@ -68,38 +62,57 @@ for current_run = 1 : RUNS
     
     elseif selected_policy == 2
      
-       WRand();
+       WRand(clients, num_clients, tot_timesteps);
     
     elseif selected_policy == 3
-       EDF();
+       EDF(clients, num_clients, tot_timesteps);
     
     elseif selected_policy == 4
-        DBLDF();
+        DBLDF(clients, num_clients, tot_timesteps);
   
     else
         disp("ERROR: selected policy not found.");
         
     end
-   
-   
+   save_run_results(clients, num_clients, current_run, selected_policy)
+   empirical_interrupt_rate = empirical_interrupt_rate + clients(1).avg_tot_interrupt_rate;
     
 end
 
+empirical_interrupt_rate = empirical_interrupt_rate / RUNS;
 
-struct2table(clients) % to print the clients' structure
+
+for x = 1 : num_clients
+
+    clients(x).avg_interrupt_over_runs = empirical_interrupt_rate;
+    
+end
+
+save_run_results(clients, num_clients, current_run, selected_policy)
+
+%struct2table(clients) % to print the clients' structure
   
 
-%% save results
+%% utility functions
+
+function save_run_results(clients, num_clients, current_run, selected_policy)
+
+global clients num_clients
 
 if not(isfolder('results'))
     mkdir('results')
 end
-filename = sprintf('results/num_clients_%d_timedate_%s', num_clients, datestr(now,'mm_dd_yyyy_HH_MM_SS'));
 
+foldername = sprintf('results/policy_%d_num_clients_%d_timedate_%s', selected_policy, num_clients, datestr(now,'mm_dd_yyyy_HH_MM_SS'));
+
+if not(isfolder(foldername))
+mkdir(foldername)
+end
+
+current_run = sprintf('/run_%d', current_run);
+filename = strcat(foldername,  current_run);
 writetable(struct2table(clients), filename);
 
 
-
-
-
+end
 

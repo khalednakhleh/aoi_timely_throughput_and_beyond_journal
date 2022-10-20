@@ -22,7 +22,8 @@ for x = 1 : num_clients
     clients(x).A_t = 0;
     clients(x).U_t = 0;
     clients(x).D_t = 0;
-    clients(x).tot_interrupt_rate = 0;
+    clients(x).avg_tot_interrupt_rate = 0; % stores the average over time. 
+    clients(x).avg_interrupt_over_runs = 0; % the same for all clients.
 end
 
 
