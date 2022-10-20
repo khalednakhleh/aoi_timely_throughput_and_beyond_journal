@@ -14,16 +14,16 @@ scheduling.
 
 
 
-function packet_generator_channel_condition(clients, num_clients, current_timestep)
+function packet_generator(clients, num_clients, current_timestep, tot_timesteps)
 
 
 for x = 1 : num_clients
     
-    
+    packet_time = setArrivals(clients(x).lambda, current_timestep, tot_timesteps);
+    clients(x).packet_deadline_array(end + 1) = packet_time;
+    clients(x).delay_time_array(end+1) = current_timestep + (clients(x).delay / clients(x).lambda);
+
    
-    
-    
-    
     
 end
 

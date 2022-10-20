@@ -7,14 +7,14 @@
 clc, clear all
 
 global mu MS varChannel clientVars delay_total delays num_clients p q 
-global lambdas betas timeslots clients
+global lambdas betas tot_timesteps clients
 
 
 %% Constants
 RUNS = 1;
 delay_total = 10;
 num_clients = 2;
-timeslots = 10;
+tot_timesteps = 10;
 [betas, delays, lambdas, p, q] = get_client_values(num_clients, delay_total);
 selected_policy = 1; % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF.
 
@@ -47,7 +47,7 @@ for current_run = 1 : RUNS
 
   rng(SEED + RUNS*10); % reseeding for each run
   
-  clients = repmat(struct('idx', {}, 'beta', {}, 'delay', {}, 'lambda', {}, 'p', {}, 'q', {}, 'packet_deadline_array', {}, 'mc', {}), num_clients);
+  clients = repmat(struct('idx', {}, 'beta', {}, 'delay', {}, 'lambda', {}, 'p', {}, 'q', {}, 'packet_time_array', {}, 'delay_time_array', {}, 'mc', {}, 'current_channel_state', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}), num_clients);
 
   clients = create_clients(clients, betas, delays, lambdas, p, q, num_clients);
   
@@ -56,7 +56,7 @@ for current_run = 1 : RUNS
   %{
     if selected_policy == 1
         
-        total_interrupt_rate = WLD(clients, timeslots);
+        total_interrupt_rate = WLD(clients, num_clients, tot_timesteps);
     
     elseif selected_policy == 2
      
