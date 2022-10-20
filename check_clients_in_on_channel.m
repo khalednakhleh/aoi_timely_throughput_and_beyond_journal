@@ -15,7 +15,7 @@ for x = 1 : num_clients
     index(x) =  clients(x).current_channel_state;
 end
 
-index = find(index == 1)
+index = find(index == 1);
 
 
 end

@@ -14,27 +14,32 @@ scheduling.
 
 
 
-function packet_generator(clients, num_clients, time_since_last_generation, tot_timesteps)
+function packet_generator(clients, num_clients, time_since_last_generation, tot_timesteps, selected_client)
 
+global num_clients tot_timesteps clients
 
-for x = 1 : num_clients
-    
-    packet_time = setArrivals(clients(x).lambda, time_since_last_generation, tot_timesteps);
+fprintf('\n++++packet_generator++++++++\n')
+   
+    packet_time = setArrivals(clients(selected_client).lambda, time_since_last_generation, tot_timesteps);
     
     if (packet_time ~= -1)
-    clients(x).packet_deadline_array(end + 1) = packet_time;
-    clients(x).delay_time_array(end + 1) = packet_time + (clients(x).delay / clients(x).lambda);
+    clients(selected_client).packet_deadline_array(end + 1) = packet_time;
+    clients(selected_client).delay_time_array(end + 1) = packet_time + (clients(selected_client).delay / clients(selected_client).lambda);
     else
         % do nothing
     end
-        
+    
+    
+    for d = 1 : length(clients(selected_client).packet_deadline_array)
+    fprintf('packet_generation_time for client %d: %d\n', selected_client, clients(selected_client).packet_deadline_array(d))
+    fprintf('packet delay time for client %d: %d\n', selected_client, clients(selected_client).delay_time_array(d))
+    end
 
    
-    
+   fprintf('\n---------packet_generator---------\n') 
 end
 
 
-end
 
 
 

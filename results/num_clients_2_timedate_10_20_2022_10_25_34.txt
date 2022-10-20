@@ -1,0 +1,3 @@
+idx,beta,delay,lambda,p,q,packet_time_array,delay_time_array_1,delay_time_array_2,delay_time_array_3,delay_time_array_4,delay_time_array_5,delay_time_array_6,mc,channel_states,A_t,U_t,D_t,tot_interrupt_rate,theoretical_interrupt_rate,packet_deadline_array_1,packet_deadline_array_2,packet_deadline_array_3,packet_deadline_array_4,packet_deadline_array_5,packet_deadline_array_6,current_channel_state
+1,0.5,5,0.2,0.299136568325323,0.585258929693674,,,,,,,,,,4,0,0,0,,,,,,,,0
+2,0.5,5,0.5,0.883958967983944,0.123334628908508,,17,18,19,20,19,20,,,2,0,0,0,,7,8,9,10,9,10,0
