@@ -8,7 +8,7 @@ function schedule_and_update_parameters(client_to_schedule, clients, current_tim
 
 global num_clients tot_timesteps clients
 
-fprintf('\n++++++ schedule_and_update_parameters++++++++++++\n')
+%fprintf('\n++++++ schedule_and_update_parameters++++++++++++\n')
 
 for x = 1 : num_clients
     
@@ -38,12 +38,12 @@ for x = 1 : num_clients
     end
     
     if(~isempty(clients(x).packet_deadline_array))
-        fprintf('\n final packet generation time: %d\n',clients(x).packet_deadline_array(end))
+        %fprintf('\n final packet generation time: %d\n',clients(x).packet_deadline_array(end))
         
     packet_generator(clients, num_clients, clients(x).packet_deadline_array(end), tot_timesteps, x);
     
     else
-        fprintf('\n it is empty and the timestep is: %d', current_timestep)
+        %fprintf('\n it is empty and the timestep is: %d', current_timestep)
     packet_generator(clients, num_clients, current_timestep, tot_timesteps, x);
        
     end
@@ -51,5 +51,5 @@ for x = 1 : num_clients
     
 end 
 
-fprintf('\n-----------schedule_and_update_parameters------------\n')
+%fprintf('\n-----------schedule_and_update_parameters------------\n')
 end
