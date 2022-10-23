@@ -31,20 +31,27 @@ for time = 1 : tot_timesteps
     if (~isempty(index))
     deficit_on = repelem(-999999999999999999999999, num_clients);
     
+    
     for x = 1 : num_clients
         if (ismember(x, index))
-        deficit_on(x) = ;  % calculate deficit per ON client.
+        deficit_on(x) = (clients(x).vwd_deficit) / sqrt(clients(x).clientVars);  % calculate deficit per ON client.
         end
     end
      
-    
+    deficit_on;
     [max_deficit, choice] = max(deficit_on);
 
     
     client_to_schedule = choice;
+    clients(client_to_schedule).activations = clients(choice).activations + 1;
+    
     end
     
     schedule_and_update_parameters(client_to_schedule, clients, time, tot_timesteps, num_clients);
+    
+    for x = 1 : num_clients
+            clients(x).vwd_deficit = time*clients(x).mu - clients(x).activations;
+    end 
     
    %fprintf('\n----------------------------------------------------------------\n')
 end

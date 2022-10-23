@@ -28,6 +28,9 @@ for x = 1 : num_clients
     clients(x).theoretical_interrupt_rate = 0; % same for all clients.
     clients(x).qoe_penalty_constant = qoe_penalty_constant(x); 
     clients(x).qoe_penalty = 0; % same for all clients.
+    clients(x).vwd_deficit = 0; % only for VWD. Deficit from previous timestep.
+    clients(x).activations = 0; % for VWD policy only.
+    
 end
 
 

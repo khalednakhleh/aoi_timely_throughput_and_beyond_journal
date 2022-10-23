@@ -15,7 +15,7 @@ RUNS = 1;
 delay_total = 10; % \delta in paper
 num_clients = 2; 
 tot_timesteps = 10;
-selected_policy = 4; % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
+selected_policy = 6; % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
 regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
 
 
@@ -49,7 +49,7 @@ for current_run = 1 : RUNS
   rng(SEED + RUNS*10); % reseeding for each run
   
   clients = repmat(struct('idx', {}, 'beta', {}, 'clientVars', {}, 'mu' , {}, 'delay', {}, 'lambda', {}, 'p', {}, 'q', {}, 'packet_time_array', {}, 'delay_time_array', {}, ...
-  'mc', {}, 'channel_states', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {}, 'theoretical_interrupt_rate', {}, 'qoe_penalty', {}), num_clients);
+  'mc', {}, 'channel_states', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {}, 'theoretical_interrupt_rate', {}, 'qoe_penalty', {}, 'vwd_deficit', {}), num_clients);
 
   create_clients(clients, betas, delays, lambdas, p, q, num_clients, qoe_penalty_constant, mu, clientVars);
   
@@ -106,13 +106,13 @@ disp('DONE')
 
 function save_run_results(clients, num_clients, current_run, selected_policy, regime_selection)
 
-global clients num_clients 
+global clients num_clients tot_timesteps
 
 if not(isfolder('results'))
     mkdir('results')
 end
 
-foldername = sprintf('results/policy_%d_regime_selection_%d_num_clients_%d_timedate_%s', selected_policy, regime_selection, num_clients, datestr(now,'mm_dd_yyyy_HH_MM_SS'));
+foldername = sprintf('results/policy_%d_regime_selection_%d_tot_timesteps_%d_num_clients_%d_timedate_%s', selected_policy, regime_selection, tot_timesteps, num_clients, datestr(now,'mm_dd_yyyy_HH_MM_SS'));
 
 if not(isfolder(foldername))
 mkdir(foldername)
