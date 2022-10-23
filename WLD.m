@@ -11,13 +11,13 @@ check_channel_state(clients, num_clients);
 
 for time = 1 : tot_timesteps
     
-    fprintf('current timestep: %d\n', time)
+    %fprintf('current timestep: %d\n', time)
     
-    disp('+++++channel states++++++')
-    for x = 1 : num_clients
-        disp(clients(x).current_channel_state)
-    end
-    disp('------channel states------')
+    %disp('+++++channel states++++++')
+    %for x = 1 : num_clients
+    %     disp(clients(x).current_channel_state)
+    %end
+    %disp('------channel states------')
     
     index = check_clients_in_on_channel(clients, num_clients);
     
@@ -41,7 +41,7 @@ for time = 1 : tot_timesteps
     
     schedule_and_update_parameters(client_to_schedule, clients, time, tot_timesteps, num_clients);
     
-   fprintf('\n----------------------------------------------------------------\n');
+   %fprintf('\n----------------------------------------------------------------\n');
 end
 
 calculate_interrupt_rate(clients, num_clients, tot_timesteps);
