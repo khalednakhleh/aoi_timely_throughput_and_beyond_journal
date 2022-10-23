@@ -40,7 +40,7 @@ prob = optimproblem('ObjectiveSense', 'minimize');
 mu = optimvar('mu', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', MS);
 vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', 100000);
 
-objectiveFunction = sum(exp((-2.*(mu - lambdas)./vars).*delays));
+objectiveFunction = sum(exp(((-2.*(mu - lambdas))./vars).*delays));
 
 
 prob.Objective = objectiveFunction;
