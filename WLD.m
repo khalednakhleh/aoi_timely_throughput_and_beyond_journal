@@ -32,16 +32,16 @@ for time = 1 : tot_timesteps
         end
     end
      
-    deficit_on
+    deficit_on;
     [max_deficit, choice] = max(deficit_on);
 
     
-    client_to_schedule = choice
+    client_to_schedule = choice;
     end
     
     schedule_and_update_parameters(client_to_schedule, clients, time, tot_timesteps, num_clients);
     
-   fprintf('\n----------------------------------------------------------------\n')
+   fprintf('\n----------------------------------------------------------------\n');
 end
 
 calculate_interrupt_rate(clients, num_clients, tot_timesteps);

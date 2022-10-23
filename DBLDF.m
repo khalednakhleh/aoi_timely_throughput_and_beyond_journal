@@ -12,6 +12,14 @@ check_channel_state(clients, num_clients);
 
 for time = 1 : tot_timesteps
     
+    %fprintf('current timestep: %d\n', time)
+    
+    %disp('+++++channel states++++++')
+    %for x = 1 : num_clients
+    %    disp(clients(x).current_channel_state)
+    %end
+    %disp('------channel states------')
+    
     
     index = check_clients_in_on_channel(clients, num_clients);
     
@@ -26,7 +34,7 @@ for time = 1 : tot_timesteps
         end
     end
      
-    
+    deficit_on;
     [max_deficit, choice] = max(deficit_on);
 
     

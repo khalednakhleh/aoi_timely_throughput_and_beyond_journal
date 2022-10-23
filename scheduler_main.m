@@ -14,15 +14,15 @@ global lambdas betas tot_timesteps clients qoe_penalty_constant
 RUNS = 1;
 delay_total = 10; % \delta in paper
 num_clients = 2; 
-tot_timesteps = 1000;
-selected_policy = 1; % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD.
+tot_timesteps = 10;
+selected_policy = 4; % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
 regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
 
 
 %% get theoretical mean and variance values
 
 % 3467823
-SEED = 4756;
+SEED = 45783457;
 
 rng(SEED);
 

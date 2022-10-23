@@ -13,6 +13,15 @@ check_channel_state(clients, num_clients);
 
 for time = 1 : tot_timesteps
     
+    %fprintf('current timestep: %d\n', time)
+    
+    %disp('+++++channel states++++++')
+    %for x = 1 : num_clients
+    %    disp(clients(x).current_channel_state)
+    %end
+    %disp('------channel states------')
+    
+    
     index = check_clients_in_on_channel(clients, num_clients);
     
     
@@ -20,22 +29,25 @@ for time = 1 : tot_timesteps
     deadline_list = [];
     for x = 1 : num_clients
        if (ismember(x, index))
-           if(~isempty(clients(x).delay_time_array))
-            deadline_list(end + 1) = tot_timesteps*5; % other value  
+           if(isempty(clients(x).delay_time_array))
+            deadline_list(end + 1) = tot_timesteps*5; % other value that we don't consider.
            else
            deadline_list(end + 1) = clients(x).delay_time_array(1);
            end
        end
     end
     
-  
+    deadline_list;
     [max_deficit, choice] = min(deadline_list);
 
     
-    client_to_schedule = choice;  
+    client_to_schedule = choice;
     end
     
     schedule_and_update_parameters(client_to_schedule, clients, time, tot_timesteps, num_clients);
+
+    
+    %fprintf('\n----------------------------------------------------------------\n');
     
 end
 
