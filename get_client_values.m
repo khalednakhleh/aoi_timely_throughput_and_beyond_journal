@@ -11,8 +11,8 @@ b = 0.95;
 %p = (b-a).*rand(num_clients,1) + a;
 %q = (b-a).*rand(num_clients,1) + a;
 
-p = 0.2;
-q = 0.2;
+p = 0.5;
+q = 0.8;
 
 
 %betas = linspace(a,b, num_clients);
@@ -25,7 +25,7 @@ for x = 1 : num_clients
    delays(x) = (betas(x) / sum(betas)) * delay_total;
 end
 
-lambdas = [0.2];%, 0.5]; % for two clients
+lambdas = [0.01]; %, 0.5]; % for two clients
 
 
 assert(length(p) == num_clients);
