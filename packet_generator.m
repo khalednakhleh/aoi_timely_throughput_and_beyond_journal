@@ -28,10 +28,10 @@ global num_clients tot_timesteps clients
     end
     
     
-    for d = 1 : length(clients(selected_client).packet_deadline_array)
+    %for d = 1 : length(clients(selected_client).packet_deadline_array)
     %fprintf('packet_generation_time for client %d: %d\n', selected_client, clients(selected_client).packet_deadline_array(d))
     %fprintf('packet delay time for client %d: %d\n', selected_client, clients(selected_client).delay_time_array(d))
-    end
+    %end
 
    
    %fprintf('\n---------packet_generator---------\n') 

@@ -11,11 +11,11 @@ global lambdas betas tot_timesteps clients qoe_penalty_constant date_file_name
 
 
 %% Constants
-RUNS = 10;
-delay_total = 40; % \delta in paper
-num_clients = 5; 
-tot_timesteps = 150000;
-selected_policy = 6; % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
+RUNS = 1;
+delay_total = 2; % \delta in paper
+num_clients = 1; 
+tot_timesteps = 20;
+selected_policy = 1; % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
 regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
 
 
@@ -137,7 +137,7 @@ for x = 1 : num_clients
 end
 
 
-current_run = sprintf('/run_%d', current_run);
+current_run = sprintf('/run_%d.csv', current_run);
 filename = strcat(date_file_name,  current_run);
 
 
