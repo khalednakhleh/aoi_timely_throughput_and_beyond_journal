@@ -8,7 +8,7 @@ function schedule_and_update_parameters(client_to_schedule, clients, current_tim
 
 global num_clients tot_timesteps clients
 
-fprintf('\n++++++ schedule_and_update_parameters++++++++++++\n')
+%fprintf('\n++++++ schedule_and_update_parameters++++++++++++\n')
 
 for x = 1 : num_clients
     
@@ -52,7 +52,7 @@ for x = 1 : num_clients
 end 
        check_channel_state(clients, num_clients);
     
-fprintf('\n-----------schedule_and_update_parameters------------\n')
+%fprintf('\n-----------schedule_and_update_parameters------------\n')
 end
 
 
