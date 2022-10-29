@@ -10,8 +10,8 @@ kIterator = 100;
 epsilon = 0.00001;
 
 
-assert( length(p) == num_clients);
-assert( length(q) == num_clients);
+assert(length(p) == num_clients);
+assert(length(q) == num_clients);
 
 a = 1:1:num_clients;
 
@@ -39,6 +39,7 @@ prob = optimproblem('ObjectiveSense', 'minimize');
 
 mu = optimvar('mu', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', MS);
 vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', 100000);
+
 
 objectiveFunction = sum(exp(((-2.*(mu - lambdas))./vars).*delays));
 

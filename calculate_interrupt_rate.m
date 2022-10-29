@@ -20,14 +20,11 @@ total_interrupt_rate = total_interrupt_rate / tot_timesteps;
 
 
 for i = 1 : num_clients
-    
    clients(i).avg_tot_interrupt_rate =  total_interrupt_rate; 
- 
+   clients(i).qoe_penalty = qoe_penalty;
+   clients(i).tot_interrupt_rate = total_interrupt_rate;
 end
 
 
-for i = 1 : num_clients
-    clients(i).qoe_penalty = qoe_penalty;
-end
 
 end

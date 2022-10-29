@@ -12,22 +12,22 @@ global lambdas betas tot_timesteps clients qoe_penalty_constant date_file_name
 
 %% Constants
 RUNS = 1;
-delay_total = 2; % \delta in paper
+delay_total = 1; % \delta in paper
 num_clients = 1; 
 tot_timesteps = 20;
-selected_policy = 1; % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
+selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
 regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
 
 
-
+% make results' directory 
 if not(isfolder('results'))
     mkdir('results')
 end
 
 timenow = datestr(now,'mm_dd_yyyy_HH_MM_SS');
 if not(isfolder(timenow))
-   current_val = sprintf('results/');
-   date_file_name = strcat(current_val,timenow);
+    current_val = sprintf('results/');
+    date_file_name = strcat(current_val,timenow);
     mkdir(date_file_name);
 end
 
@@ -40,7 +40,7 @@ SEED = 45783457;
 rng(SEED);
 
 
-[betas, delays, lambdas, p, q, qoe_penalty_constant] = get_client_values(num_clients, delay_total);
+[betas, delays, lambdas, p, q, qoe_penalty_constant] = get_client_values(num_clients, delay_total)
 
 if (regime_selection == 1)
   [MS, varChannel, mu, clientVars] = optimizer_under_loaded(num_clients, p, q, lambdas, delays);
@@ -64,10 +64,17 @@ for current_run = 1 : RUNS
   clients = repmat(struct('idx', {}, 'beta', {}, 'clientVars', {}, 'mu' , {}, 'delay', {}, 'lambda', {}, 'p', {}, 'q', {}, 'packet_time_array', {}, 'delay_time_array', {}, ...
   'mc', {}, 'channel_states', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {}, 'theoretical_interrupt_rate', {}, 'qoe_penalty', {}, 'vwd_deficit', {}), num_clients);
 
-  create_clients(clients, betas, delays, lambdas, p, q, num_clients, qoe_penalty_constant, mu, clientVars)
+  create_clients(clients, betas, delays, lambdas, p, q, num_clients, qoe_penalty_constant, mu, clientVars);
   
 
-  %struct2table(clients) % to print the clients' structure
+if num_clients == 1 % to print the table if there's one client.
+    structArray(1) = clients;
+    structArray(2) = clients;
+    one_client_table = struct2table(structArray);
+end
+
+ %struct2table(myTBL) % to print the clients' structure (for two or more
+ %clients)
   
   
     if selected_policy == 1
@@ -93,7 +100,6 @@ for current_run = 1 : RUNS
         
     end
     
-
     empirical_interrupt_rate = empirical_interrupt_rate + clients(1).avg_tot_interrupt_rate;
     
     for x = 1 : num_clients
@@ -106,11 +112,21 @@ for current_run = 1 : RUNS
     
 end
 
+
 %empirical_interrupt_rate = empirical_interrupt_rate / RUNS;
 
 
 calculate_theoretical_interrupt_rate(clients, num_clients, regime_selection);
 save_run_results(clients, num_clients, RUNS, selected_policy, regime_selection); % to save theoretical values as well.
+
+
+  
+
+if num_clients == 1 % to print the table if there's one client.
+    structArray(1) = clients;
+    structArray(2) = clients;
+    one_client_table = struct2table(structArray)
+end
 
 %struct2table(clients) % to print the clients' structure
   
