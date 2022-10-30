@@ -17,7 +17,7 @@ how_many_times_I_have_arrival = 0;
 RUNS = 1;
 delay_total = 1; % \delta in paper
 num_clients = 1; 
-tot_timesteps = 10000;
+tot_timesteps = 1000m;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
 regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
 
@@ -37,8 +37,8 @@ end
 
 %% get theoretical mean and variance values
 
-% 96325
-SEED = 13445;
+% 3467823
+SEED = 783452;
 
 rng(SEED);
 
@@ -68,9 +68,8 @@ for current_run = 1 : RUNS
   'mc', {}, 'channel_states', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {}, 'theoretical_interrupt_rate', {}, 'qoe_penalty', {}, 'vwd_deficit', {}), num_clients);
 
   create_clients(clients, betas, delays, lambdas, p, q, num_clients, qoe_penalty_constant, mu, clientVars);
-  set_arrivals(tot_timesteps);
-
   
+
 if num_clients == 1 % to print the table if there's one client.
     structArray(1) = clients;
     structArray(2) = clients;
@@ -116,9 +115,10 @@ end
     
 end
 
-%the_array_of_arrivals
-%fprintf("array of arrival average lambda is: %f\n", clients(1).packet_deadline_array)
-%how_many_times_I_have_arrival
+the_array_of_arrivals
+
+fprintf("array of arrival average lambda is: %f\n", length(the_array_of_arrivals)/tot_timesteps)
+how_many_times_I_have_arrival
 %empirical_interrupt_rate = empirical_interrupt_rate / RUNS;
 
 
@@ -137,8 +137,6 @@ end
 %struct2table(clients) % to print the clients' structure
   
 disp('DONE')
-
-xfix = asymptotics(clients(1).mc)
 
 %% utility functions
 
