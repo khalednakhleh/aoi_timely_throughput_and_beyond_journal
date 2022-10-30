@@ -4,7 +4,7 @@
 
 function create_clients(clients, betas, delays, lambdas, p, q, num_clients, qoe_penalty_constant, mu, clientVars)
 
-global delays num_clients p q lambdas betas clients mu clientVars qoe_penalty_constant
+global delays num_clients p q lambdas betas clients mu clientVars qoe_penalty_constant tot_timesteps
 
 for x = 1 : num_clients
 
@@ -19,7 +19,9 @@ for x = 1 : num_clients
     clients(x).packet_deadline_array = []; % holds info if there's a packet and its delay time. {'generation time', 'delay time'}.
     clients(x).delay_time_array = [];
     clients(x).mc = createmc(p(x), q(x));
-    clients(x).current_channel_state = 0;
+    clients(x).channel_states = simulate(clients(x).mc, tot_timesteps);
+    clients(x).channel_states(clients(x).channel_states == 2) = 0;
+    clients(x).channel_states = clients(x).channel_states(1:tot_timesteps);
     clients(x).A_t = 0;
     clients(x).U_t = 0;
     clients(x).D_t = 0;

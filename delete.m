@@ -1,12 +1,12 @@
 
 
 
-lambda = 0.05;
+lambda = 1;
 
 
 arrTime = [];
 t = 1;
-T = 100000;
+T = 500000;
 while true 
   t = t - log(rand)/lambda;
   if t <= T

@@ -6,14 +6,12 @@ function WLD(clients, num_clients, tot_timesteps)
 global num_clients tot_timesteps clients
 
 
-packet_generator_all_clients(clients, num_clients, 0, tot_timesteps);
+packet_generator_all_clients(clients, num_clients, 1, tot_timesteps);
 
 for time = 1 : tot_timesteps
     
     fprintf('current timestep: %d\n', time)
-    fprintf('number of sent packets A_n(t): %d\n', clients(1).A_t)
-    fprintf('number of dummy packets U_n(t): %d\n', clients(1).U_t)
-    fprintf('number of dropped packets D_n(t): %d\n', clients(1).D_t)
+    fprintf('number of dropped packets:'
     
     disp('+++++channel states++++++')
     for x = 1 : num_clients

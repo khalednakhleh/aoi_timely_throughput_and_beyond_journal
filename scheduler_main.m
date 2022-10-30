@@ -8,13 +8,15 @@ clc, clear all
 warning('off','all')
 global mu MS varChannel clientVars delay_total delays num_clients p q 
 global lambdas betas tot_timesteps clients qoe_penalty_constant date_file_name
+global the_array_of_arrivals
 
+the_array_of_arrivals = [];
 
 %% Constants
 RUNS = 1;
 delay_total = 1; % \delta in paper
 num_clients = 1; 
-tot_timesteps = 300000;
+tot_timesteps = 50;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
 regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
 
@@ -35,7 +37,7 @@ end
 %% get theoretical mean and variance values
 
 % 3467823
-SEED = 678957;
+SEED = 783452;
 
 rng(SEED);
 
@@ -112,6 +114,9 @@ end
     
 end
 
+the_array_of_arrivals
+
+length(the_array_of_arrivals)/tot_timesteps
 
 %empirical_interrupt_rate = empirical_interrupt_rate / RUNS;
 
