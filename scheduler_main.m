@@ -15,7 +15,7 @@ how_many_times_I_have_arrival = 0;
 
 %% Constants
 RUNS = 1;
-delay_total = 1; % \delta in paper
+delay_total = 100; % \delta in paper
 num_clients = 1; 
 tot_timesteps = 150000;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
@@ -42,7 +42,11 @@ end
 %for one-client table2: 18235
 %for one-client table3: 943667
 %for one-client table4: 23457 
-SEED = 23457;
+%------------------------------
+%for one-client table1-1: 68421. lambda = 0.5. delay = 100
+%for one-client table1-2: 31546. lambda = 0.25. delay = 1000
+%for one-client table1-3: 43671 . lambda = 0.5. delay = 100
+SEED = 43671;
 
 rng(SEED);
 
@@ -73,7 +77,7 @@ for current_run = 1 : RUNS
 
   create_clients(clients, betas, delays, lambdas, p, q, num_clients, qoe_penalty_constant, mu, clientVars);
   set_arrivals(tot_timesteps);
-
+  xfix = asymptotics(clients(1).mc)
   
 if num_clients == 1 % to print the table if there's one client.
     structArray(1) = clients;
@@ -142,7 +146,7 @@ end
   
 disp('DONE')
 
-xfix = asymptotics(clients(1).mc)
+
 
 %% utility functions
 
