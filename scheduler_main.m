@@ -17,7 +17,7 @@ how_many_times_I_have_arrival = 0;
 RUNS = 1;
 delay_total = 1; % \delta in paper
 num_clients = 1; 
-tot_timesteps = 10000;
+tot_timesteps = 150000;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
 regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
 
@@ -38,7 +38,11 @@ end
 %% get theoretical mean and variance values
 
 % 96325
-SEED = 13445;
+%for one-client table1 : 84764579
+%for one-client table2: 18235
+%for one-client table3: 943667
+%for one-client table4: 23457 
+SEED = 23457;
 
 rng(SEED);
 
