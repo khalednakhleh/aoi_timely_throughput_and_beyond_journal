@@ -14,10 +14,10 @@ the_array_of_arrivals = [];
 how_many_times_I_have_arrival = 0;
 
 %% Constants
-RUNS = 3;
-delay_total = 6; % \delta in paper
-num_clients = 1; 
-tot_timesteps = 150000;
+RUNS = 1;
+delay_total = 10; % \delta in paper
+num_clients = 5; 
+tot_timesteps = 20;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
 regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
 
@@ -46,7 +46,9 @@ end
 %for one-client table1-1: 68421.
 %for one-client table1-2: 7834567. 
 %for one-client table1-3: 23782. 
-SEED = 23782;
+%------------------------------
+% multi-client setup 1: 2967542.
+SEED = 2967542;
 
 rng(SEED);
 
@@ -127,6 +129,8 @@ end
     structArray(1) = clients;
     structArray(2) = clients;
     one_client_table = struct2table(structArray)
+    else
+    struct2table(clients)
     end
 end
 

@@ -9,18 +9,19 @@ global num_clients tot_timesteps clients
 for time = 1 : tot_timesteps
     
     %fprintf('current timestep: %d\n', time)
-    %fprintf('number of sent packets A_n(t): %d\n', clients(1).A_t)
-    %fprintf('number of dummy packets U_n(t): %d\n', clients(1).U_t)
-    %fprintf('number of dropped packets D_n(t): %d\n', clients(1).D_t)
-    
+
     %disp('+++++channel states++++++')
     %for x = 1 : num_clients
-    %     disp(clients(x).channel_states(time))
+    %     fprintf('number of sent packets A_n(t) for client %d: %d\n',x, clients(x).A_t)
+    %     fprintf('number of dummy packets U_n(t) for client %d: %d\n',x, clients(x).U_t)
+    %     fprintf('number of dropped packets D_n(t) for client %d: %d\n',x, clients(x).D_t) 
+    %     fprintf('channel state for client %d: %d\n', x, clients(x).channel_states(time))
+    %     disp(clients(x).packet_deadline_array)
+    %     disp(clients(x).delay_time_array)
     %end
     %disp('------channel states------')
     
-    %disp(clients(1).packet_deadline_array)
-    %disp(clients(1).delay_time_array)
+
 
     index = check_clients_in_on_channel(clients, num_clients, time);
     
