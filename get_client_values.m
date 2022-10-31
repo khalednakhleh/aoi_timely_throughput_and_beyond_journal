@@ -23,7 +23,7 @@ for x = 1 : num_clients
 end
 
 
-lambdas = [0.1, 0.1, 0.1, 0.1, 0.1]; %,0.5,0.5,0.5,0.5] % for two clients
+lambdas = [0.2, 0.2, 0.2, 0.2, 0.2]; %,0.5,0.5,0.5,0.5] % for two clients
 
 
 assert(length(p) == num_clients);
