@@ -14,8 +14,8 @@ the_array_of_arrivals = [];
 how_many_times_I_have_arrival = 0;
 
 %% Constants
-RUNS = 1;
-delay_total = 100; % \delta in paper
+RUNS = 3;
+delay_total = 6; % \delta in paper
 num_clients = 1; 
 tot_timesteps = 150000;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
@@ -43,10 +43,10 @@ end
 %for one-client table3: 943667
 %for one-client table4: 23457 
 %------------------------------
-%for one-client table1-1: 68421. lambda = 0.5. delay = 100
-%for one-client table1-2: 31546. lambda = 0.25. delay = 1000
-%for one-client table1-3: 43671 . lambda = 0.5. delay = 100
-SEED = 43671;
+%for one-client table1-1: 68421.
+%for one-client table1-2: 7834567. 
+%for one-client table1-3: 23782. 
+SEED = 23782;
 
 rng(SEED);
 
@@ -70,13 +70,14 @@ for current_run = 1 : RUNS
     fprintf('++++++++++++++++++++++++++++++++++++++++++++++\n')
     fprintf('RUN %d\n', current_run)
 
-  rng(SEED + RUNS*10); % reseeding for each run
+  rng(SEED + current_run*10); % reseeding for each run
   
   clients = repmat(struct('idx', {}, 'beta', {}, 'clientVars', {}, 'mu' , {}, 'delay', {}, 'lambda', {}, 'p', {}, 'q', {}, 'packet_time_array', {}, 'delay_time_array', {}, ...
   'mc', {}, 'channel_states', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {}, 'theoretical_interrupt_rate', {}, 'qoe_penalty', {}, 'vwd_deficit', {}), num_clients);
 
   create_clients(clients, betas, delays, lambdas, p, q, num_clients, qoe_penalty_constant, mu, clientVars);
   set_arrivals(tot_timesteps);
+  
   xfix = asymptotics(clients(1).mc)
   
 if num_clients == 1 % to print the table if there's one client.
@@ -121,7 +122,12 @@ end
     end
 
     save_run_results(clients, num_clients, current_run, selected_policy, regime_selection)
-    
+   
+    if num_clients == 1 % to print the table if there's one client.
+    structArray(1) = clients;
+    structArray(2) = clients;
+    one_client_table = struct2table(structArray)
+    end
 end
 
 %the_array_of_arrivals
@@ -134,13 +140,6 @@ calculate_theoretical_interrupt_rate(clients, num_clients, regime_selection);
 save_run_results(clients, num_clients, RUNS, selected_policy, regime_selection); % to save theoretical values as well.
 
 
-  
-
-if num_clients == 1 % to print the table if there's one client.
-    structArray(1) = clients;
-    structArray(2) = clients;
-    one_client_table = struct2table(structArray)
-end
 
 %struct2table(clients) % to print the clients' structure
   

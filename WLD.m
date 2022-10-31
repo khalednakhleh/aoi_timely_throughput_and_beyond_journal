@@ -6,8 +6,6 @@ function WLD(clients, num_clients, tot_timesteps)
 global num_clients tot_timesteps clients
 
 
-%packet_generator_all_clients(clients, num_clients, 0, tot_timesteps);
-
 for time = 1 : tot_timesteps
     
     %fprintf('current timestep: %d\n', time)
