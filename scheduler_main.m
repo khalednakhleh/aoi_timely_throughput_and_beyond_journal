@@ -8,18 +8,17 @@ clc, clear all
 warning('off','all')
 global mu MS varChannel clientVars delay_total delays num_clients p q 
 global lambdas betas tot_timesteps clients qoe_penalty_constant date_file_name
-global the_array_of_arrivals how_many_times_I_have_arrival
+global the_array_of_arrivals
 
 the_array_of_arrivals = [];
-how_many_times_I_have_arrival = 0;
 
 %% Constants
 RUNS = 3;
-delay_total = 100; % \delta in paper
+delay_total = 20; % \delta in paper
 num_clients = 5; 
 tot_timesteps = 150000;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
-regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
+regime_selection = 2; % 1 for under-loaded. 2 for over-loaded.
 
 
 % make results' directory 
@@ -50,7 +49,7 @@ end
 % multi-client setup 1: 2967542.
 % multi-client setup 2: 86348.
 % multi-client setup 3: 24521.
-SEED = 24521;
+SEED = 86348;
 
 rng(SEED);
 
@@ -82,7 +81,7 @@ for current_run = 1 : RUNS
   create_clients(clients, betas, delays, lambdas, p, q, num_clients, qoe_penalty_constant, mu, clientVars);
   set_arrivals(tot_timesteps);
   
-  xfix = asymptotics(clients(1).mc)
+  %xfix = asymptotics(clients(1).mc); % to calculate the stationary distribution of the Markov chain (ON-OFF)
   
 if num_clients == 1 % to print the table if there's one client.
     structArray(1) = clients;
@@ -113,19 +112,12 @@ end
        VWD(clients, num_clients, tot_timesteps);
   
     else
-        disp("ERROR: selected policy not found.");
+        error("ERROR: selected policy not found.");
         
     end
     
     empirical_interrupt_rate = empirical_interrupt_rate + clients(1).avg_tot_interrupt_rate;
     
-    for x = 1 : num_clients
-
-    clients(x).avg_interrupt_over_runs = empirical_interrupt_rate / current_run;
-    clients(x).qoe_penalty = clients(x).qoe_penalty / current_run;
-    end
-
-    save_run_results(clients, num_clients, current_run, selected_policy, regime_selection)
    
     if num_clients == 1 % to print the table if there's one client.
     structArray(1) = clients;
@@ -141,6 +133,11 @@ end
 %how_many_times_I_have_arrival
 %empirical_interrupt_rate = empirical_interrupt_rate / RUNS;
 
+ for x = 1 : num_clients
+
+    clients(x).avg_interrupt_over_runs = clients(x).avg_interrupt_over_runs / RUNS;
+    clients(x).qoe_penalty = clients(x).qoe_penalty / RUNS;
+end
 
 calculate_theoretical_interrupt_rate(clients, num_clients, regime_selection);
 save_run_results(clients, num_clients, RUNS, selected_policy, regime_selection); % to save theoretical values as well.

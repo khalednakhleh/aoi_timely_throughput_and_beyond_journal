@@ -19,9 +19,11 @@ end
 total_interrupt_rate = total_interrupt_rate / tot_timesteps;
 
 
+
+% same value for all clients. Can be retrieved from any client.
 for i = 1 : num_clients
-   clients(i).avg_tot_interrupt_rate =  total_interrupt_rate; 
-   clients(i).qoe_penalty = qoe_penalty;
+   clients(i).avg_tot_interrupt_rate = clients(x).avg_interrupt_over_runs + total_interrupt_rate; % average w.r.t. to runs (done after runs are over).
+   clients(i).qoe_penalty = clients(i).qoe_penalty + qoe_penalty; % will be average w.r.t. runs (averaged after runs are over).
    clients(i).tot_interrupt_rate = total_interrupt_rate;
 end
 

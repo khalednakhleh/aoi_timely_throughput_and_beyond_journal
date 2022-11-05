@@ -5,35 +5,27 @@
 
 function set_arrivals(tot_timesteps)
 
-global the_array_of_arrivals how_many_times_I_have_arrival 
 global clients num_clients tot_timesteps
 
 
 
-%{
-time_if_packet_arrives = time_since_last_generation - log(rand)/lambda;
-
-  if time_if_packet_arrives <= tot_timeslots
-      arrival = ceil(time_if_packet_arrives);
-      the_array_of_arrivals(end+1) = arrival;
-  else
-      arrival = -1;
-  end
-  
-  %}
-  
   for x = 1 : num_clients 
-      events = zeros(1, tot_timesteps);
-      R = rand(size(events));
-      events(R<clients(x).lambda)=1;
-      inds=find(events==1);
+
+      arrival_every_timeslots = 1/clients(x).lambda;
       
-      clients(x).packet_deadline_array = inds;
-      clients(x).delay_time_array = inds + (clients(x).delay / clients(x).lambda);
+      mustBeInteger(arrival_every_timeslots);
+      repeating_array = [1, repelem( 0, arrival_every_timeslots-1)];
+
+      arrivals = repmat(repeating_array, 1, ceil(tot_timesteps/length(repeating_array)));
+      
+      arrivals = arrivals(1:tot_timesteps); % trimming the packets' sequence
+      
+      inds=find(arrivals==1);
+
+      
+      clients(x).packet_deadline_array = inds; % times at which we have a packet
+      clients(x).delay_time_array = inds + (clients(x).delay / clients(x).lambda); % time for a packet's deadline
   end
-
-how_many_times_I_have_arrival = how_many_times_I_have_arrival + 1;
-
 
 
 

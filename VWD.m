@@ -6,12 +6,7 @@
 
 function VWD(clients, num_clients, tot_timesteps)
 
-
 global num_clients tot_timesteps clients
-
-
-packet_generator_all_clients(clients, num_clients, 1, tot_timesteps);
-check_channel_state(clients, num_clients);
 
 
 for time = 1 : tot_timesteps
@@ -24,7 +19,7 @@ for time = 1 : tot_timesteps
     %end
     %disp('+++++++++++')
     
-    index = check_clients_in_on_channel(clients, num_clients);
+    index = check_clients_in_on_channel(clients, num_clients, time);
     
     client_to_schedule = [];
     
@@ -39,11 +34,10 @@ for time = 1 : tot_timesteps
     end
      
     deficit_on;
-    [max_deficit, choice] = max(deficit_on);
+    [max_deficit, client_to_schedule] = max(deficit_on);
 
     
-    client_to_schedule = choice;
-    clients(client_to_schedule).activations = clients(choice).activations + 1;
+    clients(client_to_schedule).activations = clients(client_to_schedule).activations + 1;
     
     end
     

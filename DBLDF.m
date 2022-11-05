@@ -6,10 +6,6 @@ function  DBLDF(clients, num_clients, tot_timesteps)
 global num_clients tot_timesteps clients
 
 
-packet_generator_all_clients(clients, num_clients, 1, tot_timesteps);
-check_channel_state(clients, num_clients);
-
-
 for time = 1 : tot_timesteps
     
     %fprintf('current timestep: %d\n', time)
@@ -21,7 +17,7 @@ for time = 1 : tot_timesteps
     %disp('------channel states------')
     
     
-    index = check_clients_in_on_channel(clients, num_clients);
+    index = check_clients_in_on_channel(clients, num_clients, time);
     
     client_to_schedule = [];
     
@@ -35,17 +31,23 @@ for time = 1 : tot_timesteps
     end
      
     deficit_on;
-    [max_deficit, choice] = max(deficit_on);
+    [max_deficit, client_to_schedule] = max(deficit_on);
 
-    
-    client_to_schedule = choice;
     end
     
     schedule_and_update_parameters(client_to_schedule, clients, time, tot_timesteps, num_clients);
     
     
     
+   %fprintf('\n----------------------------------------------------------------\n');
 end
 
 
+calculate_interrupt_rate(clients, num_clients, tot_timesteps);
+
 end
+
+
+
+
+

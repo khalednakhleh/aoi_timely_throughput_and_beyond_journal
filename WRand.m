@@ -5,10 +5,6 @@ function WRand(clients, num_clients, tot_timesteps)
 
 global num_clients tot_timesteps clients
 
-packet_generator_all_clients(clients, num_clients, 1, tot_timesteps);
-check_channel_state(clients, num_clients);
-
-
 
 for time = 1 : tot_timesteps 
 
@@ -20,7 +16,7 @@ for time = 1 : tot_timesteps
     %end
     %disp('------channel states------')
     
-    index = check_clients_in_on_channel(clients, num_clients);
+    index = check_clients_in_on_channel(clients, num_clients, time);
     
     client_to_schedule = [];
     
