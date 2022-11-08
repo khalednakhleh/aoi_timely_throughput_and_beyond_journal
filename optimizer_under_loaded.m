@@ -119,7 +119,7 @@ end
 
 
 GBeforeSum = (prod(G,1) - prod(pOverQ)).*prod(pOverQ);
-%sum(GBeforeSum)
+
 varChannel = 2*sum(GBeforeSum) + prod(pOverQ) - (prod(pOverQ))^2;
 
 

@@ -11,7 +11,7 @@ global lambdas betas tot_timesteps clients qoe_penalty_constant date_file_name
 
 %% Constants
 RUNS = 1;
-delay_total = 30; % \delta in paper
+delay_total = 10; % \delta in paper
 num_clients = 5; 
 tot_timesteps = 150000;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
@@ -46,7 +46,7 @@ end
 % multi-client setup 1: 2967542.
 % multi-client setup 2: 86348.
 % multi-client setup 3: 24521.
-SEED = 4584093;
+SEED = 457234;
 
 rng(SEED);
 
@@ -60,6 +60,7 @@ elseif(regime_selection == 2)
 else
     fprintf("ERROR: selected regime is not implemeneted. Exiting.");
 end
+
 
 
 %% Generate the channel sequences for the clients
@@ -78,7 +79,7 @@ for current_run = 1 : RUNS
 
   create_clients(clients, betas, delays, lambdas, p, q, num_clients, qoe_penalty_constant, mu, clientVars);
   set_arrivals(tot_timesteps); % generates packets with their respective delays.
-  
+  calculate_theoretical_interrupt_rate(clients, num_clients, regime_selection);
 
 if num_clients == 1 % to print the table if there's one client (for debugging).
     structArray(1) = clients;
