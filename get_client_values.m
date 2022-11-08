@@ -4,8 +4,8 @@
 
 function [betas, delays, lambdas, p, q, qoe_penalty_constant] = get_client_values(num_clients, delay_total)
 
-a = 0.05;
-b = 0.95;
+a = 0.2;
+b = 0.8;
 
 penalty_constant_array = [1,2];
 p = (b-a).*rand(num_clients,1) + a;
@@ -23,7 +23,7 @@ for x = 1 : num_clients
 end
 
 
-lambdas = [0.5, 0.5, 0.5, 0.5, 0.5]; %,0.5,0.5,0.5,0.5] % for two clients
+lambdas = [0.1, 0.1, 0.1, 0.1, 0.1]; %,0.5,0.5,0.5,0.5] % for two clients
 
 
 assert(length(p) == num_clients);

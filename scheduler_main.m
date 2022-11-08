@@ -8,17 +8,14 @@ clc, clear all
 warning('off','all')
 global mu MS varChannel clientVars delay_total delays num_clients p q 
 global lambdas betas tot_timesteps clients qoe_penalty_constant date_file_name
-global the_array_of_arrivals
-
-the_array_of_arrivals = [];
 
 %% Constants
-RUNS = 3;
-delay_total = 20; % \delta in paper
+RUNS = 1;
+delay_total = 30; % \delta in paper
 num_clients = 5; 
 tot_timesteps = 150000;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
-regime_selection = 2; % 1 for under-loaded. 2 for over-loaded.
+regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
 
 
 % make results' directory 
@@ -49,7 +46,7 @@ end
 % multi-client setup 1: 2967542.
 % multi-client setup 2: 86348.
 % multi-client setup 3: 24521.
-SEED = 86348;
+SEED = 4584093;
 
 rng(SEED);
 
@@ -67,7 +64,8 @@ end
 
 %% Generate the channel sequences for the clients
 
-empirical_interrupt_rate = 0; % interruprt rate averaged over N runs.
+%empirical_interrupt_rate = 0;
+%empirical_qoe_penalty = 0;
 
 for current_run = 1 : RUNS
     fprintf('++++++++++++++++++++++++++++++++++++++++++++++\n')
@@ -79,11 +77,10 @@ for current_run = 1 : RUNS
   'mc', {}, 'channel_states', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {}, 'theoretical_interrupt_rate', {}, 'qoe_penalty', {}, 'vwd_deficit', {}), num_clients);
 
   create_clients(clients, betas, delays, lambdas, p, q, num_clients, qoe_penalty_constant, mu, clientVars);
-  set_arrivals(tot_timesteps);
+  set_arrivals(tot_timesteps); % generates packets with their respective delays.
   
-  %xfix = asymptotics(clients(1).mc); % to calculate the stationary distribution of the Markov chain (ON-OFF)
-  
-if num_clients == 1 % to print the table if there's one client.
+
+if num_clients == 1 % to print the table if there's one client (for debugging).
     structArray(1) = clients;
     structArray(2) = clients;
     one_client_table = struct2table(structArray);
@@ -115,36 +112,42 @@ end
         error("ERROR: selected policy not found.");
         
     end
-    
-    empirical_interrupt_rate = empirical_interrupt_rate + clients(1).avg_tot_interrupt_rate;
-    
+
    
-    if num_clients == 1 % to print the table if there's one client.
-    structArray(1) = clients;
-    structArray(2) = clients;
-    one_client_table = struct2table(structArray)
-    else
-    struct2table(clients)
+    for x = 1 : num_clients % empty-out the packets arrays after finishing the run for better value saving.
+        clients(x).packet_deadline_array = [];
+        clients(x).delay_time_array = [];
+        clients(x).channel_states = [];
     end
+    
+    
+    %if num_clients == 1 % to print the table if there's one client.
+    %structArray(1) = clients;
+    %structArray(2) = clients;
+    %one_client_table = struct2table(structArray)
+    %else
+    %struct2table(clients)
+    %end
+    
+    %empirical_interrupt_rate = empirical_interrupt_rate + clients(1).tot_interrupt_rate;
+    %empirical_qoe_penalty = empirical_qoe_penalty + clients(1).qoe_penalty;
+    save_run_results(clients, num_clients, current_run, selected_policy, regime_selection); % to save theoretical values as well.
+
+
 end
 
-%the_array_of_arrivals
-%fprintf("array of arrival average lambda is: %f\n", clients(1).packet_deadline_array)
-%how_many_times_I_have_arrival
-%empirical_interrupt_rate = empirical_interrupt_rate / RUNS;
 
- for x = 1 : num_clients
 
-    clients(x).avg_interrupt_over_runs = clients(x).avg_interrupt_over_runs / RUNS;
-    clients(x).qoe_penalty = clients(x).qoe_penalty / RUNS;
-end
+    %empirical_interrupt_rate = empirical_interrupt_rate / RUNS;
+    %empirical_qoe_penalty = empirical_qoe_penalty / RUNS;
+
 
 calculate_theoretical_interrupt_rate(clients, num_clients, regime_selection);
 save_run_results(clients, num_clients, RUNS, selected_policy, regime_selection); % to save theoretical values as well.
 
 
 
-%struct2table(clients) % to print the clients' structure
+struct2table(clients) % to print the clients' structure
   
 disp('DONE')
 
@@ -168,6 +171,7 @@ end
 for x = 1 : num_clients
     clients(x).packet_deadline_array = [];
     clients(x).delay_time_array = [];
+    clients(x).channel_states = [];
 end
 
 

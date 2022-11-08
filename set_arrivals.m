@@ -1,12 +1,8 @@
 
 
-
-
-
 function set_arrivals(tot_timesteps)
 
 global clients num_clients tot_timesteps
-
 
 
   for x = 1 : num_clients 
@@ -26,7 +22,6 @@ global clients num_clients tot_timesteps
       clients(x).packet_deadline_array = inds; % times at which we have a packet
       clients(x).delay_time_array = inds + (clients(x).delay / clients(x).lambda); % time for a packet's deadline
   end
-
 
 
 end
