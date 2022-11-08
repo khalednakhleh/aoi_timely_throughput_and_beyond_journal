@@ -13,8 +13,8 @@ global lambdas betas tot_timesteps clients qoe_penalty_constant date_file_name
 RUNS = 1;
 delay_total = 10; % \delta in paper
 num_clients = 5; 
-tot_timesteps = 150000;
-selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
+tot_timesteps = 30;
+selected_policy = 6;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
 regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
 
 
@@ -130,20 +130,12 @@ end
     %struct2table(clients)
     %end
     
-    %empirical_interrupt_rate = empirical_interrupt_rate + clients(1).tot_interrupt_rate;
-    %empirical_qoe_penalty = empirical_qoe_penalty + clients(1).qoe_penalty;
     save_run_results(clients, num_clients, current_run, selected_policy, regime_selection); % to save theoretical values as well.
 
 
 end
 
 
-
-    %empirical_interrupt_rate = empirical_interrupt_rate / RUNS;
-    %empirical_qoe_penalty = empirical_qoe_penalty / RUNS;
-
-
-calculate_theoretical_interrupt_rate(clients, num_clients, regime_selection);
 save_run_results(clients, num_clients, RUNS, selected_policy, regime_selection); % to save theoretical values as well.
 
 

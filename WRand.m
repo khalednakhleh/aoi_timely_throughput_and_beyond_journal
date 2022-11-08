@@ -12,7 +12,7 @@ for time = 1 : tot_timesteps
     
     %disp('+++++channel states++++++')
     %for x = 1 : num_clients
-    %    disp(clients(x).current_channel_state)
+    %    disp(clients(x).channel_states(time))
     %end
     %disp('------channel states------')
     
