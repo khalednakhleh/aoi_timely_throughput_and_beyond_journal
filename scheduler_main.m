@@ -11,9 +11,9 @@ global lambdas betas tot_timesteps clients qoe_penalty_constant date_file_name
 
 %% Constants
 RUNS = 1;
-delay_total = 1; % \delta in paper
-num_clients = 1; 
-tot_timesteps = 30;
+delay_total = 11; % \delta in paper (start from 3)
+num_clients = 5; 
+tot_timesteps = 150000;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
 regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
 
@@ -39,14 +39,14 @@ end
 %for one-client table3: 943667
 %for one-client table4: 23457 
 %------------------------------
-%for one-client table1-1: 68421.
+%for one-client table1-1: 457234.
 %for one-client table1-2: 7834567. 
 %for one-client table1-3: 23782. 
 %------------------------------
 % multi-client setup 1: 2967542.
 % multi-client setup 2: 86348.
 % multi-client setup 3: 24521.
-SEED = 457234;
+SEED = 5748792;
 
 rng(SEED);
 

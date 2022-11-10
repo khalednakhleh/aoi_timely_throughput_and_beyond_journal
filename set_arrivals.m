@@ -17,9 +17,11 @@ global clients num_clients tot_timesteps
       arrivals = arrivals(1:tot_timesteps + 1); % trimming the packets' sequence
       
       inds=find(arrivals==1);
+      
+      inds = inds - 1;
 
       
-      clients(x).packet_deadline_array = inds - 1; % times at which we generate a packet (available to transmit at end of timestep)
+      clients(x).packet_deadline_array = inds; % times at which we generate a packet (available to transmit at end of timestep)
       clients(x).delay_time_array = inds + (clients(x).delay / clients(x).lambda); % time for a packet's deadline
   end
 
