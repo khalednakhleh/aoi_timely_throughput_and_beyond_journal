@@ -23,7 +23,7 @@ for x = 1 : num_clients
           clients(x).U_t = clients(x).U_t + 1; % send a dummy packet instead.    
         
         else
-        while (current_timestep >= clients(x).delay_time_array(1))
+        if (current_timestep >= clients(x).delay_time_array(1))
         clients(x).delay_time_array(1) = [];
         clients(x).packet_deadline_array(1) = [];
         clients(x).D_t = clients(x).D_t + 1;
@@ -34,9 +34,9 @@ for x = 1 : num_clients
         end 
     else
         if(isempty(clients(x).delay_time_array))
-            %do nothing
+            continue
         else
-        while (current_timestep >= clients(x).delay_time_array(1))
+        if (current_timestep >= clients(x).delay_time_array(1))
         clients(x).delay_time_array(1) = [];
         clients(x).packet_deadline_array(1) = [];
         clients(x).D_t = clients(x).D_t + 1;
