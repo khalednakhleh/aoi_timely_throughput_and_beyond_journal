@@ -10,8 +10,8 @@ global mu MS varChannel clientVars delay_total delays num_clients p q
 global lambdas betas tot_timesteps clients qoe_penalty_constant date_file_name
 
 %% Constants
-RUNS = 1;
-delay_total = 11; % \delta in paper (start from 3)
+RUNS = 10;
+delay_total = 10; % \delta in paper (start from 3)
 num_clients = 5; 
 tot_timesteps = 150000;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 

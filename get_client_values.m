@@ -18,7 +18,7 @@ p = [0.7, 0.656, 0.93, 0.457, 0.845];
 
 betas = repelem(1/num_clients, num_clients);
 delays = zeros(1,num_clients);
-qoe_penalty_constant = [1,1,2,2,2];%zeros(1, num_clients);
+qoe_penalty_constant = [2,2,1,1,1];%zeros(1, num_clients);
 
 
 for x = 1 : num_clients
@@ -40,8 +40,8 @@ assert(length(lambdas) == num_clients);
 delays 
 lambdas 
 
-for i = 1 : num_clients
-    mustBeInteger(delays(i) / lambdas(i));
-end
+%for i = 1 : num_clients
+%    mustBeInteger(delays(i) / lambdas(i));
+%end
 
 end
