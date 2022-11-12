@@ -11,8 +11,8 @@ global lambdas betas tot_timesteps clients qoe_penalty_constant date_file_name
 
 %% Constants
 RUNS = 10;
-delay_total = 10; % \delta in paper (start from 3)
-num_clients = 5; 
+delay_total = 1; % \delta in paper (start from 3)
+num_clients = 1; 
 tot_timesteps = 150000;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
 regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
@@ -23,13 +23,20 @@ if not(isfolder('results'))
     mkdir('results')
 end
 
-timenow = datestr(now,'mm_dd_yyyy_HH_MM_SS');
-if not(isfolder(timenow))
-    current_val = sprintf('results/');
-    date_file_name = strcat(current_val,timenow);
+%timenow = datestr(now,'mm_dd_yyyy_HH_MM_SS');
+date_file_name = sprintf('results/');
+if not(isfolder(date_file_name))
+    
+    %date_file_name = strcat(current_val,timenow);
     mkdir(date_file_name);
 end
 
+timenow = datestr(now,'mm_dd_yyyy_HH_MM_SS');
+date_file_name = strcat(date_file_name, timenow);
+
+foldername = sprintf('_policy_%d_regime_selection_%d_tot_timesteps_%d_num_clients_%d_tot_delay_%d', selected_policy, regime_selection, tot_timesteps, num_clients, delay_total);
+
+date_file_name = strcat(date_file_name, foldername);
 
 %% get theoretical mean and variance values
 
@@ -38,14 +45,15 @@ end
 %for one-client table2: 18235
 %for one-client table3: 943667
 %for one-client table4: 23457 
-%------------------------------
+%--------------------------------
 %for one-client table1-1: 457234.
 %for one-client table1-2: 7834567. 
 %for one-client table1-3: 23782. 
-%------------------------------
+%--------------------------------
 % multi-client setup 1: 2967542.
 % multi-client setup 2: 86348.
 % multi-client setup 3: 24521.
+
 SEED = 5748792;
 
 rng(SEED);
@@ -151,15 +159,11 @@ disp('DONE')
 
 function save_run_results(clients, num_clients, current_run, selected_policy, regime_selection)
 
-global clients num_clients tot_timesteps delay_total date_file_name
+global clients num_clients date_file_name
 
 
-foldername = sprintf('/policy_%d_regime_selection_%d_tot_timesteps_%d_num_clients_%d_tot_delay_%d', selected_policy, regime_selection, tot_timesteps, num_clients, delay_total);
-
-foldername = strcat(date_file_name, foldername);
-
-if not(isfolder(foldername))
-mkdir(foldername)
+if not(isfolder(date_file_name))
+mkdir(date_file_name)
 end
 
 for x = 1 : num_clients
