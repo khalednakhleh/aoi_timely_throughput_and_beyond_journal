@@ -5,7 +5,7 @@
 
 function [MS, varChannel, means, clientVars] = optimizer_under_loaded(num_clients, p, q, lambdas, delays)
 
-% lambdas are the arrival rates
+
 kIterator = 100;
 epsilon = 0.00001;
 

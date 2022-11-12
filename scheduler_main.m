@@ -11,8 +11,8 @@ global lambdas betas tot_timesteps clients qoe_penalty_constant date_file_name
 
 %% Constants
 RUNS = 10;
-delay_total = 1; % \delta in paper (start from 3)
-num_clients = 1; 
+delay_total = 90; % \delta in paper (start from 3)
+num_clients = 10; 
 tot_timesteps = 150000;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
 regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
@@ -31,10 +31,10 @@ if not(isfolder(date_file_name))
     mkdir(date_file_name);
 end
 
-timenow = datestr(now,'mm_dd_yyyy_HH_MM_SS');
-date_file_name = strcat(date_file_name, timenow);
+%timenow = datestr(now,'mm_dd_yyyy_HH_MM_SS');
+%date_file_name = strcat(date_file_name, timenow);
 
-foldername = sprintf('_policy_%d_regime_selection_%d_tot_timesteps_%d_num_clients_%d_tot_delay_%d', selected_policy, regime_selection, tot_timesteps, num_clients, delay_total);
+foldername = sprintf('policy_%d_regime_selection_%d_tot_timesteps_%d_num_clients_%d_tot_delay_%d', selected_policy, regime_selection, tot_timesteps, num_clients, delay_total);
 
 date_file_name = strcat(date_file_name, foldername);
 
