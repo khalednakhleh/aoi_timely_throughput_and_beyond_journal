@@ -23,6 +23,7 @@ global clients num_clients tot_timesteps
       
       clients(x).packet_deadline_array = inds; % times at which we generate a packet (available to transmit at end of timestep)
       clients(x).delay_time_array = inds + (clients(x).delay / clients(x).lambda); % time for a packet's deadline
+      
   end
 
 

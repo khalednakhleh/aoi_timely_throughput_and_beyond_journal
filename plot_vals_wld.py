@@ -21,17 +21,15 @@ plt.rcParams['ps.fonttype'] = 42
 plt.rcParams['font.family'] = 'Times New Roman'
 
 
-
-
 #CONSTANTS for plotting
 
 timesteps = 150000
-num_clients = 10
+num_clients = 5
 regime_selection = 1 # 1 for under-loaded and 2 for over-loaded
 selected_policy = 1 # 1 is WLD
 RUNS = 10
 
-delay_total_vals = [30, 40, 50, 60, 70, 80, 90] # these are the delay values we ran the simulations for.
+delay_total_vals = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] # these are the delay values we ran the simulations for.
 
 
 folder_name = (f'results/policy_{selected_policy}_regime_selection_{regime_selection}_tot_timesteps_{timesteps}_num_clients_{num_clients}_tot_delay_')
@@ -79,6 +77,7 @@ plt.plot(delay_total_vals, tot_avg_empirical_values, label='Empirical value', zo
 plt.plot(delay_total_vals, tot_theoretical_values, label='Theoretical value', zorder=2, marker='o', color='C1', linestyle='dotted')
 
 
+#plt.yscale('log')
 
 
 plt.legend()
@@ -86,7 +85,6 @@ plt.xlabel('Total delay $\ell$')
 plt.ylabel('Interrupt rate $\sum_n D_n(t)/T$')
 plt.savefig('num_clients_'+str(num_clients)+'_regime_selection_'+str(regime_selection)+'_runs_'+str(RUNS)+'.pdf')
 plt.show()
-
 
 
 plt.figure(2)

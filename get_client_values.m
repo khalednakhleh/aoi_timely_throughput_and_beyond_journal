@@ -13,12 +13,13 @@ penalty_constant_array = [1,2];
 %q = (b-a).*rand(num_clients,1) + a;
 
 
-q = [0.8, 0.95, 0.45, 0.2, 0.1, 0.55, 0.5, 0.85, 0.3, 0.75];
-p = [0.25, 0.65, 0.2, 0.4, 0.845, 0.35, 0.6, 0.85, 0.15, 0.45];
+p = [0.9, 0.75, 0.65, 0.5, 0.8]   %, 0.4, 0.7, 0.8, 0.45, 0.25, 0.15];
+q = [0.3, 0.2, 0.7, 0.35, 0.4]   %, 0.4, 0.3, 0.4, 0.55, 0.45, 0.65];
+
 
 betas = repelem(1/num_clients, num_clients);
 delays = zeros(1,num_clients);
-qoe_penalty_constant = [2,2,2,2,2,1,1,1,1,1]%,2,1,1,1];%zeros(1, num_clients);
+qoe_penalty_constant = [2,2,1,1,1]%[2,2,2,2,2,1,1,1,1,1] %,2,1,1,1];%zeros(1, num_clients);
 
 
 for x = 1 : num_clients
@@ -27,7 +28,7 @@ for x = 1 : num_clients
 end
 
 
-lambdas = [0.1, 0.1, 0.1, 0.05, 0.05, 0.05, 0.25, 0.1, 0.05, 0.05]%, 0.2, 0.2, 0.2, 0.1]; %,0.5,0.5,0.5,0.5] % for two clients
+lambdas = [0.1, 0.1, 0.1, 0.1, 0.1];%, 0.1, 0.2, 0.2, 0.01, 0.05]%, 0.2, 0.2, 0.2, 0.1]; %,0.5,0.5,0.5,0.5] % for two clients
 
 
 assert(length(p) == num_clients);

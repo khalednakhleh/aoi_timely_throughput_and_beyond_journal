@@ -11,10 +11,10 @@ global lambdas betas tot_timesteps clients qoe_penalty_constant date_file_name
 
 %% Constants
 RUNS = 10;
-delay_total = 90; % \delta in paper (start from 3)
-num_clients = 10; 
+delay_total = 15; % \delta in paper
+num_clients = 5; 
 tot_timesteps = 150000;
-selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR. 6 is VWD. 
+selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR (not implemented yet). 6 is VWD. 
 regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
 
 
@@ -82,7 +82,7 @@ for current_run = 1 : RUNS
 
   rng(SEED + current_run*10); % reseeding for each run
   
-  clients = repmat(struct('idx', {}, 'beta', {}, 'clientVars', {}, 'mu' , {}, 'delay', {}, 'lambda', {}, 'p', {}, 'q', {}, 'packet_time_array', {}, 'delay_time_array', {}, ...
+  clients = repmat(struct('idx', {}, 'beta', {}, 'clientVars', {}, 'mu' , {}, 'delay', {}, 'lambda', {}, 'p', {}, 'q', {}, 'packet_deadline_array', {}, 'delay_time_array', {}, ...
   'mc', {}, 'channel_states', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {}, 'theoretical_interrupt_rate', {}, 'qoe_penalty', {}, 'vwd_deficit', {}), num_clients);
 
   create_clients(clients, betas, delays, lambdas, p, q, num_clients, qoe_penalty_constant, mu, clientVars);
@@ -95,7 +95,7 @@ if num_clients == 1 % to print the table if there's one client (for debugging).
     one_client_table = struct2table(structArray);
 end
 
- %struct2table(myTBL) % to print the clients' structure (for two or more
+ %struct2table(clients) % to print the clients' structure (for two or more
  %clients)
   
   
@@ -118,7 +118,7 @@ end
        VWD(clients, num_clients, tot_timesteps);
   
     else
-        error("ERROR: selected policy not found.");
+       error("ERROR: selected policy not found.");
         
     end
 
