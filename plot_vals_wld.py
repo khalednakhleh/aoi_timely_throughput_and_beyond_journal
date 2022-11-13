@@ -27,7 +27,7 @@ timesteps = 150000
 num_clients = 5
 regime_selection = 1 # 1 for under-loaded and 2 for over-loaded
 selected_policy = 1 # 1 is WLD
-RUNS = 10
+RUNS = 5
 
 delay_total_vals = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] # these are the delay values we ran the simulations for.
 
@@ -77,7 +77,7 @@ plt.plot(delay_total_vals, tot_avg_empirical_values, label='Empirical value', zo
 plt.plot(delay_total_vals, tot_theoretical_values, label='Theoretical value', zorder=2, marker='o', color='C1', linestyle='dotted')
 
 
-#plt.yscale('log')
+plt.yscale('log')
 
 
 plt.legend()
