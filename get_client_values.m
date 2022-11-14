@@ -16,8 +16,8 @@ penalty_constant_array = [1,2];
 %q = (b-a).*rand(num_clients,1) + a;
 
 
-q = [0.11]
-p = [0.9]
+q = [0.06]
+p = [0.95]
 
 
 betas = repelem(1/num_clients, num_clients);
@@ -31,7 +31,7 @@ for x = 1 : num_clients
 end
 
 
-lambdas = [0.1]; %, 0.1, 0.2, 0.2, 0.01, 0.05]%, 0.2, 0.2, 0.2, 0.1]; %,0.5,0.5,0.5,0.5] % for two clients
+lambdas = [0.05]; %, 0.1, 0.2, 0.2, 0.01, 0.05]%, 0.2, 0.2, 0.2, 0.1]; %,0.5,0.5,0.5,0.5] % for two clients
 
 
 assert(length(p) == num_clients);
