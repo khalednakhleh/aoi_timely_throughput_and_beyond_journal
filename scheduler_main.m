@@ -10,9 +10,10 @@ global mu MS varChannel clientVars delay_total delays num_clients p q
 global lambdas betas tot_timesteps clients qoe_penalty_constant date_file_name
 
 %% Constants
+
 RUNS = 10;
-delay_total = 15; % \delta in paper
-num_clients = 5; 
+delay_total = 50; % \delta in paper
+num_clients = 10; 
 tot_timesteps = 150000;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR (not implemented yet). 6 is VWD. 
 regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
@@ -40,21 +41,8 @@ date_file_name = strcat(date_file_name, foldername);
 
 %% get theoretical mean and variance values
 
-% 96325
-%for one-client table1 : 84764579
-%for one-client table2: 18235
-%for one-client table3: 943667
-%for one-client table4: 23457 
-%--------------------------------
-%for one-client table1-1: 457234.
-%for one-client table1-2: 7834567. 
-%for one-client table1-3: 23782. 
-%--------------------------------
-% multi-client setup 1: 2967542.
-% multi-client setup 2: 86348.
-% multi-client setup 3: 24521.
 
-SEED = 5748792;
+SEED = 47989;
 
 rng(SEED);
 
