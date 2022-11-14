@@ -12,7 +12,7 @@ global lambdas betas tot_timesteps clients qoe_penalty_constant date_file_name
 %% Constants
 
 RUNS = 10;
-delay_total = 50; % \delta in paper
+delay_total = 1; % \delta in paper
 num_clients = 10; 
 tot_timesteps = 150000;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR (not implemented yet). 6 is VWD. 
