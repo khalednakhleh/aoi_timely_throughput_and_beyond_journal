@@ -11,9 +11,9 @@ global lambdas betas tot_timesteps clients qoe_penalty_constant date_file_name
 
 %% Constants
 
-RUNS = 10;
-delay_total = 70; % \delta in paper
-num_clients = 10; 
+RUNS = 1;
+delay_total = 1; % \delta in paper
+num_clients = 1; 
 tot_timesteps = 150000;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR (not implemented yet). 6 is VWD. 
 regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
@@ -42,7 +42,7 @@ date_file_name = strcat(date_file_name, foldername);
 %% get theoretical mean and variance values
 
 
-SEED = 63479;
+SEED = 5346;
 
 rng(SEED);
 
@@ -76,6 +76,7 @@ for current_run = 1 : RUNS
   create_clients(clients, betas, delays, lambdas, p, q, num_clients, qoe_penalty_constant, mu, clientVars);
   set_arrivals(tot_timesteps); % generates packets with their respective delays.
   calculate_theoretical_interrupt_rate(clients, num_clients, regime_selection);
+  
 
 if num_clients == 1 % to print the table if there's one client (for debugging).
     structArray(1) = clients;
@@ -110,7 +111,7 @@ end
         
     end
 
-   
+    
     for x = 1 : num_clients % empty-out the packets arrays after finishing the run for better value saving.
         clients(x).packet_deadline_array = [];
         clients(x).delay_time_array = [];

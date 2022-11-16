@@ -16,13 +16,13 @@ penalty_constant_array = [1,2];
 %q = (b-a).*rand(num_clients,1) + a;
 
 
-q = [0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05]
-p = [0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95]
+q = [0.5]%,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05]
+p = [0.5]%,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95]
 
 
 betas = repelem(1/num_clients, num_clients);
 delays = zeros(1,num_clients);
-qoe_penalty_constant = [2,2,2,2,2,1,1,1,1,1] %,2,1,1,1];%zeros(1, num_clients);
+qoe_penalty_constant = [2]%,2,2,2,2,1,1,1,1,1] %,2,1,1,1];%zeros(1, num_clients);
 
 
 for x = 1 : num_clients
@@ -32,7 +32,7 @@ end
 
 
 
-lambdas = [0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04]
+lambdas = [1]%, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04]
 
 
 assert(length(p) == num_clients);
@@ -45,8 +45,8 @@ assert(length(qoe_penalty_constant) == num_clients);
 delays 
 lambdas 
 
-%for i = 1 : num_clients
-%    mustBeInteger(delays(i) / lambdas(i));
-%end
+for i = 1 : num_clients
+    mustBeInteger(round(delays(i) / lambdas(i), 4)); % round to four decimal point since Matlab division causes floating point numbers even for integers.
+end
 
 end

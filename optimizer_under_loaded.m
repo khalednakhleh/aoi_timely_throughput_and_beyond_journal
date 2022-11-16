@@ -41,7 +41,7 @@ mu = optimvar('mu', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBoun
 vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', 100000);
 
 
-objectiveFunction = sum(exp(((-2.*(mu - lambdas))./vars).*delays));
+objectiveFunction = sum(exp(((-2.*(mu - lambdas))./vars).*delays))
 
 
 prob.Objective = objectiveFunction;
@@ -71,7 +71,11 @@ prob.Constraints.means = meanConstraints;
 x0.mu = rand(size(mu));
 x0.vars = rand(size(vars));
 
+
+if num_clients > 1
 solution = solve(prob, x0)
+means = solution.mu;
+clientVars = solution.vars;
 
 for i = 1:num_clients
     fprintf("client %d mean: %.14f\n",i, solution.mu(i))
@@ -81,8 +85,25 @@ end
 fprintf("channel mean: %.16f\n", MS)
 fprintf("channel variance: %.16f\n", varChannel)
 
-means = solution.mu;
-clientVars = solution.vars;
+
+else
+    means = MS;
+    clientVars = varChannel;
+    
+    
+for i = 1:num_clients
+    fprintf("client %d mean: %.14f\n",i,  means)
+    fprintf("client %d variance: %.14f\n",i, clientVars)
+end
+
+fprintf("channel mean: %.16f\n", MS)
+fprintf("channel variance: %.16f\n", varChannel)
+
+
+end
+
+
+
 end
 
 %% functions 

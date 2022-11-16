@@ -18,6 +18,7 @@ for time = 1 : tot_timesteps
     %     fprintf('channel state for client %d: %d\n', x, clients(x).channel_states(time))
     %     disp(clients(x).packet_deadline_array)
     %     disp(clients(x).delay_time_array)
+    %     disp(clients(x).channel_states')
     %end
     %disp('------channel states------')
     
