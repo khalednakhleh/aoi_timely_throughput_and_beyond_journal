@@ -11,16 +11,16 @@ global LAMBDA L
 
 %% Constants 
 
-LAMBDA = 1; % 1 / LAMBDA must be an integer. 
+LAMBDA = 0.5; % 1 / LAMBDA must be an integer. 
 
-L = 1; % delay.
+L = 2; % delay.
 
 mustBeInteger(1/LAMBDA)
 mustBeInteger(L)
 
-P = 0.52; % prob of going from ON to OFF channel state.
+P = 0.8; % prob of going from ON to OFF channel state.
 
-Q = 0.83; % prob of going from OFF to ON channel state.
+Q = 0.21; % prob of going from OFF to ON channel state.
 
 TIME = 150000; % total timesteps.
 
@@ -83,12 +83,6 @@ for current_timeslot = 1 : TIME
             
         elseif(current_timeslot <= packet_generation_array(1))
             U_t = U_t + 1;
-%        else
-%            if(current_timeslot >= packet_delay(1))
-%                packet_generation_array(1) = [];
-%                packet_delay(1) = [];
-%                D_t = D_t + 1;
-%            end
         end
         else
             U_t = U_t + 1;
@@ -119,6 +113,7 @@ counter_one
 counter_two
 
 first_client_asymptotics = asymptotics(MC)
+
 %% Utility functions
 
 
@@ -128,7 +123,7 @@ TRANS = [1-P, P ;
          G, 1-G];
 
 MC =  dtmc(TRANS, 'StateNames', ["ON", "OFF"]);
-%graphplot(MC,'ColorEdges',true);
+graphplot(MC,'ColorEdges',true);
 end
 
 
