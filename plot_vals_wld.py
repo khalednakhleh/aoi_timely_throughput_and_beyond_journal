@@ -23,17 +23,18 @@ plt.rcParams['font.family'] = 'Times New Roman'
 
 #CONSTANTS for plotting
 
-timesteps = 150000
+timesteps = 1000000
 num_clients = 1
 regime_selection = 1 # 1 for under-loaded and 2 for over-loaded
 selected_policy = 1 # 1 is WLD
 RUNS = 10
 
-delay_total_vals = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] # these are the delay values we ran the simulations for.
+delay_total_vals = [1,2,3,4,5,6,7,8,9,10] # these are the delay values we ran the simulations for.
 #delay_total_vals = [10,20,30,40,50,60,70] # these are the delay values we ran the simulations for.
 
+UNDERLOADED_C_CONSTANT = 0.15
 
-folder_name = (f'results/1_client_trial_1/policy_{selected_policy}_regime_selection_{regime_selection}_tot_timesteps_{timesteps}_num_clients_{num_clients}_tot_delay_')
+folder_name = (f'results/policy_{selected_policy}_regime_selection_{regime_selection}_tot_timesteps_{timesteps}_num_clients_{num_clients}_tot_delay_')
 
 
 ######################
@@ -57,18 +58,18 @@ for delay_value in delay_total_vals:
 
         if num_clients > 1:
             empirical_avg_values.append(sum(data_values['tot_interrupt_rate']))
-            theoretical_values.append(sum(data_values['theoretical_interrupt_rate']))
+            theoretical_values.append(sum(UNDERLOADED_C_CONSTANT * data_values['theoretical_interrupt_rate']))
         else:
             empirical_avg_values.append(data_values['tot_interrupt_rate'][0])
-            theoretical_values.append(data_values['theoretical_interrupt_rate'][0])            
+            theoretical_values.append(UNDERLOADED_C_CONSTANT * data_values['theoretical_interrupt_rate'][0])            
 
 
     tot_avg_empirical_values.append( sum(empirical_avg_values) / RUNS )
     tot_theoretical_values.append( sum(theoretical_values) / RUNS )
 
 
-#print(tot_avg_empirical_values)
-#print(tot_theoretical_values)
+print(tot_avg_empirical_values)
+print(tot_theoretical_values)
 
 
 plt.figure(1)
@@ -106,10 +107,10 @@ for delay_value_ratio in delay_total_vals:
         data_values = pd.read_csv(run_file)
         
         if num_clients > 1:
-            empirical_avg_values.append(sum(data_values['tot_interrupt_rate'] / num_clients*data_values['theoretical_interrupt_rate']))
+            empirical_avg_values.append(sum(data_values['tot_interrupt_rate'] / UNDERLOADED_C_CONSTANT * data_values['theoretical_interrupt_rate']))
             
         else:
-            empirical_avg_values.append(data_values['tot_interrupt_rate'][0] / num_clients * data_values['theoretical_interrupt_rate'][0])            
+            empirical_avg_values.append(data_values['tot_interrupt_rate'][0] / UNDERLOADED_C_CONSTANT * data_values['theoretical_interrupt_rate'][0])            
 
 
     tot_avg_empirical_values.append( sum(empirical_avg_values) / RUNS )
