@@ -68,8 +68,8 @@ prob.Constraints.varConstraint = sum(sqrt(vars)) >= sqrt(varChannel);
 prob.Constraints.means = meanConstraints;
 
 
-x0.mu = rand(size(mu));
-x0.vars = rand(size(vars));
+x0.mu = zeros(size(mu));
+x0.vars = zeros(size(vars));
 
 
 if num_clients > 1

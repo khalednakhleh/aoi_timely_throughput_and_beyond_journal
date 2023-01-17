@@ -2,7 +2,7 @@
 % solves for the optimal mean and variance given the linear program. 
 
 
-%format long 
+format long 
 
 clc, clear all
 warning('off','all')
@@ -11,8 +11,8 @@ global lambdas betas tot_timesteps clients qoe_penalty_constant date_file_name
 
 %% Constants
 
-RUNS = 10;
-delay_total = 10; % \delta in paper
+RUNS = 1;
+delay_total = 25; % \delta in paper
 num_clients = 1; 
 tot_timesteps = 1000000;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR (not implemented yet). 6 is VWD. 
@@ -138,8 +138,10 @@ else
 all_clients_table = struct2table(clients)
 end
 
+clients(1).tot_interrupt_rate
+clients(1).theoretical_interrupt_rate
 
-
+clients(1).tot_interrupt_rate / clients(1).theoretical_interrupt_rate
 disp('DONE')
 
 
