@@ -12,11 +12,11 @@ global lambdas betas tot_timesteps clients qoe_penalty_constant date_file_name
 %% Constants
 
 RUNS = 1;
-delay_total = 25; % \delta in paper
+delay_total = 20; % \delta in paper
 num_clients = 1; 
-tot_timesteps = 1000000;
+tot_timesteps = 500000;
 selected_policy = 1;  % 1 is WLD. 2 is WRand. 3 is EDF. 4 is DBLDF. 5 is WRR (not implemented yet). 6 is VWD. 
-regime_selection = 1; % 1 for under-loaded. 2 for over-loaded.
+regime_selection = 2; % 1 for under-loaded. 2 for over-loaded.
 
 
 % make results' directory 
@@ -42,7 +42,7 @@ date_file_name = strcat(date_file_name, foldername);
 %% get theoretical mean and variance values
 
 
-SEED = 5346;
+SEED = 42823;  %5346
 
 rng(SEED);
 

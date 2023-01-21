@@ -23,13 +23,13 @@ plt.rcParams['font.family'] = 'Times New Roman'
 
 #CONSTANTS for plotting
 
-timesteps = 1000000
+timesteps = 500000
 num_clients = 1
-regime_selection = 1 # 1 for under-loaded and 2 for over-loaded
+regime_selection = 2 # 1 for under-loaded and 2 for over-loaded
 selected_policy = 1 # 1 is WLD
-RUNS = 10
+RUNS = 1
 
-delay_total_vals = [1,2,3,4,5,6,7,8,9,10] # these are the delay values we ran the simulations for.
+delay_total_vals = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] # these are the delay values we ran the simulations for.
 #delay_total_vals = [10,20,30,40,50,60,70] # these are the delay values we ran the simulations for.
 
 UNDERLOADED_C_CONSTANT = 0.15
@@ -61,7 +61,7 @@ for delay_value in delay_total_vals:
             theoretical_values.append(sum(UNDERLOADED_C_CONSTANT * data_values['theoretical_interrupt_rate']))
         else:
             empirical_avg_values.append(data_values['tot_interrupt_rate'][0])
-            theoretical_values.append(UNDERLOADED_C_CONSTANT * data_values['theoretical_interrupt_rate'][0])            
+            theoretical_values.append(data_values['theoretical_interrupt_rate'][0])            
 
 
     tot_avg_empirical_values.append( sum(empirical_avg_values) / RUNS )
@@ -75,8 +75,8 @@ print(tot_theoretical_values)
 plt.figure(1)
 
 
-plt.plot(delay_total_vals, tot_avg_empirical_values, label='Empirical value', zorder=1, marker='x', color='C0', linestyle='solid')
-plt.plot(delay_total_vals, tot_theoretical_values, label='Theoretical value', zorder=2, marker='o', color='C1', linestyle='dotted')
+plt.plot(delay_total_vals, tot_avg_empirical_values, label='Empirical $Q_i$', zorder=1, marker='o', color='r', linestyle='solid')
+plt.plot(delay_total_vals, tot_theoretical_values, label='Theoretical $Q_i$', zorder=2, marker='x', color='k', linestyle='dotted')
 
 
 #plt.yscale('log')
@@ -84,48 +84,8 @@ plt.plot(delay_total_vals, tot_theoretical_values, label='Theoretical value', zo
 
 plt.legend()
 plt.xlabel('Total delay $\ell$')
-plt.ylabel('Interrupt rate $\sum_n D_n(t)/T$')
+plt.ylabel('Outage rate $\sum_i Q_i$')
 plt.savefig('num_clients_'+str(num_clients)+'_regime_selection_'+str(regime_selection)+'_runs_'+str(RUNS)+'.pdf')
 plt.show()
 
-
-plt.figure(2)
-
-
-
-tot_avg_empirical_values = []
-tot_theoretical_values = []
-
-
-for delay_value_ratio in delay_total_vals:
-    empirical_avg_values = []
-
-    filename = folder_name+(f'{delay_value_ratio}/') 
-
-    for current_run in range(RUNS):
-        run_file = filename+'run_'+str(current_run+1)+'.csv'
-        data_values = pd.read_csv(run_file)
-        
-        if num_clients > 1:
-            empirical_avg_values.append(sum(data_values['tot_interrupt_rate'] / UNDERLOADED_C_CONSTANT * data_values['theoretical_interrupt_rate']))
-            
-        else:
-            empirical_avg_values.append(data_values['tot_interrupt_rate'][0] / UNDERLOADED_C_CONSTANT * data_values['theoretical_interrupt_rate'][0])            
-
-
-    tot_avg_empirical_values.append( sum(empirical_avg_values) / RUNS )
-
-
-plt.yscale('log')
-
-plt.plot(delay_total_vals, tot_avg_empirical_values, label='Ratio', zorder=1, marker='x', color='C0', linestyle='solid')
-
-
-
-
-plt.legend()
-plt.xlabel('Total delay $\ell$')
-plt.ylabel('Total video interrupt rate ratio')
-plt.savefig('ratio_num_clients_'+str(num_clients)+'_regime_selection_'+str(regime_selection)+'_runs_'+str(RUNS)+'.pdf')
-plt.show()
 
