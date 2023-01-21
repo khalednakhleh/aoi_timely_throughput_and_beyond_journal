@@ -1,0 +1,3 @@
+idx,beta,clientVars,mu,delay,lambda,p,q,packet_deadline_array,delay_time_array,mc,channel_states,A_t,U_t,D_t,tot_interrupt_rate,theoretical_interrupt_rate,qoe_penalty,vwd_deficit,avg_tot_interrupt_rate,avg_interrupt_over_runs,qoe_penalty_constant,activations
+1,1,0.0859376577917013,0.125,4,0.125,0.98,0.14,,,,,57309,5214,5191,0.010382,0.0107422072239627,0.000215571848,0,0,0,2,0
+1,1,0.0859376577917013,0.125,4,0.125,0.98,0.14,,,,,57309,5214,5191,0.010382,0.0107422072239627,0.000215571848,0,0,0,2,0
