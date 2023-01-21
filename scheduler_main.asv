@@ -41,7 +41,7 @@ date_file_name = strcat(date_file_name, foldername);
 
 %% get theoretical mean and variance values
 
-% 42823 for p 0.3 and q 0.3 lambda 0.5
+% 42823 for p 0.3 and q 0.3 lam
 % 5346 for q 0.15 p 0.6 lambda 0.2
 SEED = 5346;  %5346
 
