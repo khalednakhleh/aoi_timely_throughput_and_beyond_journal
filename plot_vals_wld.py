@@ -10,11 +10,11 @@ import matplotlib as mpl
 #mpl.use('pgf')
 
 
-WIDTH = 14 
-HEIGHT = 3.5 
+WIDTH = 8 
+HEIGHT = 7 
 
-plt.rcParams['font.size'] = 14 
-plt.rcParams['legend.fontsize'] = 14 
+plt.rcParams['font.size'] = 11
+plt.rcParams['legend.fontsize'] = 20
 
 plt.rcParams['pdf.fonttype'] = 42 
 plt.rcParams['ps.fonttype'] = 42
@@ -34,7 +34,7 @@ delay_total_vals = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] # these 
 
 UNDERLOADED_C_CONSTANT = 0.15
 
-folder_name = (f'results/policy_{selected_policy}_regime_selection_{regime_selection}_tot_timesteps_{timesteps}_num_clients_{num_clients}_tot_delay_')
+folder_name = (f'results/clients_1_p_0.6_q_0.15_lambda_0.2/policy_{selected_policy}_regime_selection_{regime_selection}_tot_timesteps_{timesteps}_num_clients_{num_clients}_tot_delay_')
 
 
 ######################
@@ -81,6 +81,7 @@ plt.plot(delay_total_vals, tot_theoretical_values, label='Theoretical $Q_i$', zo
 
 #plt.yscale('log')
 
+plt.xticks(delay_total_vals)
 
 plt.legend()
 plt.xlabel('Total delay $\ell$')
