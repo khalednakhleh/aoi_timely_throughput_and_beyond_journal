@@ -10,7 +10,7 @@ kIterator = 100;
 
 assert( length(p) == num_clients);
 assert( length(q) == num_clients);
-assert(all(period == period(1))); % check that we have the same period value for all clients. 
+assert(all(periods == periods(1))); % check that we have the same period value for all clients. 
 
 %%%%%%%%%%%%%%%%%%% optimization %%%%%%%%%%%%%%%%%%%%%%%
 MS = CalculateMeans(num_clients, p, q); % ms for the entire set
@@ -40,7 +40,7 @@ fprintf("channel mean: %.16f\n", MS)
 fprintf("channel variance: %.16f\n", varChannel)
 
 clientVars = solution.vars;
-mu = 1/periods;
+mu = 1./periods;
 
 end
 

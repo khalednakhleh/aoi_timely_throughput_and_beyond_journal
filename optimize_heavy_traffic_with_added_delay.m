@@ -21,13 +21,11 @@ prob = optimproblem('ObjectiveSense', 'minimize');
 vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', 100000);
 
 
-weights = randi([10 100],1, num_clients); % pick random integers in range for the number of clients we have.
+weights = randi([10 100], 1, num_clients) % pick random integers in range for the number of clients we have.
 
-objectiveFunction = sum(vars ./ (2.*delays) + weights.*(delays.^2));
+objectiveFunction = sum((vars ./ (2.*delays)) + (weights.*(delays.^2)));
 
 prob.Objective = objectiveFunction;
-
-
 
 prob.Constraints.varConstraint = sum(sqrt(vars)) == sqrt(varChannel);
 
@@ -45,7 +43,7 @@ fprintf("channel variance: %.16f\n", varChannel)
 
 clientVars = solution.vars;
 
-mu = 1/periods;
+mu = 1./periods;
 
 end
 

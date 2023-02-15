@@ -13,11 +13,8 @@ global clients num_clients
 
 for x = 1 : num_clients
 
-    if(regime_selection == 1 && x<(floor(num_clients/2))) % if client is an AoI client
-     clients(x).theoretical_vwd_rate = -0.5 * (vars(x)/(mu(x)^2) + (((1/mu(x)) + 1)) + (periods(x)) - 1);
-     clients(x).theoretical_wld_rate = -0.5 * (vars(x)/(mu(x)^2) + (((1/mu(x)) + 1)) + (periods(x)) - 1);
-     clients(x).theoretical_dbldf_rate = -0.5 * (vars(x)/(mu(x)^2) + (((1/mu(x)) + 1)) + (periods(x)) - 1);
-
+    if(regime_selection == 1 && x<=(floor(num_clients/2))) % if client is an AoI client
+     clients(x).theoretical_vwd_rate = 0.5 * (clients(x).clientVars /(clients(x).mu^2) + 1/clients(x).mu) + clients(x).period - 0.5;
     else
      clients(x).theoretical_vwd_rate = (clients(x).clientVars / (2*clients(x).delay));
      clients(x).theoretical_wld_rate = (sigma_tot^2 / (2*sum(delays)^2));

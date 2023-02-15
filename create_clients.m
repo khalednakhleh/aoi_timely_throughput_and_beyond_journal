@@ -2,15 +2,15 @@
 
 
 
-function create_clients(clients, delays, lambdas, p, q, num_clients, mu, clientVars)
+function create_clients(clients, delays, periods, p, q, num_clients, mu, clientVars)
 
-global delays num_clients p q lambdas clients mu clientVars  tot_timesteps
+global delays num_clients p q periods clients mu clientVars  tot_timesteps
 
 for x = 1 : num_clients
 
     clients(x).idx = x;
     clients(x).delay = delays(x);
-    clients(x).lambda = lambdas(x);
+    clients(x).period = periods(x);
     clients(x).clientVars = clientVars(x);
     clients(x).mu = mu(x);
     clients(x).p = p(x);

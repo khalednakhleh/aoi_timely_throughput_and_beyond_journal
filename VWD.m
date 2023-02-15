@@ -48,7 +48,7 @@ for time = 1 : tot_timesteps
     
     end
     
-    schedule_and_update_parameters(client_to_schedule, clients, time, tot_timesteps, num_clients, regime_selection);
+    schedule_and_update_parameters(client_to_schedule, clients, time, tot_timesteps, num_clients);
     
     for x = 1 : num_clients
             clients(x).vwd_deficit = time*clients(x).mu - clients(x).activations;

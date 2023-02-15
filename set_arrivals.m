@@ -7,7 +7,7 @@ global clients num_clients tot_timesteps
 
   for x = 1 : num_clients 
 
-      arrival_every_timeslots = 1/clients(x).lambda;
+      arrival_every_timeslots = clients(x).period;
       
       mustBeInteger(arrival_every_timeslots);
       repeating_array = [1, repelem( 0, arrival_every_timeslots-1)];
@@ -22,7 +22,7 @@ global clients num_clients tot_timesteps
 
       
       clients(x).packet_deadline_array = inds; % times at which we generate a packet (available to transmit at end of timestep)
-      clients(x).delay_time_array = inds + (clients(x).delay / clients(x).lambda); % time for a packet's deadline
+      clients(x).delay_time_array = inds + (clients(x).delay * clients(x).period); % time for a packet's deadline
       
   end
 

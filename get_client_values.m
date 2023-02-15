@@ -7,30 +7,38 @@ function [delays, periods, p, q] = get_client_values(num_clients)
 % p_n: prob of going from ON to OFF channel.
 % q_n: prob of going from OFF to ON channel.
 
+if num_clients == 1
+interval = 0.1;
+starting_q = 0.3;
+delay_interval = 10;
+starting_factor = 0.9;
+
+elseif num_clients == 5
 % for 5 clients
+interval = 0.1;
+starting_q = 0.3;
+delay_interval = 10;
+starting_factor = 0.9;
 
-%interval = 0.1;
-%starting_q = 0.3;
-%delay_interval = 10;
-%starting_factor = 0.9;
-
+elseif num_clients == 10
 % for 10 clients
-%interval = 0.05;
-%starting_q = 0.25;
-%delay_interval = 10;
-%starting_factor = 0.95;
+interval = 0.05;
+starting_q = 0.25;
+delay_interval = 10;
+starting_factor = 0.95;
 
+elseif num_clients == 20
 % for 20 clients
 interval = 0.025;
 starting_q = 0.15;
 delay_interval = 4;
 starting_factor = 0.95;
 
+else
+    error("number of clients not implemented. exiting.");
+end
+
 delays = zeros(1,num_clients);
-
-
-
-
 period_val = num_clients + 1;
 
 

@@ -32,7 +32,7 @@ for time = 1 : tot_timesteps
     
     for x = 1 : num_clients
         if (ismember(x, index))
-        deficit_on(x) = (clients(x).lambda * time - (clients(x).A_t));  % calculate deficit per ON client.
+        deficit_on(x) = ((time/clients(x).period) - (clients(x).A_t));  % calculate deficit per ON client.
         end
     end
      
@@ -41,7 +41,7 @@ for time = 1 : tot_timesteps
 
     end
     
-    schedule_and_update_parameters(client_to_schedule, clients, time, tot_timesteps, num_clients, regime_selection);
+    schedule_and_update_parameters(client_to_schedule, clients, time, tot_timesteps, num_clients);
     
     
     

@@ -12,11 +12,12 @@ global periods tot_timesteps clients date_file_name
 %% Constants
 
 RUNS = 1;
-num_clients = 20; 
-tot_timesteps = 50000;
-selected_policy = 1;  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD. 
+num_clients = 5; 
+tot_timesteps = 100;
+selected_policy = 6;  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD. 
 regime_selection = 1; % 1 for heavy-traffic with clients optimizing AoI. 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
+%% Making directories
 
 % make results' directory 
 if not(isfolder('results'))
@@ -25,7 +26,6 @@ end
 
 date_file_name = sprintf('results/');
 if not(isfolder(date_file_name))
-    
     mkdir(date_file_name);
 end
 
@@ -33,13 +33,11 @@ end
 foldername = sprintf('policy_%d_regime_selection_%d_tot_timesteps_%d_num_clients_%d', selected_policy, regime_selection, tot_timesteps, num_clients);
 
 date_file_name = strcat(date_file_name, foldername);
-
 %% get theoretical mean and variance values
 
 SEED = 5346;
 
 rng(SEED);
-
 
 [delays, periods, p, q] = get_client_values(num_clients);
 
@@ -49,7 +47,7 @@ if (regime_selection == 1)
   [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_aoi_clients(num_clients, p, q, periods, delays);
 elseif(regime_selection == 2)
   [MS, varChannel, mu, clientVars] = optimize_heavy_traffic(num_clients, p, q, periods, delays);
-eliseif(regime_selection == 3)
+elseif(regime_selection == 3)
   [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods, delays);
 else
     error("ERROR: selected regime is not implemeneted. Exiting.");
@@ -103,12 +101,12 @@ end
         clients(x).channel_states = [];
     end
     
-    save_run_results(clients, num_clients, current_run, selected_policy, regime_selection); % to save theoretical values as well.
+    save_run_results(clients, num_clients, current_run); % to save theoretical values as well.
 
 end
 
 % to save theoretical values as well.
-save_run_results(clients, num_clients, RUNS, selected_policy, regime_selection); 
+save_run_results(clients, num_clients, RUNS); 
 
 
 % print the last run values
@@ -127,7 +125,7 @@ disp('DONE')
 
 %% utility functions
 
-function save_run_results(clients, num_clients, current_run, selected_policy, regime_selection)
+function save_run_results(clients, num_clients, current_run)
 
 global clients num_clients date_file_name
 
