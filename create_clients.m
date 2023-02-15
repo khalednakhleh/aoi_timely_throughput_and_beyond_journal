@@ -30,6 +30,10 @@ for x = 1 : num_clients
     clients(x).theoretical_interrupt_rate = 0; % same for all clients.
     clients(x).vwd_deficit = 0; % only for VWD. Deficit from previous timestep.
     clients(x).activations = 0; % for VWD policy only.
+
+    % for AoI only
+    clients(x).current_aoi_array = []; % for clients with AoI objective function.
+    clients(x).time_since_last_packet_was_generated = 1; 
     
 end
 
