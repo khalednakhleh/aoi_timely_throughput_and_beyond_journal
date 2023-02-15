@@ -6,13 +6,14 @@ format long
 
 clc, clear all
 warning('off','all')
-global mu MS varChannel clientVars delays num_clients p q 
-global periods tot_timesteps clients date_file_name
+global mu MS varChannel clientVars delay_total delays num_clients p q 
+global periods betas tot_timesteps clients qoe_penalty_constant date_file_name
 
 %% Constants
 
 RUNS = 1;
-num_clients = 20; 
+delay_total = 20; % \delta_tot in paper
+num_clients = 1; 
 tot_timesteps = 500000;
 selected_policy = 1;  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD. 
 regime_selection = 2; % 1 for heavy-traffic with clients optimizing AoI. 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
@@ -30,7 +31,7 @@ if not(isfolder(date_file_name))
 end
 
 
-foldername = sprintf('policy_%d_regime_selection_%d_tot_timesteps_%d_num_clients_%d', selected_policy, regime_selection, tot_timesteps, num_clients);
+foldername = sprintf('policy_%d_regime_selection_%d_tot_timesteps_%d_num_clients_%d_tot_delay_%d', selected_policy, regime_selection, tot_timesteps, num_clients, delay_total);
 
 date_file_name = strcat(date_file_name, foldername);
 
@@ -41,17 +42,14 @@ SEED = 5346;
 rng(SEED);
 
 
-[delays, periods, p, q] = get_client_values(num_clients);
+[betas, delays, periods, p, q, qoe_penalty_constant] = get_client_values(num_clients, delay_total)
 
-
-
-%{
 if (regime_selection == 1)
   [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_aoi_clients(num_clients, p, q, periods, delays);
 elseif(regime_selection == 2)
   [MS, varChannel, mu, clientVars] = optimize_heavy_traffic(num_clients, p, q, periods, delays);
 eliseif(regime_selection == 3)
-  [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods, delays);
+  [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods,);
 else
     error("ERROR: selected regime is not implemeneted. Exiting.");
 end
@@ -67,9 +65,9 @@ for current_run = 1 : RUNS
   
   clients = repmat(struct('idx', {}, 'beta', {}, 'clientVars', {}, 'mu' , {}, 'delay', {}, 'period', {}, 'p', {}, 'q', {}, 'packet_deadline_array', {}, 'delay_time_array', {}, ...
   'mc', {}, 'channel_states', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {},...
-  'theoretical_vwd_rate', {}, 'theoretical_wld_rate', {}, 'theoretical_edf_rate', {}, 'theoretical_dbldf_rate', {}, 'vwd_deficit', {}), num_clients);
+  'theoretical_vwd_rate', {}, 'theoretical_wld_rate', {}, 'theoretical_edf_rate', {}, 'theoretical_dbldf_rate', {}, 'qoe_penalty', {}, 'vwd_deficit', {}), num_clients);
 
-  create_clients(clients, delays, periods, p, q, num_clients, mu, clientVars);
+  create_clients(clients, betas, delays, periods, p, q, num_clients, qoe_penalty_constant, mu, clientVars);
   set_arrivals(tot_timesteps); % generates packets with their respective delays.
   calculate_theoretical_interrupt_rate(clients, num_clients, regime_selection);
   
@@ -160,5 +158,3 @@ end
 
 end
 
-
-%}

@@ -3,14 +3,14 @@
 % regime
 
 
-function [MS, varChannel, mu, clientVars] = optimizer_over_loaded(num_clients, p, q, lambdas, delays)
+function [MS, varChannel, mu, clientVars] = optimize_heavy_traffic(num_clients, p, q, lambdas, delays)
 
 % lambdas are the arrival rates
 kIterator = 100;
 
 assert( length(p) == num_clients);
 assert( length(q) == num_clients);
-
+assert()
 
 %%%%%%%%%%%%%%%%%%% optimization %%%%%%%%%%%%%%%%%%%%%%%
 MS = CalculateMeans(num_clients, p, q); % ms for the entire set
@@ -26,7 +26,7 @@ prob.Objective = objectiveFunction;
 
 
 
-prob.Constraints.varConstraint = sum(sqrt(vars)) >= sqrt(varChannel);
+prob.Constraints.varConstraint = sum(sqrt(vars)) = sqrt(varChannel);
 
 
 x0.vars = rand(size(vars));

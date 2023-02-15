@@ -3,7 +3,7 @@
 % regime
 
 
-function [MS, varChannel, means, clientVars] = optimizer_under_loaded(num_clients, p, q, lambdas, delays)
+function [MS, varChannel, means, clientVars] = optimize_heavy_traffic_with_aoi_clients(num_clients, p, q, lambdas, delays)
 
 
 kIterator = 100;

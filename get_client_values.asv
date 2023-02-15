@@ -1,0 +1,64 @@
+
+
+
+
+function [delays, periods, p, q] = get_client_values(num_clients, delay_total)
+
+% p_n: prob of going from ON to OFF channel.
+% q_n: prob of going from OFF to ON channel.
+
+
+
+
+delays = zeros(1,num_clients);
+
+
+
+
+period_val = num_clients + 1;
+
+
+period_sum = 0;
+
+
+for x = 1 : num_clients
+    periods(x) = period_val;
+    delays(x) = 10 + 5*x;    % setting the delay value here. 
+    period_sum = period_sum + (1/periods(x));
+end
+
+period_sum
+pq_ratio = nthroot(1 - period_sum, num_clients) 
+p_ratio = pq_ratio / (1 - pq_ratio) % p is equal this value * q. 
+
+
+q(1) = 0.3%0.25875; % the first q value 
+p(1) = q(1) * p_ratio; 
+starting_factor = 0.9;
+
+for x = 1 : num_clients 
+    if x == 1 
+        continue 
+    end
+        p(x) = starting_factor*pq_ratio;
+        q(x) = starting_factor*(1 - pq_ratio);
+        starting_factor = starting_factor - 0.1;
+end 
+
+
+
+
+
+
+assert(length(p) == num_clients);
+assert(length(q) == num_clients);
+assert(length(delays) == num_clients);
+assert(length(periods) == num_clients);
+
+delays 
+periods 
+
+
+
+
+end
