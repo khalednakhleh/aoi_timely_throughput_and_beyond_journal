@@ -9,7 +9,6 @@ global num_clients tot_timesteps clients
 
 for x = 1 : num_clients
     clients(x).tot_interrupt_rate = clients(x).D_t / tot_timesteps;
-    clients(x).qoe_penalty = (clients(x).qoe_penalty_constant *(clients(x).D_t / tot_timesteps)^2 );
 end
 
 

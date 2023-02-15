@@ -70,7 +70,7 @@ for current_run = 1 : RUNS
 
   create_clients(clients, delays, periods, p, q, num_clients, mu, clientVars);
   set_arrivals(tot_timesteps); % generates packets with their respective delays.
-  calculate_theoretical_interrupt_rate(clients, num_clients, sqrt(varChannel), delays);
+  calculate_theoretical_interrupt_rate(clients, num_clients, sqrt(varChannel), delays, regime_selection);
   
 
 if num_clients == 1 % to print the table if there's one client (for debugging).
@@ -81,23 +81,22 @@ end
 
     % actual scheduling loop.
     if selected_policy == 1
-       WLD(clients, num_clients, tot_timesteps);
+       WLD(clients, num_clients, tot_timesteps, regime_selection);
     
     elseif selected_policy == 3
-       EDF(clients, num_clients, tot_timesteps);
+       EDF(clients, num_clients, tot_timesteps, regime_selection);
     
     elseif selected_policy == 4
-       DBLDF(clients, num_clients, tot_timesteps);
+       DBLDF(clients, num_clients, tot_timesteps, regime_selection);
 
     elseif selected_policy == 6
-       VWD(clients, num_clients, tot_timesteps);
+       VWD(clients, num_clients, tot_timesteps, regime_selection);
   
     else
        error("ERROR: selected policy not found.");
         
     end
 
-    
     for x = 1 : num_clients % empty-out the packets arrays after finishing the run for better value saving.
         clients(x).packet_deadline_array = [];
         clients(x).delay_time_array = [];

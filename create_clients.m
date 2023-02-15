@@ -24,10 +24,10 @@ for x = 1 : num_clients
     clients(x).A_t = 0;
     clients(x).U_t = 0;
     clients(x).D_t = 0;
-    clients(x).avg_tot_interrupt_rate = 0; % stores the average over time. 
+    clients(x).avg_tot_interrupt_rate = 0; % stores the average over time.
+    clients(x).avg_tot_interrupt_rate_per_timestep = []; % stores the current avg. for every timestep.
     clients(x).avg_interrupt_over_runs = 0; % the same for all clients.
     clients(x).theoretical_interrupt_rate = 0; % same for all clients.
-    clients(x).qoe_penalty = 0; % same for all clients.
     clients(x).vwd_deficit = 0; % only for VWD. Deficit from previous timestep.
     clients(x).activations = 0; % for VWD policy only.
     
