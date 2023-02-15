@@ -3,7 +3,7 @@
 % regime
 
 
-function [MS, varChannel, mu, clientVars] = optimize_heavy_traffic(num_clients, p, q, lambdas, delays)
+function [MS, varChannel, mu, clientVars] = optimize_heavy_traffic(num_clients, p, q, periods, delays)
 
 % lambdas are the arrival rates
 kIterator = 100;
@@ -20,10 +20,9 @@ prob = optimproblem('ObjectiveSense', 'minimize');
 
 vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', 100000);
 
-objectiveFunction = sum(vars ./ (2.*delays));
+objectiveFunction = sum((delays.^2).*(vars ./ (2.*delays))); % setting the weights as delays^2.
 
 prob.Objective = objectiveFunction;
-
 
 
 prob.Constraints.varConstraint = sum(sqrt(vars)) == sqrt(varChannel);
@@ -41,8 +40,8 @@ fprintf("channel mean: %.16f\n", MS)
 fprintf("channel variance: %.16f\n", varChannel)
 
 clientVars = solution.vars;
+mu = 1/periods;
 
-mu = lambdas;
 end
 
 %% functions 

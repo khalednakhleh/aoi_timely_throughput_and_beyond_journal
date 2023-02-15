@@ -3,7 +3,7 @@
 % regime
 
 
-function [MS, varChannel, mu, clientVars] = optimize_heavy_traffic(num_clients, p, q, lambdas, delays)
+function [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods, delays)
 
 % lambdas are the arrival rates
 kIterator = 100;
@@ -20,13 +20,16 @@ prob = optimproblem('ObjectiveSense', 'minimize');
 
 vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', 100000);
 
-objectiveFunction = sum(vars ./ (2.*delays));
+
+weights = randi([10 100],1, num_clients); % pick random integers in range for the number of clients we have.
+
+objectiveFunction = sum(vars ./ (2.*delays) + weights.*(delays.^2));
 
 prob.Objective = objectiveFunction;
 
 
 
-prob.Constraints.varConstraint = sum(sqrt(vars)) >= sqrt(varChannel);
+prob.Constraints.varConstraint = sum(sqrt(vars)) == sqrt(varChannel);
 
 
 x0.vars = rand(size(vars));
@@ -42,7 +45,8 @@ fprintf("channel variance: %.16f\n", varChannel)
 
 clientVars = solution.vars;
 
-mu = lambdas;
+mu = 1/periods;
+
 end
 
 %% functions 

@@ -13,9 +13,9 @@ global periods tot_timesteps clients date_file_name
 
 RUNS = 1;
 num_clients = 20; 
-tot_timesteps = 500000;
+tot_timesteps = 50000;
 selected_policy = 1;  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD. 
-regime_selection = 2; % 1 for heavy-traffic with clients optimizing AoI. 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
+regime_selection = 1; % 1 for heavy-traffic with clients optimizing AoI. 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
 
 % make results' directory 
@@ -45,7 +45,6 @@ rng(SEED);
 
 
 
-%{
 if (regime_selection == 1)
   [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_aoi_clients(num_clients, p, q, periods, delays);
 elseif(regime_selection == 2)
@@ -67,11 +66,11 @@ for current_run = 1 : RUNS
   
   clients = repmat(struct('idx', {}, 'beta', {}, 'clientVars', {}, 'mu' , {}, 'delay', {}, 'period', {}, 'p', {}, 'q', {}, 'packet_deadline_array', {}, 'delay_time_array', {}, ...
   'mc', {}, 'channel_states', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {},...
-  'theoretical_vwd_rate', {}, 'theoretical_wld_rate', {}, 'theoretical_edf_rate', {}, 'theoretical_dbldf_rate', {}, 'vwd_deficit', {}), num_clients);
+  'theoretical_vwd_rate', {}, 'theoretical_wld_rate', {}, 'theoretical_dbldf_rate', {}, 'vwd_deficit', {}), num_clients);
 
   create_clients(clients, delays, periods, p, q, num_clients, mu, clientVars);
   set_arrivals(tot_timesteps); % generates packets with their respective delays.
-  calculate_theoretical_interrupt_rate(clients, num_clients, regime_selection);
+  calculate_theoretical_interrupt_rate(clients, num_clients, sqrt(varChannel), delays);
   
 
 if num_clients == 1 % to print the table if there's one client (for debugging).
@@ -161,4 +160,4 @@ end
 end
 
 
-%}
+

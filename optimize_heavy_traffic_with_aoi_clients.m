@@ -1,34 +1,15 @@
 % author: Khaled Nakhleh
-% optimizer for the Gilbert-Elliot channel model for the under-loaded
+% optimizer for the Gilbert-Elliot channel model for the over-loaded
 % regime
 
 
-function [MS, varChannel, means, clientVars] = optimize_heavy_traffic_with_aoi_clients(num_clients, p, q, lambdas, delays)
+function [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_aoi_clients(num_clients, p, q, periods, delays)
 
-
+% lambdas are the arrival rates
 kIterator = 100;
-epsilon = 0.00001;
 
-
-assert(length(p) == num_clients);
-assert(length(q) == num_clients);
-
-a = 1:1:num_clients;
-
-values = partitions(a);
-C = {};
-
-for i = 1 : length(values)
-    for j = 1 : length(values{i})
-        C(end + 1) = values{i}(j);
-    end
-end
-
-B = cellfun(@(v)sort(char(v)),C,'uni',0);
-C = cellfun(@double,unique(B),'uni',0);
-
-
-meanConstraints = optimconstr(length(C) - 1, 1);
+assert( length(p) == num_clients);
+assert( length(q) == num_clients);
 
 
 %%%%%%%%%%%%%%%%%%% optimization %%%%%%%%%%%%%%%%%%%%%%%
@@ -37,72 +18,45 @@ varChannel = calculateChannelVar(num_clients, p,q, kIterator);
 
 prob = optimproblem('ObjectiveSense', 'minimize');
 
-mu = optimvar('mu', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', MS);
 vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', 100000);
 
 
-objectiveFunction = sum(exp(((-2.*(mu - lambdas))./vars).*delays))
+weights = randi([10 100],1, num_clients); % pick random integers in range for the number of clients we have.
 
+
+aoi_clients_num = floor(num_clients/2); % will be 2 for the case of 5 clients. 5 for 10 total clients, and 10 for 20 total clients.
+throughput_clients_num = num_clients - aoi_clients_num;
+
+assert(throughput_clients_num + aoi_clients_num == num_clients);
+
+
+obj_func_aoi = -0.5 .* (vars(1:aoi_clients_num)./(mu(1:aoi_clients_num).^2) + (((1./mu(1:aoi_clients_num)) + 1)) + (periods(1:aoi_clients_num)) - 1);
+obj_func_throughput = vars(aoi_clients_num+1:num_clients) ./ (2.*delays(aoi_clients_num+1:num_clients));
+
+
+objectiveFunction = sum(obj_func_aoi + obj_func_throughput);
 
 prob.Objective = objectiveFunction;
 
 
-for i = 1 : length(C)
-        
-        if length((C{i})) == num_clients
-            continue
-        end
-        a(C{i});
-        pVals = p(a(C{i}));
-        qVals = q(a(C{i}));
-        ms = CalculateMeans(length(a(C{i})), pVals, qVals);
-        meanConstraints(i) =  sum(mu(a(C{i}))) <= (ms - epsilon);
-        meanConstraints(i);
-        %fprintf("--------------------")
-end
+
+prob.Constraints.varConstraint = sum(sqrt(vars)) == sqrt(varChannel);
 
 
+x0.vars = rand(size(vars));
 
-prob.Constraints.meanMainSetConstraint = sum(mu) == MS;
-prob.Constraints.varConstraint = sum(sqrt(vars)) >= sqrt(varChannel);
-prob.Constraints.means = meanConstraints;
-
-
-x0.mu = zeros(size(mu));
-x0.vars = zeros(size(vars));
-
-
-if num_clients > 1
 solution = solve(prob, x0)
-means = solution.mu;
-clientVars = solution.vars;
 
 for i = 1:num_clients
-    fprintf("client %d mean: %.14f\n",i, solution.mu(i))
     fprintf("client %d variance: %.14f\n",i, solution.vars(i))
 end
 
 fprintf("channel mean: %.16f\n", MS)
 fprintf("channel variance: %.16f\n", varChannel)
 
+clientVars = solution.vars;
 
-else
-    means = MS;
-    clientVars = varChannel;
-    
-    
-for i = 1:num_clients
-    fprintf("client %d mean: %.14f\n",i,  means)
-    fprintf("client %d variance: %.14f\n",i, clientVars)
-end
-
-fprintf("channel mean: %.16f\n", MS)
-fprintf("channel variance: %.16f\n", varChannel)
-
-
-end
-
-
+mu = 1/periods;
 
 end
 
@@ -140,7 +94,7 @@ end
 
 
 GBeforeSum = (prod(G,1) - prod(pOverQ)).*prod(pOverQ);
-
+%sum(GBeforeSum)
 varChannel = 2*sum(GBeforeSum) + prod(pOverQ) - (prod(pOverQ))^2;
 
 
