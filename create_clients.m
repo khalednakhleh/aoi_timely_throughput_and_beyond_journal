@@ -34,9 +34,10 @@ for x = 1 : num_clients
     clients(x).activations = 0; % for VWD policy only.
 
     % for AoI only
-    clients(x).current_aoi_array = []; % for clients with AoI objective function.
-    clients(x).time_since_last_packet_was_generated = 1;
+    clients(x).current_aoi_array = [1]; % for clients with AoI objective function.
+    clients(x).time_since_last_packet_was_generated = 0;
     clients(x).aoi_lambda = lambdas(x);
+    clients(x).avg_tot_aoi_value = [];
 
     
 end

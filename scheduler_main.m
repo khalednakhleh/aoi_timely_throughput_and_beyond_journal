@@ -13,11 +13,17 @@ global periods tot_timesteps date_file_name lambdas clients
 
 RUNS = 1;
 num_clients = 5; 
-tot_timesteps = 10;
+tot_timesteps = 100;
 selected_policy = 6;  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
-regime_selection = 1; % 1 for heavy-traffic with clients optimizing AoI. 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
+regime_selection = 1; % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
+
 
 %% Making directories
+
+
+if regime_selection == 1
+assert(selected_policy == 6)
+end
 
 % make results' directory 
 if not(isfolder('results'))
@@ -76,9 +82,6 @@ if num_clients == 1 % to print the table if there's one client (for debugging).
     one_client_table = struct2table(structArray);
 end
 
-
-end
-%{
     % actual scheduling loop.
     if selected_policy == 1
        WLD(clients, num_clients, tot_timesteps, regime_selection);
@@ -97,7 +100,7 @@ end
         
     end
 
-    save_run_results(clients, num_clients, current_run); % to save theoretical values as well.
+    save_run_results(clients, num_clients, current_run, regime_selection); % to save theoretical values as well.
 
 end
 
@@ -117,7 +120,7 @@ disp('DONE')
 
 %% utility functions
 
-function save_run_results(clients, num_clients, current_run)
+function save_run_results(clients, num_clients, current_run, regime_selection)
 
 global clients num_clients date_file_name
 
@@ -137,17 +140,23 @@ for x = 1 : num_clients
 current_client_file = sprintf('/client_%d.csv', x);
 client_filename = strcat(date_file_name, current_client_file);
 
-clients(x).current_aoi_array;
-clients(x).avg_tot_interrupt_rate_per_timestep;
 
-aoi_vals_per_time = clients(x).current_aoi_array';
-delay_vals_per_time = clients(x).avg_tot_interrupt_rate_per_timestep';
+if (regime_selection == 1 && x <= floor(num_clients/2)) % aoi client 
 
+aoi_vals_per_time = clients(x).current_aoi_array';%avg_tot_aoi_value';
 clients(x).current_aoi_array = []; % empty out after storing the values. 
+time_table = table(aoi_vals_per_time);
+writetable(time_table, client_filename);
+
+else
+delay_vals_per_time = clients(x).avg_tot_interrupt_rate_per_timestep';
 clients(x).avg_tot_interrupt_rate_per_timestep = [];
 
-time_table = table(delay_vals_per_time);%, aoi_vals_per_time);
+time_table = table(delay_vals_per_time);
 writetable(time_table, client_filename);
+
+end
+
 
 end
 
@@ -167,5 +176,5 @@ end
 
 end
 
-%}
+
 

@@ -41,7 +41,7 @@ for time = 1 : tot_timesteps
 
     end
     
-    schedule_and_update_parameters(client_to_schedule, clients, time, tot_timesteps, num_clients);
+    schedule_and_update_parameters(client_to_schedule, clients, time, tot_timesteps, num_clients, regime_selection);
     
     
     
