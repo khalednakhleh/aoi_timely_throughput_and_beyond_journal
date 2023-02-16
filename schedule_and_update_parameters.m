@@ -39,7 +39,7 @@ for x = 1 : num_clients
     else
         if(isempty(clients(x).delay_time_array))
             clients(x).current_aoi_array(end+1) = max(1, current_timestep - clients(x).time_since_last_packet_was_generated);
-            continue
+            %continue
         else
         if (current_timestep >= clients(x).delay_time_array(1))
         clients(x).delay_time_array(1) = [];
