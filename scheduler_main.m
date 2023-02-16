@@ -14,7 +14,7 @@ global periods tot_timesteps clients date_file_name
 RUNS = 1;
 num_clients = 5; 
 tot_timesteps = 10;
-selected_policy = 1;  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD. 
+selected_policy = 6;  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
 regime_selection = 2; % 1 for heavy-traffic with clients optimizing AoI. 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
 %% Making directories

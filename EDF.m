@@ -32,7 +32,7 @@ for time = 1 : tot_timesteps
     for x = 1 : num_clients
        if (ismember(x, index))
            if(isempty(clients(x).delay_time_array))
-            deadline_list(x) = tot_timesteps*2; % other value that we don't consider.
+            deadline_list(x) = 999999999999999; % other value that we don't consider.
            else
            deadline_list(x) = clients(x).delay_time_array(1);
            end
