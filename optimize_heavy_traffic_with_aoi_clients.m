@@ -3,7 +3,7 @@
 % regime
 
 
-function [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_aoi_clients(num_clients, p, q, periods, delays)
+function [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_aoi_clients(num_clients, p, q, periods, delays, lambdas)
 
 % lambdas are the arrival rates
 kIterator = 100;
@@ -21,8 +21,6 @@ prob = optimproblem('ObjectiveSense', 'minimize');
 vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', 100000);
 
 
-%aoi_clients_num = ceil(num_clients/2) % will be 2 for the case of 5 clients. 5 for 10 total clients, and 10 for 20 total clients.
-
 aoi_clients_num = floor(num_clients/2); % will be 2 for the case of 5 clients. 5 for 10 total clients, and 10 for 20 total clients.
 
 throughput_clients_num = num_clients - aoi_clients_num;
@@ -32,12 +30,12 @@ assert(throughput_clients_num + aoi_clients_num == num_clients);
 mu = 1./periods;
 
 % AoI objective function according to equation 14.
-obj_func_aoi = sum(0.5.*(vars(1:aoi_clients_num)./(mu(1:aoi_clients_num).^2) + (1./mu(1:aoi_clients_num))) + periods(1:aoi_clients_num) - 0.5);
+obj_func_aoi = sum(0.5.*(vars(1:aoi_clients_num)./(mu(1:aoi_clients_num).^2) + (1./mu(1:aoi_clients_num))) + 1/lambdas(1:aoi_clients_num) - 0.5);
 obj_func_throughput = sum(vars(aoi_clients_num+1:num_clients) ./ (2.*delays(aoi_clients_num+1:num_clients)));
 final_objective = obj_func_aoi + obj_func_throughput;
 
-objectiveFunction = final_objective;
 
+objectiveFunction = final_objective;
 prob.Objective = objectiveFunction;
 
 

@@ -2,7 +2,7 @@
 
 
 
-function [delays, periods, p, q] = get_client_values(num_clients)
+function [delays, periods, p, q, lambdas] = get_client_values(num_clients)
 
 % p_n: prob of going from ON to OFF channel.
 % q_n: prob of going from OFF to ON channel.
@@ -77,6 +77,18 @@ for x = 1 : num_clients
     prod_val = prod_val*(p(x) / (p(x) + q(x)));
 end
 
+
+
+% for aoi clients only (generate for total number of clients even though we use floor(num_clients/2))
+
+
+lambda_max_range = 1 / num_clients;
+lambda_min_range = 0.1 / num_clients;
+
+lambdas = (lambda_max_range-lambda_min_range).*rand(num_clients,1) + lambda_min_range;
+
+
+
 prod_val;
 value_to_compare_against = 1 - period_sum;
 
@@ -88,7 +100,7 @@ assert(sum(p > 1) == 0)
 assert(sum(p < 0) == 0) % ensure that sum of elements violating condition is zero.
 assert(sum(q > 1) == 0)
 assert(sum(q < 0) == 0) % ensure that sum of elements violating condition is zero.
-
+assert(length(lambdas) == num_clients)
 
 
 

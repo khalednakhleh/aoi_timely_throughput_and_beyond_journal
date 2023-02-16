@@ -1,12 +1,14 @@
 
 
-function set_arrivals(tot_timesteps)
+function set_arrivals(tot_timesteps, regime_selection)
 
-global clients num_clients tot_timesteps
+global clients num_clients
 
 
   for x = 1 : num_clients 
-
+  if(regime_selection == 1 && x <= floor(num_clients/2)) % if client is a aoi client.
+  continue
+  else % if client is a delay client.
       arrival_every_timeslots = clients(x).period;
       
       mustBeInteger(arrival_every_timeslots);
@@ -23,6 +25,8 @@ global clients num_clients tot_timesteps
       
       clients(x).packet_deadline_array = inds; % times at which we generate a packet (available to transmit at end of timestep)
       clients(x).delay_time_array = inds + (clients(x).delay * clients(x).period); % time for a packet's deadline
+
+  end
       
   end
 

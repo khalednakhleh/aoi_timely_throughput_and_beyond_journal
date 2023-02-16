@@ -7,7 +7,7 @@ format long
 clc, clear all
 warning('off','all')
 global mu MS varChannel clientVars delays num_clients p q 
-global periods tot_timesteps clients date_file_name
+global periods tot_timesteps date_file_name lambdas clients
 
 %% Constants
 
@@ -15,7 +15,7 @@ RUNS = 1;
 num_clients = 5; 
 tot_timesteps = 10;
 selected_policy = 6;  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
-regime_selection = 2; % 1 for heavy-traffic with clients optimizing AoI. 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
+regime_selection = 1; % 1 for heavy-traffic with clients optimizing AoI. 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
 %% Making directories
 
@@ -39,12 +39,11 @@ SEED = 5346;
 
 rng(SEED);
 
-[delays, periods, p, q] = get_client_values(num_clients);
-
+[delays, periods, p, q, lambdas] = get_client_values(num_clients);
 
 
 if (regime_selection == 1)
-  [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_aoi_clients(num_clients, p, q, periods, delays);
+  [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_aoi_clients(num_clients, p, q, periods, delays, lambdas);
 elseif(regime_selection == 2)
   [MS, varChannel, mu, clientVars] = optimize_heavy_traffic(num_clients, p, q, periods, delays);
 elseif(regime_selection == 3)
@@ -66,8 +65,8 @@ for current_run = 1 : RUNS
   'mc', {}, 'channel_states', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {},...
   'theoretical_vwd_rate', {}, 'theoretical_wld_rate', {}, 'theoretical_dbldf_rate', {}, 'vwd_deficit', {}), num_clients);
 
-  create_clients(clients, delays, periods, p, q, num_clients, mu, clientVars);
-  set_arrivals(tot_timesteps); % generates packets with their respective delays.
+  create_clients(clients, delays, periods, p, q, num_clients, mu, clientVars, lambdas);
+  set_arrivals(tot_timesteps, regime_selection); % generates packets with their respective delays.
   calculate_theoretical_interrupt_rate(clients, num_clients, sqrt(varChannel), delays, regime_selection);
   
 
@@ -77,6 +76,9 @@ if num_clients == 1 % to print the table if there's one client (for debugging).
     one_client_table = struct2table(structArray);
 end
 
+
+end
+%{
     % actual scheduling loop.
     if selected_policy == 1
        WLD(clients, num_clients, tot_timesteps, regime_selection);
@@ -165,5 +167,5 @@ end
 
 end
 
-
+%}
 
