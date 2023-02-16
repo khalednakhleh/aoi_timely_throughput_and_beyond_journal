@@ -95,18 +95,9 @@ end
         
     end
 
-    for x = 1 : num_clients % empty-out the packets arrays after finishing the run for better value saving.
-        clients(x).packet_deadline_array = [];
-        clients(x).delay_time_array = [];
-        clients(x).channel_states = [];
-    end
-    
     save_run_results(clients, num_clients, current_run); % to save theoretical values as well.
 
 end
-
-% to save theoretical values as well.
-save_run_results(clients, num_clients, RUNS); 
 
 
 % print the last run values
@@ -120,7 +111,6 @@ all_clients_table = struct2table(clients)
 end
 
 disp('DONE')
-
 
 
 %% utility functions
@@ -138,6 +128,25 @@ for x = 1 : num_clients % clearing out the arrays before saving the final result
     clients(x).packet_deadline_array = [];
     clients(x).delay_time_array = [];
     clients(x).channel_states = [];
+end
+
+
+for x = 1 : num_clients
+current_client_file = sprintf('/client_%d.csv', x);
+client_filename = strcat(date_file_name, current_client_file);
+
+clients(x).current_aoi_array;
+clients(x).avg_tot_interrupt_rate_per_timestep;
+
+aoi_vals_per_time = clients(x).current_aoi_array';
+delay_vals_per_time = clients(x).avg_tot_interrupt_rate_per_timestep';
+
+clients(x).current_aoi_array = []; % empty out after storing the values. 
+clients(x).avg_tot_interrupt_rate_per_timestep = [];
+
+time_table = table(delay_vals_per_time);%, aoi_vals_per_time);
+writetable(time_table, client_filename);
+
 end
 
 
