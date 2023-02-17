@@ -17,19 +17,21 @@ for x = 1 : num_clients
      if (x == client_to_schedule)
 
          if (randsrc(1, 1, [1 0; clients(x).aoi_lambda 1 - clients(x).aoi_lambda]) == 1) % if there is a packet to transmit 
+             %fprintf("!!!!!!!!!!!!!!packet received for scheduled client: %d", x)
          clients(x).time_since_last_packet_was_generated = current_timestep;
          clients(x).current_aoi_array(end+1) = 1;
 
          else % if there is no packet to transmit
-             if (current_timestep == 1)
-                 clients(x).current_aoi_array(end+1) = current_timestep + 1 - clients(x).time_since_last_packet_was_generated;
-             else
+             %if (current_timestep == 1)
                  clients(x).current_aoi_array(end+1) = current_timestep - clients(x).time_since_last_packet_was_generated;
-             end
+             %else
+             %    clients(x).current_aoi_array(end+1) = current_timestep - clients(x).time_since_last_packet_was_generated;
+             %end
          end
      
      else
          if (randsrc(1, 1, [1 0; clients(x).aoi_lambda 1 - clients(x).aoi_lambda]) == 1) % if there is a packet to transmit 
+             %fprintf("!!!!!!!!!!!!!!packet received for non-scheduled client: %d", x)
          clients(x).time_since_last_packet_was_generated = current_timestep;
          clients(x).current_aoi_array(end+1) = clients(x).current_aoi_array(end) + 1; 
          else

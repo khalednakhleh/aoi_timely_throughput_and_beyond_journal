@@ -11,9 +11,9 @@ global periods tot_timesteps date_file_name lambdas clients
 
 %% Constants
 
-RUNS = 1;
+RUNS = 3;
 num_clients = 5; 
-tot_timesteps = 100;
+tot_timesteps = 20;
 selected_policy = 6;  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
 regime_selection = 1; % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
@@ -41,7 +41,7 @@ foldername = sprintf('policy_%d_regime_selection_%d_tot_timesteps_%d_num_clients
 date_file_name = strcat(date_file_name, foldername);
 %% get theoretical mean and variance values
 
-SEED = 5346;
+SEED = 79436827;
 
 rng(SEED);
 
@@ -137,7 +137,7 @@ end
 
 
 for x = 1 : num_clients
-current_client_file = sprintf('/client_%d.csv', x);
+current_client_file = sprintf('/client_%d_run_%d.csv', x, current_run);
 client_filename = strcat(date_file_name, current_client_file);
 
 
