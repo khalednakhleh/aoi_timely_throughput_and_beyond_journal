@@ -6,7 +6,7 @@
 function schedule_and_update_parameters(client_to_schedule, clients, current_timestep, tot_timesteps, num_clients, regime_selection)
 
 
-global num_clients tot_timesteps clients
+global num_clients tot_timesteps clients delay_counter
 
 %fprintf('\n++++++ schedule_and_update_parameters++++++++++++\n')
 
@@ -47,6 +47,8 @@ for x = 1 : num_clients
     
 
     else   % update throughput client values
+
+        delay_counter = delay_counter + 1;
 
     if (x == client_to_schedule)
         if(~isempty(clients(x).packet_deadline_array))
