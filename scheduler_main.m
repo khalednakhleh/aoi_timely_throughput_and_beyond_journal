@@ -11,9 +11,9 @@ global periods tot_timesteps date_file_name lambdas clients delay_counter
 
 %% Constants
 delay_counter = 0;
-RUNS = 1;
+RUNS = 10;
 num_clients = 20; 
-tot_timesteps = 50;
+tot_timesteps = 150000;
 selected_policy = 6;  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
 regime_selection = 1; % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
@@ -143,7 +143,7 @@ client_filename = strcat(date_file_name, current_client_file);
 
 if (regime_selection == 1 && x <= floor(num_clients/2)) % aoi client 
 
-aoi_vals_per_time = clients(x).avg_tot_aoi_value';
+aoi_vals_per_time = clients(x).current_aoi_array';
 clients(x).current_aoi_array = []; % empty out after storing the values. 
 clients(x).avg_tot_aoi_value = [];
 time_table = table(aoi_vals_per_time);

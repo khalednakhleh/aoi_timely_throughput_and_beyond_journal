@@ -9,20 +9,21 @@ if num_clients == 1
 interval = 0.1;
 starting_q = 0.3;
 starting_factor = 0.9;
+initial_delay_value = [20];
 
 elseif num_clients == 5
 % for 5 clients
 interval = 0.1;
 starting_q = 0.3;
 starting_factor = 0.9;
-initial_delay_value = [18,19,20,21,22]; 
+initial_delay_value = [20,21,22,23,24]; 
 
 elseif num_clients == 10
 % for 10 clients
 interval = 0.05;
 starting_q = 0.2326;
 starting_factor = 0.9;
-initial_delay_value = [2,2,2,2,2,3,3,3,3,3];
+initial_delay_value = [11,12,13,14,15,16,17,18,19,20];
 
 
 elseif num_clients == 20
@@ -30,7 +31,7 @@ elseif num_clients == 20
 interval = 0.025;
 starting_q = 0.15;
 starting_factor = 0.95;
-initial_delay_value = [5,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6,6];
+initial_delay_value = [2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11]; %[5,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6,6];
 
 else
     error("number of clients not implemented. exiting.");

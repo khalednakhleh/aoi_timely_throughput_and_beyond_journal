@@ -5,14 +5,14 @@ import numpy as np
 
 
 regime_selection = 1
-num_clients = [10]# 10, 20]
+num_clients = [5, 10, 20]
 
-timeslots = 300000
-policies = [6]
+timeslots = 150000
+policies = [6]#[1,3,4,6]
 labels = ['WLD', 'EDF', 'DBLDF', 'VWD'] # labels must match the policies order
 
 num_runs = 10
-plotting_interval = 60000
+plotting_interval = 30000
 
 
 def average_results(current_policy, current_num_clients, regime_selection):
@@ -31,7 +31,7 @@ def average_results(current_policy, current_num_clients, regime_selection):
             df = pd.read_csv(directory+f"client_{current_client}_run_{current_run}.csv")
 
             value_to_plot = df.iloc[:,0]
-            print(np.shape(value_to_plot), f"current_client {current_client}. current run {current_run}. policy {current_policy}")
+            #print(np.shape(value_to_plot), f"current_client {current_client}. current run {current_run}. policy {current_policy}")
 
             if (regime_selection == 1 and current_client <= np.floor(current_num_clients/2)):
                 timeslots_divide = np.arange(1, timeslots+1)
@@ -66,7 +66,9 @@ def plot_theoretical_values(current_policy, current_num_clients, regime_selectio
 
     elif current_policy == 6:
         theoretical_value = df["theoretical_vwd_rate"]
-
+    
+    elif current_policy == 3:
+        pass
     else:
         print("ERROR: theoretical value selected policy does not exist.")
         exit(1)
@@ -99,12 +101,12 @@ for current_client in num_clients:
 
 
     # set the title and axis labels
-    axs[i].set_title('Plot {}'.format(i+1))
+    axs[i].set_title('N = {}'.format(current_client))
     if i == 0:
-        axs[i].set_ylabel('Y label')
+        axs[i].set_ylabel('$\sum_i \alpha_i Q_i$')
 
     if i == 1:
-        axs[i].set_xlabel('X label')
+        axs[i].set_xlabel('Timesteps')
     
 
     axs[i].set_xticks(np.arange(0,timeslots+plotting_interval-1,plotting_interval))

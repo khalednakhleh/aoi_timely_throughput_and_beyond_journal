@@ -71,7 +71,8 @@ for x = 1 : num_clients
         end 
     else
         if(isempty(clients(x).delay_time_array))
-            continue
+            %disp("in ifempty");
+            % do nothing
         else
         if (current_timestep >= clients(x).delay_time_array(1))
         clients(x).delay_time_array(1) = [];

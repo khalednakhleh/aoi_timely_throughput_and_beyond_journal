@@ -61,4 +61,8 @@ end
 calculate_interrupt_rate(clients, num_clients, tot_timesteps);
 
 
+for x = 1 : num_clients
+disp(length(clients(x).avg_tot_interrupt_rate_per_timestep))
+end
+
 end
