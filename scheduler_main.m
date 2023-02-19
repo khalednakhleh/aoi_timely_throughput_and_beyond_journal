@@ -12,7 +12,7 @@ global periods tot_timesteps date_file_name lambdas clients delay_counter
 %% Constants
 delay_counter = 0;
 RUNS = 1;
-num_clients = 5; 
+num_clients = 20; 
 tot_timesteps = 50;
 selected_policy = 6;  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
 regime_selection = 1; % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
@@ -48,8 +48,6 @@ rng(SEED);
 
 
 
-
-
 if (regime_selection == 1)
   [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_aoi_clients(num_clients, p, q, periods, delays, lambdas);
 elseif(regime_selection == 2)
@@ -60,16 +58,16 @@ else
     error("ERROR: selected regime is not implemeneted. Exiting.");
 end
 
-%{
+
 %% Generate the channel sequences for the clients
 
 for current_run = 1 : RUNS
     fprintf('++++++++++++++++++++++++++++++++++++++++++++++\n')
     fprintf('RUN %d\n', current_run)
 
-  rng(SEED + current_run*10); % reseeding for each run
+  rng(SEED + current_run*100); % reseeding for each run
   
-  clients = repmat(struct('idx', {}, 'beta', {}, 'clientVars', {}, 'mu' , {}, 'delay', {}, 'period', {}, 'p', {}, 'q', {}, 'packet_deadline_array', {}, 'delay_time_array', {}, ...
+  clients = repmat(struct('idx', {}, 'clientVars', {}, 'mu' , {}, 'delay', {}, 'period', {}, 'p', {}, 'q', {}, 'packet_deadline_array', {}, 'delay_time_array', {}, ...
   'mc', {}, 'channel_states', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {},...
   'theoretical_vwd_rate', {}, 'theoretical_wld_rate', {}, 'theoretical_dbldf_rate', {}, 'vwd_deficit', {}), num_clients);
 
@@ -118,7 +116,7 @@ end
 
 
 disp('DONE')
-disp(delay_counter)
+%disp(delay_counter)
 
 %% utility functions
 
@@ -145,8 +143,9 @@ client_filename = strcat(date_file_name, current_client_file);
 
 if (regime_selection == 1 && x <= floor(num_clients/2)) % aoi client 
 
-aoi_vals_per_time = clients(x).current_aoi_array';%avg_tot_aoi_value';
+aoi_vals_per_time = clients(x).avg_tot_aoi_value';
 clients(x).current_aoi_array = []; % empty out after storing the values. 
+clients(x).avg_tot_aoi_value = [];
 time_table = table(aoi_vals_per_time);
 writetable(time_table, client_filename);
 
@@ -177,9 +176,6 @@ writetable(struct2table(clients), filename);
 end
 
 end
-
-
-%}
 
 
 

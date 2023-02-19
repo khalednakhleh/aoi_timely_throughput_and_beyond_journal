@@ -105,5 +105,7 @@ assert(length(lambdas) == num_clients)
 lambdas;
 delays;
 periods;
+p;
+q;
 
 end
