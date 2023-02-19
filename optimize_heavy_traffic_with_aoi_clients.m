@@ -30,14 +30,11 @@ assert(throughput_clients_num + aoi_clients_num == num_clients);
 mu = 1./periods;
 
 % AoI objective function according to equation 14.
-obj_func_aoi = sum(0.5.*(vars(1:aoi_clients_num)./(mu(1:aoi_clients_num).^2) + (1./mu(1:aoi_clients_num))) + 1/lambdas(1:aoi_clients_num) - 0.5);
+obj_func_aoi = sum(0.5.*(vars(1:aoi_clients_num)./(mu(1:aoi_clients_num).^2) + (1./mu(1:aoi_clients_num))) + (1./lambdas(1:aoi_clients_num)) - 0.5);
 obj_func_throughput = sum(vars(aoi_clients_num+1:num_clients) ./ (2.*delays(aoi_clients_num+1:num_clients)));
-final_objective = obj_func_aoi + obj_func_throughput;
 
-
-objectiveFunction = final_objective;
+objectiveFunction = obj_func_aoi + obj_func_throughput;
 prob.Objective = objectiveFunction;
-
 
 prob.Constraints.varConstraint = sum(sqrt(vars)) == sqrt(varChannel);
 
@@ -54,7 +51,6 @@ fprintf("channel mean: %.16f\n", MS)
 fprintf("channel variance: %.16f\n", varChannel)
 
 clientVars = solution.vars;
-
 
 
 end

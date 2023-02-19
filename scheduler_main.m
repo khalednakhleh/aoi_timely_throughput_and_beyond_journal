@@ -11,12 +11,11 @@ global periods tot_timesteps date_file_name lambdas clients delay_counter
 
 %% Constants
 delay_counter = 0;
-RUNS = 2;
+RUNS = 1;
 num_clients = 5; 
-tot_timesteps = 300000;
-selected_policy = 3  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
-regime_selection = 2; % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
-
+tot_timesteps = 50;
+selected_policy = 6;  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
+regime_selection = 1; % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
 %% Making directories
 
@@ -48,6 +47,9 @@ rng(SEED);
 [delays, periods, p, q, lambdas] = get_client_values(num_clients);
 
 
+
+
+
 if (regime_selection == 1)
   [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_aoi_clients(num_clients, p, q, periods, delays, lambdas);
 elseif(regime_selection == 2)
@@ -58,7 +60,7 @@ else
     error("ERROR: selected regime is not implemeneted. Exiting.");
 end
 
-
+%{
 %% Generate the channel sequences for the clients
 
 for current_run = 1 : RUNS
@@ -175,6 +177,9 @@ writetable(struct2table(clients), filename);
 end
 
 end
+
+
+%}
 
 
 

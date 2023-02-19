@@ -1,7 +1,5 @@
 
 
-
-
 function [delays, periods, p, q, lambdas] = get_client_values(num_clients)
 
 % p_n: prob of going from ON to OFF channel.
@@ -10,32 +8,29 @@ function [delays, periods, p, q, lambdas] = get_client_values(num_clients)
 if num_clients == 1
 interval = 0.1;
 starting_q = 0.3;
-delay_interval = 5;
 starting_factor = 0.9;
 
 elseif num_clients == 5
 % for 5 clients
 interval = 0.1;
 starting_q = 0.3;
-delay_interval = 1;
 starting_factor = 0.9;
-initial_delay_value = 18; % here we add from 20 using interval of 2. or 10 and increment of 1 
+initial_delay_value = [18,19,20,21,22]; 
 
 elseif num_clients == 10
 % for 10 clients
 interval = 0.05;
-starting_q = 0.25;
-delay_interval = 10;
-starting_factor = 0.95;
-initial_delay_value = 10;
+starting_q = 0.2326;
+starting_factor = 0.9;
+initial_delay_value = [2,2,2,2,2,3,3,3,3,3];
+
 
 elseif num_clients == 20
 % for 20 clients
 interval = 0.025;
 starting_q = 0.15;
-delay_interval = 4;
 starting_factor = 0.95;
-initial_delay_value = 10;
+initial_delay_value = [5,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6,6];
 
 else
     error("number of clients not implemented. exiting.");
@@ -50,7 +45,7 @@ period_sum = 0;
 
 for x = 1 : num_clients
     periods(x) = period_val;
-    delays(x) = initial_delay_value + delay_interval*(x-1);    % setting the delay value here. 
+    delays(x) = initial_delay_value(x); %initial_delay_value + delay_interval*(x-1); % % setting the delay value here. 
     period_sum = period_sum + (1/periods(x));
 end
 
@@ -88,12 +83,13 @@ end
 lambda_max_range = 1 / num_clients;
 lambda_min_range = 0.1 / num_clients;
 
-lambdas = (lambda_max_range-lambda_min_range).*rand(num_clients,1) + lambda_min_range;
-
+lambdas = (lambda_max_range-lambda_min_range).*rand(1,num_clients) + lambda_min_range;
 
 
 prod_val;
 value_to_compare_against = 1 - period_sum;
+
+
 
 assert(length(p) == num_clients);
 assert(length(q) == num_clients);
@@ -106,5 +102,8 @@ assert(sum(q < 0) == 0) % ensure that sum of elements violating condition is zer
 assert(length(lambdas) == num_clients)
 
 
+lambdas;
+delays;
+periods;
 
 end
