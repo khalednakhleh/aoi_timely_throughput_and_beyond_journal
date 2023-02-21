@@ -31,7 +31,7 @@ mu = 1./periods;
 
 % AoI objective function according to equation 14.
 obj_func_aoi = sum(0.5.*(vars(1:aoi_clients_num)./(mu(1:aoi_clients_num).^2) + (1./mu(1:aoi_clients_num))) + (1./lambdas(1:aoi_clients_num)) - 0.5);
-obj_func_throughput = sum(vars(aoi_clients_num+1:num_clients) ./ (2.*delays(aoi_clients_num+1:num_clients)));
+obj_func_throughput = sum((delays(aoi_clients_num+1:num_clients).^2).*(vars(aoi_clients_num+1:num_clients) ./ (2.*delays(aoi_clients_num+1:num_clients))));
 
 objectiveFunction = obj_func_aoi + obj_func_throughput;
 prob.Objective = objectiveFunction;

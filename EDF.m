@@ -51,6 +51,6 @@ for time = 1 : tot_timesteps
     
 end
 
-calculate_interrupt_rate(clients, num_clients, tot_timesteps);
+calculate_interrupt_rate(clients, num_clients, tot_timesteps, regime_selection);
 
 end

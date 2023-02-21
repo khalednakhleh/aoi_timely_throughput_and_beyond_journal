@@ -58,11 +58,8 @@ for time = 1 : tot_timesteps
    %fprintf('\n----------------------------------------------------------------\n')
 end
 
-calculate_interrupt_rate(clients, num_clients, tot_timesteps);
+calculate_interrupt_rate(clients, num_clients, tot_timesteps, regime_selection);
 
 
-for x = 1 : num_clients
-disp(length(clients(x).avg_tot_interrupt_rate_per_timestep))
-end
 
 end
