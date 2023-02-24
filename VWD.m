@@ -6,7 +6,7 @@
 
 function VWD(clients, num_clients, tot_timesteps, regime_selection)
 
-global num_clients tot_timesteps clients
+global num_clients tot_timesteps clients 
 
 
 for time = 1 : tot_timesteps

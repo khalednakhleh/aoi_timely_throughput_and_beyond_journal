@@ -3,7 +3,7 @@
 % regime
 
 
-function [MS, varChannel, mu, clientVars] = optimize_heavy_traffic(num_clients, p, q, periods, delays)
+function [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic(num_clients, p, q, periods, delays)
 
 % lambdas are the arrival rates
 kIterator = 100;
@@ -27,6 +27,7 @@ prob.Objective = objectiveFunction;
 
 prob.Constraints.varConstraint = sum(sqrt(vars)) == sqrt(varChannel);
 
+weights = ones(1,num_clients);
 
 x0.vars = rand(size(vars));
 

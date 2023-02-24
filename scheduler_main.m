@@ -6,16 +6,16 @@ format long
 
 clc, clear all
 warning('off','all')
-global mu MS varChannel clientVars delays num_clients p q 
+global mu MS varChannel clientVars delays num_clients p q weights
 global periods tot_timesteps date_file_name lambdas clients delay_counter
 
 %% Constants
 delay_counter = 0;
 RUNS = 1;
-num_clients = 5; 
-tot_timesteps = 300000;
+num_clients = 10; 
+tot_timesteps = 1000000;
 selected_policy = 6  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
-regime_selection = 1 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
+regime_selection = 2 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
 %% Making directories
 
@@ -51,9 +51,9 @@ rng(SEED);
 if (regime_selection == 1)
   [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_aoi_clients(num_clients, p, q, periods, delays, lambdas);
 elseif(regime_selection == 2)
-  [MS, varChannel, mu, clientVars] = optimize_heavy_traffic(num_clients, p, q, periods, delays);
+  [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic(num_clients, p, q, periods, delays);
 elseif(regime_selection == 3)
-  [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods, delays);
+  [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods, delays);
 else
     error("ERROR: selected regime is not implemeneted. Exiting.");
 end
@@ -67,14 +67,30 @@ for current_run = 1 : RUNS
 
   rng(SEED + current_run*100); % reseeding for each run
   
-  clients = repmat(struct('idx', {}, 'clientVars', {}, 'period', {}, 'p', {}, 'q', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {},...
+  clients = repmat(struct('idx', {}, 'clientVars', {}, 'period', {}, 'p', {}, 'q', {}, 'activations', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {},...
   'theoretical_vwd_rate', {}, 'theoretical_wld_rate', {}, 'theoretical_dbldf_rate', {}, 'vwd_deficit', {},'packet_deadline_array', {}, 'delay_time_array', {}, ...
   'mc', {}, 'channel_states', {}, 'mu' , {}, 'delay', {}), num_clients);
 
   create_clients(clients, delays, periods, p, q, num_clients, mu, clientVars, lambdas);
   set_arrivals(tot_timesteps, regime_selection); % generates packets with their respective delays.
   calculate_theoretical_interrupt_rate(clients, num_clients, sqrt(varChannel), delays, regime_selection);
-  
+  %struct2table(clients)
+
+vwd_sum_theoretical_value = 0;
+wld_sum_theoretical_value = 0;
+dbldf_sum_theoretical_value = 0;
+
+  for x = 1 : num_clients
+
+vwd_sum_theoretical_value = vwd_sum_theoretical_value + clients(x).theoretical_vwd_rate;
+wld_sum_theoretical_value = wld_sum_theoretical_value + clients(x).theoretical_wld_rate;
+dbldf_sum_theoretical_value = dbldf_sum_theoretical_value + clients(x).theoretical_dbldf_rate;
+
+end
+vwd_sum_theoretical_value
+wld_sum_theoretical_value
+dbldf_sum_theoretical_value
+
 
 if num_clients == 1 % to print the table if there's one client (for debugging).
     structArray(1) = clients;
@@ -111,23 +127,11 @@ all_clients_table = struct2table(clients)
 end
 
 
-vwd_sum_theoretical_value = 0;
-wld_sum_theoretical_value = 0;
-dbldf_sum_theoretical_value = 0;
 
 
-for x = 1 : num_clients
 
-vwd_sum_theoretical_value = vwd_sum_theoretical_value + clients(x).theoretical_vwd_rate;
-wld_sum_theoretical_value = wld_sum_theoretical_value + clients(x).theoretical_wld_rate;
-dbldf_sum_theoretical_value = dbldf_sum_theoretical_value + clients(x).theoretical_dbldf_rate;
+    save_run_results(clients, num_clients, current_run, regime_selection); % to save theoretical values as well.
 
-end
-vwd_sum_theoretical_value
-wld_sum_theoretical_value
-dbldf_sum_theoretical_value
-
-    %save_run_results(clients, num_clients, current_run, regime_selection); % to save theoretical values as well.
 
 end
 

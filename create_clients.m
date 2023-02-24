@@ -4,7 +4,7 @@
 
 function create_clients(clients, delays, periods, p, q, num_clients, mu, clientVars, lambdas)
 
-global tot_timesteps clients
+global tot_timesteps clients weights
 
 for x = 1 : num_clients
 
@@ -28,6 +28,7 @@ for x = 1 : num_clients
     clients(x).avg_tot_interrupt_rate_per_timestep = []; % stores the current avg. for every timestep.
     clients(x).avg_interrupt_over_runs = 0;    
     clients(x).theoretical_interrupt_rate = 0; % same for all runs.
+    clients(x).weight = weights(x);
 
     % for vwd only
     clients(x).vwd_deficit = 0; % only for VWD. Deficit from previous timestep d(t-1).
