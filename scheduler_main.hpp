@@ -14,7 +14,10 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <fstream>
-
+#include <random>
+#include <math.h>
+#include <cmath>
+#include <memory>
 
 struct InputParams {
     int num_clients;
@@ -81,29 +84,72 @@ void read_values_from_file(Client& client, const std::string& fileName, InputPar
 
 
 class BaseScheduler {
-
-private:
-    std::list<Client>& my_clients; 
-
 public:
+    std::list<Client>& my_clients; 
+    std::default_random_engine generator;
+    std::uniform_real_distribution<double> distribution;
+    
+    InputParams params;
+    bool* states;
 
-    BaseScheduler(std::list<Client>& my_clients) : my_clients{my_clients};
+    BaseScheduler(std::list<Client>& my_clients, InputParams params) 
+        : my_clients{my_clients}, generator{}, distribution{0.0, 1.0}, params{params}, states{new bool[params.num_clients]}
+    {}
 
+    void get_clients_channel_states(); // get current channel state at the current timestep.
 
-    void get_clients_channel_states();
-
-
-
-
-
+    std::vector<int> check_clients_in_on_channel();
 }; // class BaseScheduler
 
 
 
+class VWD : public BaseScheduler {
+public:
+    // constructor that calls BaseScheduler constructor
+    VWD(std::list<Client>& my_clients, InputParams params) 
+        : BaseScheduler(my_clients, params) {
+        // additional constructor code for VWD class
+    }
+    
+    // additional member functions for VWD class
+};
 
 
 
 
+
+class WLD : public BaseScheduler {
+public:
+    // constructor that calls BaseScheduler constructor
+    WLD(std::list<Client>& my_clients, InputParams params) 
+        : BaseScheduler(my_clients, params) {
+        // additional constructor code for WLD class
+    }
+    
+    // additional member functions for WLD class
+};
+
+
+class EDF : public BaseScheduler {
+public:
+    // constructor that calls BaseScheduler constructor
+    EDF(std::list<Client>& my_clients, InputParams params) 
+        : BaseScheduler(my_clients, params) {
+        // additional constructor code for EDF class
+    }
+    
+    // additional member functions for EDF class
+};
+
+
+class DBLDF : public BaseScheduler {
+public:
+    // constructor that calls BaseScheduler constructor
+    DBLDF(std::list<Client>& my_clients, InputParams params) 
+        : BaseScheduler(my_clients, params) {}
+    
+    // additional member functions for DBLDF class
+};
 
 
 

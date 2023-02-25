@@ -112,3 +112,40 @@ void read_values_from_file(Client& client, const std::string& fileName, InputPar
     }
 } // void read_values_from_file
 
+
+
+
+void BaseScheduler::get_clients_channel_states() {
+    int i = 0;
+    for (auto it = my_clients.begin(); it != my_clients.end(); ++it) {
+        Client& client = *it;
+        double number = distribution(generator);
+        if (states[i]) {
+            if (number < client.p) {
+                states[i] = 0;
+            }
+        } else {
+            if (number < client.q) {
+                states[i] = 1;
+            }
+        }
+        ++i;
+    }
+
+
+}; // void BaseScheduler::get_clients_channel_states
+
+
+
+std::vector<int> BaseScheduler::check_clients_in_on_channel() {
+    std::vector<int> clients_on_channel;
+    int i = 0;
+    for (auto it = my_clients.begin(); it != my_clients.end(); ++it) {
+        if (states[i] == 1) {
+            clients_on_channel.push_back(i);
+        }
+        ++i;
+    }
+    return clients_on_channel;
+};
+

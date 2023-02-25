@@ -19,9 +19,24 @@ for (int i = 0; i < params.num_clients; i++) {
 }
 
 
+//BaseScheduler scheduler(my_clients, params);
 
-
+    std::unique_ptr<BaseScheduler> scheduler_ptr;
+    if (params.policy == 6) {
+        scheduler_ptr = std::unique_ptr<BaseScheduler>(new VWD(my_clients, params));
+    } else if (params.policy == 1) {
+        scheduler_ptr = std::unique_ptr<BaseScheduler>(new WLD(my_clients, params));
+    } else if (params.policy == 3) {
+        scheduler_ptr = std::unique_ptr<BaseScheduler>(new EDF(my_clients, params));
+    } else if (params.policy == 4) {
+        scheduler_ptr = std::unique_ptr<BaseScheduler>(new DBLDF(my_clients, params));
+    } else {
+        std::cout << "Invalid policy\n";
+        return 1;
+    }
 
 //print_clients_values(my_clients);
+
+    return 0;
 
 } // int main 
