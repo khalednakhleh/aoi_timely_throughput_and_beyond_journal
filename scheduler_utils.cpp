@@ -5,7 +5,7 @@
 
 
 
-void print_clients_values(std::list<Client>& my_clients){
+void BaseScheduler::print_clients_values(){
 
 for (auto it = my_clients.begin(); it != my_clients.end(); ++it){
 
@@ -83,8 +83,17 @@ InputParams parse_input_params(int argc, char **argv) {
     return params;
 }
 
+void BaseScheduler::get_clients() {
+// setting the clients with their respective values
+for (int i = 0; i < params.num_clients; i++) {
+    //Client client(i+1);
+    std::string filename = "client_" + std::to_string(i+1) + "_values.txt";
+    read_values_from_file(i, filename, params);
+    //my_clients.push_back(client);
+}
+}; // void get_clients()
 
-void read_values_from_file(Client& client, const std::string& fileName, InputParams params) {
+void BaseScheduler::read_values_from_file(int client_index, const std::string& fileName, InputParams params) {
 
     
     std::string filepath = std::string("results/")+std::string("policy_")+std::to_string(params.policy)+\
@@ -98,21 +107,15 @@ void read_values_from_file(Client& client, const std::string& fileName, InputPar
     if (file.is_open()) {
         double delay, period, p, q, mean, variance, weight;
         while (file >> delay >> period >> p >> q >> mean >> variance >> weight) {
-            client.delay = delay;
-            client.period = period;
-            client.p = p;
-            client.q = q;
-            client.mean = mean;
-            client.variance = variance;
-            client.weight = weight;
+            Client client(client_index+1, delay, period, p, q, mean, variance, weight);
+            my_clients.push_back(client);
         }
         file.close();
+
     } else {
         std::cerr << "Error: Could not open file " << filepath+fileName << std::endl;
     }
 } // void read_values_from_file
-
-
 
 
 void BaseScheduler::get_clients_channel_states() {
@@ -149,3 +152,13 @@ std::vector<int> BaseScheduler::check_clients_in_on_channel() {
     return clients_on_channel;
 };
 
+
+void BaseScheduler::start_scheduler_loop() {
+
+
+for(int i = 0; i < params.timesteps; i++){
+    std::cout << i << std::endl;
+}
+
+
+};
