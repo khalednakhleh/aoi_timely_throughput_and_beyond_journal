@@ -18,9 +18,7 @@ for x = 1 : num_clients
     clients(x).packet_deadline_array = []; % holds info if there's a packet and its delay time. {'generation time'}.
     clients(x).delay_time_array = [];
     clients(x).mc = createmc(p(x), q(x));
-    clients(x).channel_states = simulate(clients(x).mc, tot_timesteps);
-    clients(x).channel_states(clients(x).channel_states == 2) = 0;
-    clients(x).channel_states = clients(x).channel_states(1:tot_timesteps); % this is the trajectory of on-off states
+    clients(x).current_state = 0; 
     clients(x).A_t = 0;
     clients(x).U_t = 0;
     clients(x).D_t = 0;

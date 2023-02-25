@@ -10,28 +10,22 @@ global num_clients tot_timesteps clients delay_counter
 
 %fprintf('\n++++++ schedule_and_update_parameters++++++++++++\n')
 
-for x = 1 : num_clients
+parfor x = 1 : num_clients
 
     if(regime_selection == 1 && x <= floor(num_clients/2)) % update aoi values for the client
     
      if (x == client_to_schedule)
 
          if (randsrc(1, 1, [1 0; clients(x).aoi_lambda 1 - clients(x).aoi_lambda]) == 1) % if there is a packet to transmit 
-             %fprintf("!!!!!!!!!!!!!!packet received for scheduled client: %d", x)
          clients(x).time_since_last_packet_was_generated = current_timestep;
          clients(x).current_aoi_array(end+1) = 1;
 
          else % if there is no packet to transmit
-             %if (current_timestep == 1)
                  clients(x).current_aoi_array(end+1) = current_timestep - clients(x).time_since_last_packet_was_generated;
-             %else
-             %    clients(x).current_aoi_array(end+1) = current_timestep - clients(x).time_since_last_packet_was_generated;
-             %end
          end
      
      else
          if (randsrc(1, 1, [1 0; clients(x).aoi_lambda 1 - clients(x).aoi_lambda]) == 1) % if there is a packet to transmit 
-             %fprintf("!!!!!!!!!!!!!!packet received for non-scheduled client: %d", x)
          clients(x).time_since_last_packet_was_generated = current_timestep;
          clients(x).current_aoi_array(end+1) = clients(x).current_aoi_array(end) + 1; 
          else
@@ -49,6 +43,17 @@ for x = 1 : num_clients
     else   % update throughput client values
 
         delay_counter = delay_counter + 1;
+    
+
+
+    if (x==client_to_schedule)
+
+
+
+    else % other clients that are not scheduled 
+
+    end 
+
 
     if (x == client_to_schedule)
         if(~isempty(clients(x).packet_deadline_array))

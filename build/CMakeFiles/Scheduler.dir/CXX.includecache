@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/c/repos/fresher_content_journal/scheduler_main.cpp
+scheduler_main.hpp
+/mnt/c/repos/fresher_content_journal/scheduler_main.hpp
+
+/mnt/c/repos/fresher_content_journal/scheduler_main.hpp
+stdio.h
+-
+stdlib.h
+-
+iostream
+-
+vector
+-
+list
+-
+string
+-
+cstdlib
+-
+unistd.h
+-
+fstream
+-
+
+/mnt/c/repos/fresher_content_journal/scheduler_utils.cpp
+scheduler_main.hpp
+/mnt/c/repos/fresher_content_journal/scheduler_main.hpp
+

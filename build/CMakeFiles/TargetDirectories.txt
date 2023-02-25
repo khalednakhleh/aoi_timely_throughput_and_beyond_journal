@@ -1,0 +1,4 @@
+/mnt/c/repos/fresher_content_journal/build/CMakeFiles/edit_cache.dir
+/mnt/c/repos/fresher_content_journal/build/CMakeFiles/rebuild_cache.dir
+/mnt/c/repos/fresher_content_journal/build/CMakeFiles/clean-build.dir
+/mnt/c/repos/fresher_content_journal/build/CMakeFiles/Scheduler.dir

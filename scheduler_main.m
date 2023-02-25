@@ -11,9 +11,9 @@ global periods tot_timesteps date_file_name lambdas clients delay_counter
 
 %% Constants
 delay_counter = 0;
-RUNS = 1;
-num_clients = 10; 
-tot_timesteps = 1000000;
+RUNS = 5;
+num_clients = 5; 
+tot_timesteps = 10000000;
 selected_policy = 6  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
 regime_selection = 2 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
@@ -58,7 +58,20 @@ else
     error("ERROR: selected regime is not implemeneted. Exiting.");
 end
 
+%{
+for x = 1 : num_clients
+   
+ client_array = [delays(x), periods(x), p(x), q(x), mu(x), clientVars(x), weights(x)]';
+if not(isfolder(date_file_name))
+    mkdir(date_file_name);
+end
 
+   current_client_file = sprintf('/client_%d_values.txt', x);
+   client_filename = strcat(date_file_name, current_client_file);
+   save(client_filename, 'client_array', '-ascii');
+
+end
+%}
 %% Generate the channel sequences for the clients
 
 for current_run = 1 : RUNS
@@ -72,16 +85,14 @@ for current_run = 1 : RUNS
   'mc', {}, 'channel_states', {}, 'mu' , {}, 'delay', {}), num_clients);
 
   create_clients(clients, delays, periods, p, q, num_clients, mu, clientVars, lambdas);
-  set_arrivals(tot_timesteps, regime_selection); % generates packets with their respective delays.
   calculate_theoretical_interrupt_rate(clients, num_clients, sqrt(varChannel), delays, regime_selection);
-  %struct2table(clients)
 
 vwd_sum_theoretical_value = 0;
 wld_sum_theoretical_value = 0;
 dbldf_sum_theoretical_value = 0;
 
   for x = 1 : num_clients
-
+      
 vwd_sum_theoretical_value = vwd_sum_theoretical_value + clients(x).theoretical_vwd_rate;
 wld_sum_theoretical_value = wld_sum_theoretical_value + clients(x).theoretical_wld_rate;
 dbldf_sum_theoretical_value = dbldf_sum_theoretical_value + clients(x).theoretical_dbldf_rate;
@@ -125,7 +136,6 @@ one_client_table = struct2table(structArray)
 else
 all_clients_table = struct2table(clients)
 end
-
 
 
 

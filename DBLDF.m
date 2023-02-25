@@ -8,6 +8,8 @@ global num_clients tot_timesteps clients
 
 for time = 1 : tot_timesteps
     
+    print_current_timestep(time);
+    
     %fprintf('current timestep: %d\n', time)
 
     %disp('+++++channel states++++++')

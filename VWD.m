@@ -10,6 +10,8 @@ global num_clients tot_timesteps clients
 
 
 for time = 1 : tot_timesteps
+
+    print_current_timestep(time);
     
 
     %fprintf('current timestep: %d\n', time)
@@ -35,7 +37,7 @@ for time = 1 : tot_timesteps
     deficit_on = repelem(-999999999999999999999999, num_clients);
     
     
-    for x = 1 : num_clients
+    parfor x = 1 : num_clients
         if (ismember(x, index))
         deficit_on(x) = (clients(x).vwd_deficit) / sqrt(clients(x).clientVars);  % calculate deficit per ON client.
         end
@@ -51,7 +53,7 @@ for time = 1 : tot_timesteps
     
     schedule_and_update_parameters(client_to_schedule, clients, time, tot_timesteps, num_clients, regime_selection);
     
-    for x = 1 : num_clients
+    parfor x = 1 : num_clients
             clients(x).vwd_deficit = time*clients(x).mu - clients(x).activations;
     end 
     

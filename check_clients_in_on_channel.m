@@ -12,7 +12,15 @@ index = zeros(1, num_clients);
 
 
 for x = 1 : num_clients
-    index(x) =  clients(x).channel_states(time);
+
+    clients(x).current_state = simulate(clients(x).mc, 2);
+    clients(x).current_state = clients(x).current_state(end);
+    if (clients(x).current_state == 2)
+    clients(x).current_state = 0;
+    end
+    
+
+    index(x) =  clients(x).current_state;
 end
 
 index = find(index == 1);
