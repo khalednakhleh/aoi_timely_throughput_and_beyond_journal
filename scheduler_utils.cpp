@@ -155,34 +155,40 @@ std::vector<int> BaseScheduler::check_clients_in_on_channel() {
 
 void BaseScheduler::start_scheduler_loop() {
 
-for(int i = 0; i < params.timesteps-9990000; i++){
+for(int current_timestep = 0; current_timestep < params.timesteps-9990000; current_timestep++){
     get_clients_channel_states(); // update clients' ON-OFF channel states.
-    client_to_schedule = pick_client_to_schedule(); // depends on scheduling policy.
+    client_to_schedule = pick_client_to_schedule(); // picks client in ON channel
+    //schedule_client_and_update_values(); // performs scheduling depending on the selected regime
+    //update_client_parameters(); // updates values related to deficit (depends on policy)
+
      
 
     std::cout << "client to schedule: " << client_to_schedule << std::endl; 
     // for printing the ON channel vector.
-    //for (int i = 0; i < clients_in_on_channel.size(); i++) {
-    //    std::cout << clients_in_on_channel[i] << " ";
+    //for (int i = 0; i < params.num_clients; i++) {
+    //    std::cout << states[i] << " ";
     //}
     //std::cout << std::endl << "----------------------" << std::endl;
 
 }
 
+};
+
+void BaseScheduler::schedule_client_and_update_values(){  
+
+
 
 };
 
 
+void BaseScheduler::save_results(){ // saves the arrays from each client for each run.
 
-int BaseScheduler::pick_client_to_schedule() const {
+}; // function BaseScheduler::save_results
+
+
+// picking client based on deficit (deficit defined differently for each policy)
+int BaseScheduler::pick_client_to_schedule() {
 std::cout << "base scheduler " << std::endl;  
-return -2;
-};
-
-
-int VWD::pick_client_to_schedule() const {
-std::cout << "VWD " << std::endl;  
-
 int client_to_schedule = -1; // ID of the client to be selected for scheduling.
 double max_deficit;
 int n = 0;
@@ -191,59 +197,62 @@ for (auto it = my_clients.begin(); it != my_clients.end(); it++){
 
 if(states[n] && client_to_schedule < 0){
     client_to_schedule = n;
-    max_deficit = it->vwd_deficit;
+    max_deficit = it->deficit;
 }else{
-if(states[n] && max_deficit < it->vwd_deficit){
+if(states[n] && max_deficit < it->deficit){
     client_to_schedule = n;
-    max_deficit = it->vwd_deficit;
-}
-}
-
+    max_deficit = it->deficit;
+}}
 n = n + 1;
-
 }
-
-
-
-
-
-
-
-
-
-
-//for (int n = 0; n < params.num_clients; n++){
-//if(states[n] && client_to_schedule < 0){
-//    client_to_schedule = n;
-//    max_deficit = my_clients[n].vwd_deficit;
-//}else{
-//if(states[n] && max_deficit < my_clients[n].vwd_deficit){
-//    client_to_schedule = n;
-//    max_deficit = my_clients[n].vwd_deficit;
-//}
-//}
-//} 
-
 return client_to_schedule;
+};
+
+
+void BaseScheduler::update_client_parameters() const {
+// nothing implemented here since it depends on policy.
+};
+
+
+void VWD::update_client_parameters() const {
+std::cout << "VWD " << std::endl;  
+
+
+
+// updating the VWD deficit after a client was picked
+//int x = 0;
+//for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+
+//if(x == client_to_schedule){
+//it->deficit = ((it->mean * (double)current_timestep) - );} // a client was scheduled
+
+//x = x+1;
+
+//}
+
+
 
 }; // function VWD::pick_client_to_schedule
 
 
-int WLD::pick_client_to_schedule() const {
+void WLD::update_client_parameters() const {
 std::cout << "WLD " << std::endl;  
-return 10;
-};
+
+
+}; // function WLD::pick_client_to_schedule
 
 
 
-int EDF::pick_client_to_schedule() const {
+void EDF::update_client_parameters() const {
 std::cout << "EDF " << std::endl;  
-return 20;
-};
+
+
+}; // function EDF::pick_client_to_schedule
 
 
 
-int DBLDF::pick_client_to_schedule() const {
+void DBLDF::update_client_parameters() const {
 std::cout << "DBLDF " << std::endl; 
-return 30; 
-};
+
+
+}; // function DBLDF::pick_client_to_schedule
