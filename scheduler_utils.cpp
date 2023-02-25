@@ -155,10 +155,60 @@ std::vector<int> BaseScheduler::check_clients_in_on_channel() {
 
 void BaseScheduler::start_scheduler_loop() {
 
+for(int i = 0; i < params.timesteps-9990000; i++){
+    get_clients_channel_states(); // update clients' ON-OFF channel states.
+    std::vector<int> clients_in_on_channel = check_clients_in_on_channel();
 
-for(int i = 0; i < params.timesteps; i++){
-    std::cout << i << std::endl;
+    if(clients_in_on_channel.size() == 0){
+        client_to_schedule = -1; // don't pick any client to schedule since all are in OFF channel.
+        std::cout << "no clients scheduled" << std::endl; 
+    }
+    else{
+        client_to_schedule = pick_client_to_schedule(clients_in_on_channel); // depends on scheduling policy.
+    }
+    
+    
+
+    // for printing the ON channel vector.
+    //for (int i = 0; i < clients_in_on_channel.size(); i++) {
+    //    std::cout << clients_in_on_channel[i] << " ";
+    //}
+    //std::cout << std::endl << "----------------------" << std::endl;
+
 }
 
 
+};
+
+
+
+int BaseScheduler::pick_client_to_schedule(std::vector<int> clients_on_channel) const {
+std::cout << "base scheduler " << std::endl;  
+return 1;
+};
+
+
+int VWD::pick_client_to_schedule(std::vector<int> clients_on_channel) const {
+std::cout << "VWD " << std::endl;  
+return 5;
+};
+
+
+int WLD::pick_client_to_schedule(std::vector<int> clients_on_channel) const {
+std::cout << "WLD " << std::endl;  
+return 10;
+};
+
+
+
+int EDF::pick_client_to_schedule(std::vector<int> clients_on_channel) const {
+std::cout << "EDF " << std::endl;  
+return 20;
+};
+
+
+
+int DBLDF::pick_client_to_schedule(std::vector<int> clients_on_channel) const {
+std::cout << "DBLDF " << std::endl; 
+return 30; 
 };

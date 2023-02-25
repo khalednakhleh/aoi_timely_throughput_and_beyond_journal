@@ -25,9 +25,9 @@ if (params.policy == 6) {
 }
 
 
-scheduler_ptr->get_clients();
+scheduler_ptr->get_clients(); // initialize clients given their parameters (p,q, mean, variance, weight, delay)
 scheduler_ptr->print_clients_values();
-//scheduler_ptr->start_scheduler_loop(); // main scheduling loop
+scheduler_ptr->start_scheduler_loop(); // main scheduling loop
 //scheduler_ptr->save_results();
 
 

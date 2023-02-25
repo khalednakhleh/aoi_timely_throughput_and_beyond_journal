@@ -32,8 +32,6 @@ struct InputParams {
 
 
 class Client {
-
-
 public: // defining the variables, setters, and getters.
 std::string client_type; // client can either be a "aoi" or "delay" client.
 
@@ -89,6 +87,7 @@ public:
     
     const InputParams params;
     bool* states;
+    int client_to_schedule; // index to schedule a client in a timestep
 
     std::vector<int> check_clients_in_on_channel();
 
@@ -102,6 +101,7 @@ public:
     void start_scheduler_loop(); // main iteration loop over clients.
     void save_results();
     void print_clients_values();
+    virtual int pick_client_to_schedule(std::vector<int> clients_on_channel) const;
 
     
 }; // class BaseScheduler
@@ -113,7 +113,8 @@ public:
     // constructor that calls BaseScheduler constructor
     VWD(InputParams params) : BaseScheduler(params) {}
     
-    // additional member functions for VWD class
+    int pick_client_to_schedule(std::vector<int> clients_on_channel) const override;
+
 };
 
 
@@ -123,7 +124,10 @@ public:
     // constructor that calls BaseScheduler constructor
     WLD(InputParams params) : BaseScheduler(params) {}
     
-    // additional member functions for WLD class
+
+    int pick_client_to_schedule(std::vector<int> clients_on_channel) const override;
+
+
 };
 
 
@@ -131,6 +135,9 @@ class EDF : public BaseScheduler {
 public:
     // constructor that calls BaseScheduler constructor
     EDF(InputParams params) : BaseScheduler(params) {}
+
+    int pick_client_to_schedule(std::vector<int> clients_on_channel) const override;
+
     
     // additional member functions for EDF class
 };
@@ -140,6 +147,10 @@ class DBLDF : public BaseScheduler {
 public:
     // constructor that calls BaseScheduler constructor
     DBLDF(InputParams params) : BaseScheduler(params) {}
+
+
+    int pick_client_to_schedule(std::vector<int> clients_on_channel) const override;
+
     
     // additional member functions for DBLDF class
 };
