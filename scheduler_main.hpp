@@ -56,7 +56,7 @@ double U_t; // number of dummy packets up to time t.
 double D_t; // number of dropped packets up to time t.
 
 
-double vwd_deficit; // only for the VWD policy.
+double vwd_deficit = 0.0; // only for the VWD policy.
 
 
 double get_delay();
@@ -101,7 +101,7 @@ public:
     void start_scheduler_loop(); // main iteration loop over clients.
     void save_results();
     void print_clients_values();
-    virtual int pick_client_to_schedule(std::vector<int> clients_on_channel) const;
+    virtual int pick_client_to_schedule() const;
 
     
 }; // class BaseScheduler
@@ -113,7 +113,7 @@ public:
     // constructor that calls BaseScheduler constructor
     VWD(InputParams params) : BaseScheduler(params) {}
     
-    int pick_client_to_schedule(std::vector<int> clients_on_channel) const override;
+    int pick_client_to_schedule() const override;
 
 };
 
@@ -125,7 +125,7 @@ public:
     WLD(InputParams params) : BaseScheduler(params) {}
     
 
-    int pick_client_to_schedule(std::vector<int> clients_on_channel) const override;
+    int pick_client_to_schedule() const override;
 
 
 };
@@ -136,7 +136,7 @@ public:
     // constructor that calls BaseScheduler constructor
     EDF(InputParams params) : BaseScheduler(params) {}
 
-    int pick_client_to_schedule(std::vector<int> clients_on_channel) const override;
+    int pick_client_to_schedule() const override;
 
     
     // additional member functions for EDF class
@@ -149,7 +149,7 @@ public:
     DBLDF(InputParams params) : BaseScheduler(params) {}
 
 
-    int pick_client_to_schedule(std::vector<int> clients_on_channel) const override;
+    int pick_client_to_schedule() const override;
 
     
     // additional member functions for DBLDF class

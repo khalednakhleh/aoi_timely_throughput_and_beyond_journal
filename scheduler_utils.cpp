@@ -7,7 +7,7 @@
 
 void BaseScheduler::print_clients_values(){
 
-for (auto it = my_clients.begin(); it != my_clients.end(); ++it){
+for (auto it = my_clients.begin(); it != my_clients.end(); it++){
 
 	std::cout << "-------------------------------------------" << std::endl;
 	std::cout << "Client index: " << it->idx << std::endl;
@@ -157,18 +157,10 @@ void BaseScheduler::start_scheduler_loop() {
 
 for(int i = 0; i < params.timesteps-9990000; i++){
     get_clients_channel_states(); // update clients' ON-OFF channel states.
-    std::vector<int> clients_in_on_channel = check_clients_in_on_channel();
+    client_to_schedule = pick_client_to_schedule(); // depends on scheduling policy.
+     
 
-    if(clients_in_on_channel.size() == 0){
-        client_to_schedule = -1; // don't pick any client to schedule since all are in OFF channel.
-        std::cout << "no clients scheduled" << std::endl; 
-    }
-    else{
-        client_to_schedule = pick_client_to_schedule(clients_in_on_channel); // depends on scheduling policy.
-    }
-    
-    
-
+    std::cout << "client to schedule: " << client_to_schedule << std::endl; 
     // for printing the ON channel vector.
     //for (int i = 0; i < clients_in_on_channel.size(); i++) {
     //    std::cout << clients_in_on_channel[i] << " ";
@@ -182,33 +174,76 @@ for(int i = 0; i < params.timesteps-9990000; i++){
 
 
 
-int BaseScheduler::pick_client_to_schedule(std::vector<int> clients_on_channel) const {
+int BaseScheduler::pick_client_to_schedule() const {
 std::cout << "base scheduler " << std::endl;  
-return 1;
+return -2;
 };
 
 
-int VWD::pick_client_to_schedule(std::vector<int> clients_on_channel) const {
+int VWD::pick_client_to_schedule() const {
 std::cout << "VWD " << std::endl;  
-return 5;
-};
+
+int client_to_schedule = -1; // ID of the client to be selected for scheduling.
+double max_deficit;
+int n = 0;
+
+for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+
+if(states[n] && client_to_schedule < 0){
+    client_to_schedule = n;
+    max_deficit = it->vwd_deficit;
+}else{
+if(states[n] && max_deficit < it->vwd_deficit){
+    client_to_schedule = n;
+    max_deficit = it->vwd_deficit;
+}
+}
+
+n = n + 1;
+
+}
 
 
-int WLD::pick_client_to_schedule(std::vector<int> clients_on_channel) const {
+
+
+
+
+
+
+
+
+//for (int n = 0; n < params.num_clients; n++){
+//if(states[n] && client_to_schedule < 0){
+//    client_to_schedule = n;
+//    max_deficit = my_clients[n].vwd_deficit;
+//}else{
+//if(states[n] && max_deficit < my_clients[n].vwd_deficit){
+//    client_to_schedule = n;
+//    max_deficit = my_clients[n].vwd_deficit;
+//}
+//}
+//} 
+
+return client_to_schedule;
+
+}; // function VWD::pick_client_to_schedule
+
+
+int WLD::pick_client_to_schedule() const {
 std::cout << "WLD " << std::endl;  
 return 10;
 };
 
 
 
-int EDF::pick_client_to_schedule(std::vector<int> clients_on_channel) const {
+int EDF::pick_client_to_schedule() const {
 std::cout << "EDF " << std::endl;  
 return 20;
 };
 
 
 
-int DBLDF::pick_client_to_schedule(std::vector<int> clients_on_channel) const {
+int DBLDF::pick_client_to_schedule() const {
 std::cout << "DBLDF " << std::endl; 
 return 30; 
 };
