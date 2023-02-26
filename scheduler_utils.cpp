@@ -12,8 +12,8 @@ InputParams parse_input_params(int argc, char **argv) {
         switch (opt) {
             case 'n':
                 params.num_clients = atoi(optarg);
-                if (params.num_clients != 5 && params.num_clients != 10 && params.num_clients != 20) {
-                    std::cerr << "Error: number of clients must be 5, 10, or 20." << std::endl;
+                if (params.num_clients != 1 && params.num_clients != 5 && params.num_clients != 10 && params.num_clients != 20) {
+                    std::cerr << "Error: number of clients must be 1, 5, 10, or 20." << std::endl;
                     exit(1);
                 }
                 n_set = true;
@@ -70,7 +70,7 @@ InputParams parse_input_params(int argc, char **argv) {
 
 
 void BaseScheduler::print_clients_values(){
-
+//std::cout << "im in function print_clients_values()" << std::endl;
 for (auto it = my_clients.begin(); it != my_clients.end(); it++){
 
     std::cout << "-------------------------------------------" << std::endl;
@@ -107,9 +107,7 @@ for (int i = 0; i < params.num_clients; i++) {
 void BaseScheduler::read_values_from_file(int client_index, const std::string& fileName, InputParams params) {
 
     
-    filepath = std::string("results/")+std::string("policy_")+std::to_string(params.policy)+\
-    std::string("_regime_selection_")+std::to_string(params.regime_selection)+\
-    std::string("_tot_timesteps_")+std::to_string(params.timesteps)+std::string("_num_clients_")+\
+    filepath = std::string("results/")+std::string("num_clients_")+\
     std::to_string(params.num_clients)+std::string("/");
     
 
@@ -133,14 +131,15 @@ void BaseScheduler::read_values_from_file(int client_index, const std::string& f
 void BaseScheduler::get_clients_channel_states() {
     int i = 0;
     for (auto it = my_clients.begin(); it != my_clients.end(); ++it) {
-        Client& client = *it;
+        
         double number = distribution(generator);
+        //std::cout << it->p << " " << it->q << " " << number << std::endl;
         if (states[i]) {
-            if (number < client.p) {
+            if (number < it->p) {
                 states[i] = 0;
             }
         } else {
-            if (number < client.q) {
+            if (number < it->q) {
                 states[i] = 1;
             }
         }
@@ -156,39 +155,28 @@ int i = 0;
 for(auto it = my_clients.begin(); it != my_clients.end(); ++it) {
 
 double number = distribution(generator);
+
 if(it->lambda > number){
         aoi_packets[i] = 1;
         it->time_since_aoi_packet_generated = current_timestep; // store the timestep where the packet was generated
 }else{
         aoi_packets[i] = 0;
     }
-
+//std::cout << it->lambda << " " << number << " " << aoi_packets[i] << std::endl;
 ++i;
 }
-};
-
-std::vector<int> BaseScheduler::check_clients_in_on_channel() {
-    std::vector<int> clients_on_channel;
-    int i = 0;
-    for (auto it = my_clients.begin(); it != my_clients.end(); ++it) {
-        if (states[i] == 1) {
-            clients_on_channel.push_back(i);
-        }
-        ++i;
-    }
-    return clients_on_channel;
 };
 
 
 void BaseScheduler::start_scheduler_loop() {
 
-for(int current_timestep = 0; current_timestep < params.timesteps; current_timestep++){
+for(int current_timestep = 0; current_timestep < params.timesteps-9999900; current_timestep++){
     get_clients_channel_states(); // update clients' ON-OFF channel states.
     aoi_client_packet_arrival(current_timestep); // for AoI clients.
+    update_client_parameters(current_timestep); // updates values related to deficit (depends on policy)
     client_to_schedule = pick_client_to_schedule(); // picks client in ON channel
     schedule_client_and_update_values(current_timestep); // performs scheduling depending on the selected regime
-    update_client_parameters(current_timestep); // updates values related to deficit (depends on policy)
-
+    
 
 /*
     // for printing the ON channel vector.
@@ -203,12 +191,14 @@ for(int current_timestep = 0; current_timestep < params.timesteps; current_times
 
     std::cout << "client to schedule is: " << client_to_schedule  << " at timestep " << current_timestep << std::endl;
     
-    std::cout << "client index    A_t    U_t    D_t   buffer  AoI" << std::endl;
+    std::cout << "client index    A_t    U_t    D_t   buffer  AoI  deficit(t-1)" << std::endl;
     for (auto it = my_clients.begin(); it != my_clients.end(); it++){
-        std::cout << "client " << it->idx << " " << it->A_t << " " << it->U_t << " " << it->D_t << " " << it->buffer << " " << it->AoI << " " << std::endl;
+        std::cout << "client " << it->idx << " " << it->A_t << " " << it->U_t << " " << it->D_t << " " << it->buffer << " " << it->AoI << " " << it->deficit << std::endl;
     }
     std::cout << std::endl << "----------------------" << std::endl;
+
 */
+
 }
 
 for (auto it = my_clients.begin(); it != my_clients.end(); it++){
@@ -216,7 +206,7 @@ for (auto it = my_clients.begin(); it != my_clients.end(); it++){
 }
 
 
-};
+}; // BaseScheduler::start_scheduler_loop
 
 void BaseScheduler::schedule_client_and_update_values(int current_timestep){  
 
@@ -225,7 +215,7 @@ int i = 0;
 
 for (auto it = my_clients.begin(); it != my_clients.end(); it++){
 
-if(params.regime_selection == 1 && (i <= floor(params.num_clients/2) - 1)){ // if the client is an AoI client (when selected regime is 1).
+if((params.regime_selection == 1) && (i <= floor(params.num_clients/2) - 1)){ // if the client is an AoI client (when selected regime is 1).
 
 if(client_to_schedule == i){
     it->activations = it->activations + 1; // used by vwd only.
@@ -244,8 +234,8 @@ it->aoi_values.push_back(it->AoI);
 if((current_timestep % it->period) == 0) // a packet is generated for client i
 {it->buffer = it->buffer + 1;
 
-if(it->buffer > (it->delay * it->period)){
-it->buffer = it->delay * it->period;
+if(it->buffer > (it->delay)){
+it->buffer = it->delay;
 it->D_t = it->D_t + 1;
 }
 }
@@ -316,7 +306,9 @@ if(states[n] && max_deficit < it->deficit){
     client_to_schedule = n;
     max_deficit = it->deficit;
 }}
+
 n = n + 1;
+
 }
 return client_to_schedule;
 };
@@ -338,7 +330,7 @@ it->deficit = ((it->mean * (double)current_timestep ) - it->activations) / sqrt(
 
 
 
-}; // function VWD::pick_client_to_schedule
+}; // function VWD::update_client_parameters
 
 
 void WLD::update_client_parameters(int current_timestep) {
@@ -346,11 +338,11 @@ void WLD::update_client_parameters(int current_timestep) {
 
 for (auto it = my_clients.begin(); it != my_clients.end(); it++){
 
-it->deficit = ((it->mean * (double)current_timestep ) - (it->A_t + it->U_t)) / pow(2, (it->delay)) ; 
+it->deficit = ((it->mean * (double)current_timestep ) - (it->A_t + it->U_t)) / pow((it->delay), 2) ; 
 
 }
 
-}; // function WLD::pick_client_to_schedule
+}; // function WLD::update_client_parameters
 
 
 
@@ -358,10 +350,10 @@ void EDF::update_client_parameters(int current_timestep) {
 //std::cout << "EDF " << std::endl; 
 
 for (auto it = my_clients.begin(); it != my_clients.end(); it++){
-it->deficit = -1 * it->buffer; // deficit here is the shortest buffer value.
+it->deficit = -1*(it->delay - it->buffer);
 }
 
-}; // function EDF::pick_client_to_schedule
+}; // function EDF::update_client_parameters
 
 
 
@@ -374,7 +366,7 @@ it->deficit = ((it->mean * (double)current_timestep ) - (it->A_t + it->U_t));
 
 }
 
-}; // function DBLDF::pick_client_to_schedule
+}; // function DBLDF::update_client_parameters
 
 
 

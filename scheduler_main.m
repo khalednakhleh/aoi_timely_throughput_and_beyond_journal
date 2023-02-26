@@ -11,9 +11,9 @@ global periods tot_timesteps date_file_name lambdas clients delay_counter
 
 %% Constants
 delay_counter = 0;
-RUNS = 5;
-num_clients = 5; 
-tot_timesteps = 10000000;
+RUNS = 1;
+num_clients = 1; 
+tot_timesteps = 300000;
 selected_policy = 6  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
 regime_selection = 2 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
@@ -34,6 +34,9 @@ if not(isfolder(date_file_name))
     mkdir(date_file_name);
 end
 
+values_file_name = sprintf('num_clients_%d', num_clients);
+
+values_date_file_name = strcat(date_file_name, values_file_name);
 
 foldername = sprintf('policy_%d_regime_selection_%d_tot_timesteps_%d_num_clients_%d', selected_policy, regime_selection, tot_timesteps, num_clients);
 
@@ -58,16 +61,18 @@ else
     error("ERROR: selected regime is not implemeneted. Exiting.");
 end
 
+
+
 %{
 for x = 1 : num_clients
    
  client_array = [delays(x), periods(x), p(x), q(x), mu(x), clientVars(x), weights(x)]';
-if not(isfolder(date_file_name))
-    mkdir(date_file_name);
+if not(isfolder(values_date_file_name))
+    mkdir(values_date_file_name);
 end
 
    current_client_file = sprintf('/client_%d_values.txt', x);
-   client_filename = strcat(date_file_name, current_client_file);
+   client_filename = strcat(values_date_file_name, current_client_file);
    save(client_filename, 'client_array', '-ascii');
 
 end
@@ -140,7 +145,7 @@ end
 
 
 
-    save_run_results(clients, num_clients, current_run, regime_selection); % to save theoretical values as well.
+    %save_run_results(clients, num_clients, current_run, regime_selection); % to save theoretical values as well.
 
 
 end

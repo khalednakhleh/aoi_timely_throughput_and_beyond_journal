@@ -28,9 +28,12 @@ struct InputParams {
     int regime_selection;
     int policy;
     int timesteps;	
-    int seed_value; // initial seed
+    int seed_value;
+    int current_run;
 }; // struct input_params
 
+
+InputParams parse_input_params(int argc, char **argv);
 
 
 class Client {
@@ -59,23 +62,16 @@ std::vector<double> aoi_values_per_time;
 int A_t = 0; // number of activations up to time t.
 int U_t = 0; // number of dummy packets up to time t.
 int D_t = 0; // number of dropped packets up to time t.
-int AoI = 1;
+int AoI = 0;
 int time_since_aoi_packet_generated = 0; // for AoI clients only.
 
-int activations; // only for VWD policy (equal to A_t + U_t).
+int activations = 0; // only for VWD policy (equal to A_t + U_t).
 std::vector<int> aoi_values;
 std::vector<int> delay_values;
 int final_aoi_value; 
 
 double deficit = 0.0; // For VWD, WLD, and DBLDF.
 
-
-double get_delay();
-double get_period();
-double get_p();
-double get_q();
-double get_mean();
-double get_variance();
 
 
 }; // Class Client.
@@ -85,7 +81,7 @@ class BaseScheduler {
 public:
 
     std::list<Client> my_clients;
-    int seed_value;
+    const int seed_value;
     std::default_random_engine generator;
     std::uniform_real_distribution<double> distribution;
     
@@ -95,8 +91,6 @@ public:
     int client_to_schedule; // index to schedule a client in a timestep
 
     std::string filepath;
-
-    std::vector<int> check_clients_in_on_channel();
 
     BaseScheduler(InputParams params, int seed_value)
         : generator(seed_value), seed_value(seed_value), distribution(0.0, 1.0), params(params),
@@ -135,7 +129,6 @@ public:
     // constructor that calls BaseScheduler constructor
     WLD(InputParams params, int seed_value) : BaseScheduler(params, seed_value) {}
     
-
     void update_client_parameters(int current_timestep) override;
 
 
@@ -159,24 +152,11 @@ public:
     // constructor that calls BaseScheduler constructor
     DBLDF(InputParams params, int seed_value) : BaseScheduler(params, seed_value) {}
 
-
     void update_client_parameters(int current_timestep) override;
 
     
     // additional member functions for DBLDF class
 };
-
-
-
-
-
-
-InputParams parse_input_params(int argc, char **argv);
-
-
-
-
-
 
 
 

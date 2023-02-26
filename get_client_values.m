@@ -9,7 +9,7 @@ if num_clients == 1
 interval = 0.1;
 starting_q = 0.3;
 starting_factor = 0.9;
-initial_delay_value = [20];
+initial_delay_value = [15];
 
 elseif num_clients == 5
 % for 5 clients
