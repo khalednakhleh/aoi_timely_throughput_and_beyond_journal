@@ -3,14 +3,12 @@
 
 #include "scheduler_main.hpp"
 
-
-
 InputParams parse_input_params(int argc, char **argv) {
     InputParams params;
 
     int opt;
-    bool n_set = false, r_set = false, p_set = false, t_set = false;
-    while ((opt = getopt(argc, argv, "n:r:p:t:")) != -1) {
+    bool n_set = false, r_set = false, p_set = false, t_set = false, s_set = false;
+    while ((opt = getopt(argc, argv, "n:r:p:t:s:")) != -1) {
         switch (opt) {
             case 'n':
                 params.num_clients = atoi(optarg);
@@ -44,16 +42,20 @@ InputParams parse_input_params(int argc, char **argv) {
                 }
                 t_set = true;
                 break;
+            case 's':
+                params.seed_value = atoi(optarg);
+                s_set = true;
+                break;
             default:
-                std::cerr << "Usage: " << argv[0] << " -n num_clients -r regime_selection -p policy -t timesteps" << std::endl;
+                std::cerr << "Usage: " << argv[0] << " -n num_clients -r regime_selection -p policy -t timesteps -s seed_value" << std::endl;
                 exit(1);
         }
     }
 
     // Check that all input parameters have been set
-    if (!n_set || !r_set || !p_set || !t_set) {
+    if (!n_set || !r_set || !p_set || !t_set || !s_set) {
         std::cerr << "Error: Missing input parameter." << std::endl;
-        std::cerr << "Usage: " << argv[0] << " -n num_clients -r regime_selection -p policy -t timesteps" << std::endl;
+        std::cerr << "Usage: " << argv[0] << " -n num_clients -r regime_selection -p policy -t timesteps -s seed_value" << std::endl;
         exit(1);
     }
 
@@ -61,10 +63,10 @@ InputParams parse_input_params(int argc, char **argv) {
     std::cout << "regime selection = " << params.regime_selection << std::endl;
     std::cout << "policy = " << params.policy << std::endl;
     std::cout << "timesteps = " << params.timesteps << std::endl;
+    std::cout << "seed value = " << params.seed_value << std::endl;
 
     return params;
 }
-
 
 
 void BaseScheduler::print_clients_values(){
@@ -373,3 +375,29 @@ it->deficit = ((it->mean * (double)current_timestep ) - (it->A_t + it->U_t));
 }
 
 }; // function DBLDF::pick_client_to_schedule
+
+
+
+/*
+void BaseScheduler::reset_clients(){
+for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+
+it->buffer = 0;
+it->A_t = 0;
+it->U_t = 0;
+it->D_t = 0;
+it->AoI = 1;
+it->time_since_aoi_packet_generated = 0;
+
+it->aoi_values.clear();
+it->delay_values.clear();
+
+it->final_aoi_value = 0;
+it->deficit = 0.0;
+
+
+
+}
+
+}
+*/

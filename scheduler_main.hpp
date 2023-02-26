@@ -28,6 +28,7 @@ struct InputParams {
     int regime_selection;
     int policy;
     int timesteps;	
+    int seed_value; // initial seed
 }; // struct input_params
 
 
@@ -77,9 +78,6 @@ double get_mean();
 double get_variance();
 
 
-void update_delay_values_per_time_vector(int current_timestep);
-void update_aoi_values_per_time_vector(int current_timestep);
-
 }; // Class Client.
 
 
@@ -87,6 +85,7 @@ class BaseScheduler {
 public:
 
     std::list<Client> my_clients;
+    int seed_value;
     std::default_random_engine generator;
     std::uniform_real_distribution<double> distribution;
     
@@ -99,8 +98,9 @@ public:
 
     std::vector<int> check_clients_in_on_channel();
 
-    BaseScheduler(InputParams params) 
-        : generator{}, distribution{0.0, 1.0}, params{params}, states{new bool[params.num_clients]}, aoi_packets{new bool[params.num_clients]}
+    BaseScheduler(InputParams params, int seed_value)
+        : generator(seed_value), seed_value(seed_value), distribution(0.0, 1.0), params(params),
+          states(new bool[params.num_clients]), aoi_packets(new bool[params.num_clients])
     {}
     
     void get_clients();
@@ -122,7 +122,7 @@ public:
 class VWD : public BaseScheduler {
 public:
     // constructor that calls BaseScheduler constructor
-    VWD(InputParams params) : BaseScheduler(params) {}
+    VWD(InputParams params, int seed_value) : BaseScheduler(params, seed_value) {}
     
     void update_client_parameters(int current_timestep) override;
 
@@ -133,7 +133,7 @@ public:
 class WLD : public BaseScheduler {
 public:
     // constructor that calls BaseScheduler constructor
-    WLD(InputParams params) : BaseScheduler(params) {}
+    WLD(InputParams params, int seed_value) : BaseScheduler(params, seed_value) {}
     
 
     void update_client_parameters(int current_timestep) override;
@@ -145,7 +145,7 @@ public:
 class EDF : public BaseScheduler {
 public:
     // constructor that calls BaseScheduler constructor
-    EDF(InputParams params) : BaseScheduler(params) {}
+    EDF(InputParams params, int seed_value) : BaseScheduler(params, seed_value) {}
 
     void update_client_parameters(int current_timestep) override;
 
@@ -157,7 +157,7 @@ public:
 class DBLDF : public BaseScheduler {
 public:
     // constructor that calls BaseScheduler constructor
-    DBLDF(InputParams params) : BaseScheduler(params) {}
+    DBLDF(InputParams params, int seed_value) : BaseScheduler(params, seed_value) {}
 
 
     void update_client_parameters(int current_timestep) override;
