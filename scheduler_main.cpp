@@ -29,7 +29,7 @@ scheduler_ptr->get_clients(); // initialize clients given their parameters (p,q,
 
 scheduler_ptr->start_scheduler_loop(); // main scheduling loop per run
 scheduler_ptr->print_clients_values();
-
+scheduler_ptr->save_results(1);
 
    return 0;
 

@@ -105,7 +105,7 @@ for (int i = 0; i < params.num_clients; i++) {
 void BaseScheduler::read_values_from_file(int client_index, const std::string& fileName, InputParams params) {
 
     
-    std::string filepath = std::string("results/")+std::string("policy_")+std::to_string(params.policy)+\
+    filepath = std::string("results/")+std::string("policy_")+std::to_string(params.policy)+\
     std::string("_regime_selection_")+std::to_string(params.regime_selection)+\
     std::string("_tot_timesteps_")+std::to_string(params.timesteps)+std::string("_num_clients_")+\
     std::to_string(params.num_clients)+std::string("/");
@@ -258,7 +258,8 @@ if(it->buffer <= 0){
     it->buffer = it->buffer - 1;
 }
 }
-it->activations = it->A_t + it->U_t;
+it->delay_values.push_back(it->D_t);
+it->activations = it->A_t + it->U_t; // activations for delay clients.
 } // end of delay client functions
 
 
@@ -271,8 +272,28 @@ i = i + 1;
 }; // void BaseScheduler::schedule_client_and_update_values
 
 
-void BaseScheduler::save_results(){ // saves the arrays from each client for each run.
+void BaseScheduler::save_results(int current_run){ // saves the arrays from each client for each run.
+int i = 0;
+for (auto it = my_clients.begin(); it != my_clients.end(); it++){
 
+std::string filename = "client_" + std::to_string(it->idx) +"_run_" + std::to_string(current_run) + "_results.txt";
+
+
+std::ofstream outfile(filepath+filename);
+    
+if(params.regime_selection == 1 && (i <= floor(params.num_clients/2) - 1)){ // storing aoi values
+ for (const auto& aoi_value : it->aoi_values){
+    outfile << aoi_value << "\n";
+}
+    }else{ // storing delay values
+ for (const auto& delay_value : it->delay_values){
+    outfile << delay_value << "\n";
+}
+}
+
+outfile.close();
+i = i + 1;
+}
 }; // function BaseScheduler::save_results
 
 

@@ -18,6 +18,7 @@
 #include <math.h>
 #include <cmath>
 #include <memory>
+#include <iomanip>
 
 
 
@@ -62,6 +63,7 @@ int time_since_aoi_packet_generated = 0; // for AoI clients only.
 
 int activations; // only for VWD policy (equal to A_t + U_t).
 std::vector<int> aoi_values;
+std::vector<int> delay_values;
 int final_aoi_value; 
 
 double deficit = 0.0; // For VWD, WLD, and DBLDF.
@@ -93,6 +95,8 @@ public:
     bool* aoi_packets;
     int client_to_schedule; // index to schedule a client in a timestep
 
+    std::string filepath;
+
     std::vector<int> check_clients_in_on_channel();
 
     BaseScheduler(InputParams params) 
@@ -103,7 +107,7 @@ public:
     void read_values_from_file(int client_index, const std::string& fileName, InputParams params);
     void get_clients_channel_states(); // get current channel state at the current timestep.
     void start_scheduler_loop(); // main iteration loop over clients.
-    void save_results();
+    void save_results(int current_run);
     void print_clients_values();
     int pick_client_to_schedule();
     void aoi_client_packet_arrival(int current_timestep);
