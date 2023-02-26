@@ -108,7 +108,7 @@ public:
     int pick_client_to_schedule();
     void aoi_client_packet_arrival(int current_timestep);
     void schedule_client_and_update_values(int current_timestep);
-    virtual void update_client_parameters() const;
+    virtual void update_client_parameters(int current_timestep);
 
     
 }; // class BaseScheduler
@@ -120,7 +120,7 @@ public:
     // constructor that calls BaseScheduler constructor
     VWD(InputParams params) : BaseScheduler(params) {}
     
-    void update_client_parameters() const override;
+    void update_client_parameters(int current_timestep) override;
 
 };
 
@@ -132,7 +132,7 @@ public:
     WLD(InputParams params) : BaseScheduler(params) {}
     
 
-    void update_client_parameters() const override;
+    void update_client_parameters(int current_timestep) override;
 
 
 };
@@ -143,7 +143,7 @@ public:
     // constructor that calls BaseScheduler constructor
     EDF(InputParams params) : BaseScheduler(params) {}
 
-    void update_client_parameters() const override;
+    void update_client_parameters(int current_timestep) override;
 
     
     // additional member functions for EDF class
@@ -156,7 +156,7 @@ public:
     DBLDF(InputParams params) : BaseScheduler(params) {}
 
 
-    void update_client_parameters() const override;
+    void update_client_parameters(int current_timestep) override;
 
     
     // additional member functions for DBLDF class

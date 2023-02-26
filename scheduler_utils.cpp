@@ -185,7 +185,7 @@ for(int current_timestep = 0; current_timestep < params.timesteps; current_times
     aoi_client_packet_arrival(current_timestep); // for AoI clients.
     client_to_schedule = pick_client_to_schedule(); // picks client in ON channel
     schedule_client_and_update_values(current_timestep); // performs scheduling depending on the selected regime
-    //update_client_parameters(); // updates values related to deficit (depends on policy)
+    update_client_parameters(current_timestep); // updates values related to deficit (depends on policy)
 
 
 /*
@@ -258,6 +258,7 @@ if(it->buffer <= 0){
     it->buffer = it->buffer - 1;
 }
 }
+it->activations = it->A_t + it->U_t;
 } // end of delay client functions
 
 
@@ -298,50 +299,56 @@ return client_to_schedule;
 };
 
 
-void BaseScheduler::update_client_parameters() const {
+void BaseScheduler::update_client_parameters(int current_timestep) {
 // nothing implemented here since it depends on policy.
 };
 
 
-void VWD::update_client_parameters() const {
-std::cout << "VWD " << std::endl;  
+void VWD::update_client_parameters(int current_timestep) {
+//std::cout << "VWD " << std::endl;  
 
+for (auto it = my_clients.begin(); it != my_clients.end(); it++){
 
+it->deficit = ((it->mean * (double)current_timestep ) - it->activations) / sqrt(it->variance) ; 
 
-// updating the VWD deficit after a client was picked
-//int x = 0;
-//for (auto it = my_clients.begin(); it != my_clients.end(); it++){
-
-//if(x == client_to_schedule){
-//it->deficit = ((it->mean * (double)current_timestep) - );} // a client was scheduled
-
-//x = x+1;
-
-//}
+}
 
 
 
 }; // function VWD::pick_client_to_schedule
 
 
-void WLD::update_client_parameters() const {
-std::cout << "WLD " << std::endl;  
+void WLD::update_client_parameters(int current_timestep) {
+//std::cout << "WLD " << std::endl;  
 
+for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+
+it->deficit = ((it->mean * (double)current_timestep ) - (it->A_t + it->U_t)) / pow(2, (it->delay)) ; 
+
+}
 
 }; // function WLD::pick_client_to_schedule
 
 
 
-void EDF::update_client_parameters() const {
-std::cout << "EDF " << std::endl;  
+void EDF::update_client_parameters(int current_timestep) {
+//std::cout << "EDF " << std::endl; 
 
+for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+it->deficit = -1 * it->buffer; // deficit here is the shortest buffer value.
+}
 
 }; // function EDF::pick_client_to_schedule
 
 
 
-void DBLDF::update_client_parameters() const {
-std::cout << "DBLDF " << std::endl; 
+void DBLDF::update_client_parameters(int current_timestep) {
+//std::cout << "DBLDF " << std::endl; 
 
+for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+
+it->deficit = ((it->mean * (double)current_timestep ) - (it->A_t + it->U_t)); 
+
+}
 
 }; // function DBLDF::pick_client_to_schedule
