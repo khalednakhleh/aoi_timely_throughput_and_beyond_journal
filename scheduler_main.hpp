@@ -41,21 +41,23 @@ Client(int idx_value, double delay_value, double period_value,
 double p_value, double q_value, double mean_value, double variance_value, double weight_value) : idx(idx_value),delay(delay_value), period(period_value), p(p_value), q(q_value), mean(mean_value), variance(variance_value), weight(weight_value) {}
 
 const int idx;
-const double delay;
-const double period;
+const int delay;
+const int period;
 const double p;
 const double q; 
-std::vector<double> delay_values_per_time;
-std::vector<double> aoi_values_per_time;
 const double mean;
 const double variance;
 const double weight; 
+int buffer = 0;
 
-double A_t; // number of activations up to time t.
-double U_t; // number of dummy packets up to time t.
-double D_t; // number of dropped packets up to time t.
+std::vector<double> delay_values_per_time;
+std::vector<double> aoi_values_per_time;
 
-double activations; // only for VWD policy (equal to A_t + U_t).
+int A_t = 0; // number of activations up to time t.
+int U_t = 0; // number of dummy packets up to time t.
+int D_t = 0; // number of dropped packets up to time t.
+
+int activations; // only for VWD policy (equal to A_t + U_t).
 
 
 double deficit = 0.0; // For VWD, WLD, and DBLDF.
@@ -73,11 +75,6 @@ void update_delay_values_per_time_vector(int current_timestep);
 void update_aoi_values_per_time_vector(int current_timestep);
 
 }; // Class Client.
-
-
-void print_clients_values(std::list<Client>& my_clients);
-InputParams parse_input_params(int argc, char **argv);
-
 
 
 class BaseScheduler {
@@ -104,7 +101,7 @@ public:
     void save_results();
     void print_clients_values();
     int pick_client_to_schedule();
-    void schedule_client_and_update_values();
+    void schedule_client_and_update_values(int current_timestep);
     virtual void update_client_parameters() const;
 
     
@@ -161,6 +158,10 @@ public:
 
 
 
+
+
+
+InputParams parse_input_params(int argc, char **argv);
 
 
 

@@ -5,24 +5,6 @@
 
 
 
-void BaseScheduler::print_clients_values(){
-
-for (auto it = my_clients.begin(); it != my_clients.end(); it++){
-
-	std::cout << "-------------------------------------------" << std::endl;
-	std::cout << "Client index: " << it->idx << std::endl;
-	std::cout << "delay: " << it->delay << std::endl;
-	std::cout << "period: " << it->period << std::endl;
-	std::cout << "p value: " << it->p << std::endl;
-	std::cout << "q value: " << it->q << std::endl;
-	std::cout << "mean value: " << it->mean << std::endl;
-	std::cout << "variance value: " << it->variance << std::endl;
-	std::cout << "weight value: " << it->weight << std::endl;
-}
-
-}; // void print_clients_values
-
-
 InputParams parse_input_params(int argc, char **argv) {
     InputParams params;
 
@@ -82,6 +64,30 @@ InputParams parse_input_params(int argc, char **argv) {
 
     return params;
 }
+
+
+
+void BaseScheduler::print_clients_values(){
+
+for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+
+    std::cout << "-------------------------------------------" << std::endl;
+    std::cout << "Client index: " << it->idx << std::endl;
+    std::cout << "delay: " << it->delay << std::endl;
+    std::cout << "period: " << it->period << std::endl;
+    std::cout << "p value: " << it->p << std::endl;
+    std::cout << "q value: " << it->q << std::endl;
+    std::cout << "mean value: " << it->mean << std::endl;
+    std::cout << "variance value: " << it->variance << std::endl;
+    std::cout << "weight value: " << it->weight << std::endl;
+    std::cout << "transmitted packets A_t: " << it->A_t << std::endl;
+    std::cout << "dummy packet U_t: " << it->U_t << std::endl;
+    std::cout << "Dropped packets: " << it->D_t << std::endl;
+    std::cout << "remaining packets in buffer: " << it->buffer << std::endl;
+}
+
+}; // void print_clients_values
+
 
 void BaseScheduler::get_clients() {
 // setting the clients with their respective values
@@ -155,18 +161,23 @@ std::vector<int> BaseScheduler::check_clients_in_on_channel() {
 
 void BaseScheduler::start_scheduler_loop() {
 
-for(int current_timestep = 0; current_timestep < params.timesteps-9990000; current_timestep++){
+for(int current_timestep = 0; current_timestep < params.timesteps; current_timestep++){
     get_clients_channel_states(); // update clients' ON-OFF channel states.
     client_to_schedule = pick_client_to_schedule(); // picks client in ON channel
-    //schedule_client_and_update_values(); // performs scheduling depending on the selected regime
+    schedule_client_and_update_values(current_timestep); // performs scheduling depending on the selected regime
     //update_client_parameters(); // updates values related to deficit (depends on policy)
 
-     
 
-    std::cout << "client to schedule: " << client_to_schedule << std::endl; 
+
     // for printing the ON channel vector.
     //for (int i = 0; i < params.num_clients; i++) {
     //    std::cout << states[i] << " ";
+    //}
+    //std::cout << "client to schedule is: " << client_to_schedule + 1<< std::endl;
+    
+    //std::cout << "client index    A_t    U_t    D_t   buffer" << std::endl;
+    //for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+    //    std::cout << "client " << it->idx << " " << it->A_t << " " << it->U_t << " " << it->D_t << " " << it->buffer << std::endl;
     //}
     //std::cout << std::endl << "----------------------" << std::endl;
 
@@ -174,11 +185,48 @@ for(int current_timestep = 0; current_timestep < params.timesteps-9990000; curre
 
 };
 
-void BaseScheduler::schedule_client_and_update_values(){  
+void BaseScheduler::schedule_client_and_update_values(int current_timestep){  
+
+int i = 0;
+
+
+for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+
+if(params.regime_selection == 1 && i <= floor(params.num_clients/2)){ // if the client is an AoI client (when selected regime is 1).
 
 
 
-};
+}else{ // if the client is a delay client. 
+
+if((current_timestep % it->period) == 0) // a packet is generated for client i
+{it->buffer = it->buffer + 1;
+
+if(it->buffer > (it->delay * it->period)){
+it->buffer = it->delay * it->period;
+it->D_t = it->D_t + 1;
+}
+}
+
+if(client_to_schedule == i){ // if the client is the one picked to schedule
+    //std::cout << "picked client " << i+1 << " in timestep "<< current_timestep << std::endl;
+if(it->buffer <= 0){
+    it->U_t = it->U_t + 1;
+    it->buffer = 0;
+}else{
+    it->A_t = it->A_t + 1;
+    it->buffer = it->buffer - 1;
+}
+}
+} // end of delay client functions
+
+
+
+
+i = i + 1;
+}
+
+
+}; // void BaseScheduler::schedule_client_and_update_values
 
 
 void BaseScheduler::save_results(){ // saves the arrays from each client for each run.
@@ -188,7 +236,7 @@ void BaseScheduler::save_results(){ // saves the arrays from each client for eac
 
 // picking client based on deficit (deficit defined differently for each policy)
 int BaseScheduler::pick_client_to_schedule() {
-std::cout << "base scheduler " << std::endl;  
+//std::cout << "base scheduler " << std::endl;  
 int client_to_schedule = -1; // ID of the client to be selected for scheduling.
 double max_deficit;
 int n = 0;
