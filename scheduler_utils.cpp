@@ -85,7 +85,7 @@ for (auto it = my_clients.begin(); it != my_clients.end(); it++){
     std::cout << "Dropped packets: " << it->D_t << std::endl;
     std::cout << "remaining packets in buffer: " << it->buffer << std::endl;
     std::cout << "activations for AoI clients: " << it->activations << std::endl;
-    std::cout << "AoI for AoI clients: " << it->AoI << std::endl;
+    std::cout << "Empirical AoI for AoI clients: " << it->final_aoi_value << std::endl;
     std::cout << "Lambda for AoI clients: " << it->lambda << std::endl;
 }
 
@@ -209,6 +209,11 @@ for(int current_timestep = 0; current_timestep < params.timesteps; current_times
 */
 }
 
+for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+    it->final_aoi_value = std::accumulate(it->aoi_values.begin(), it->aoi_values.end(), 0.0);
+}
+
+
 };
 
 void BaseScheduler::schedule_client_and_update_values(int current_timestep){  
@@ -228,6 +233,8 @@ if(client_to_schedule == i){
 }else{
     it->AoI = it->AoI + 1;
 }
+
+it->aoi_values.push_back(it->AoI);
 
 
 }else{ // if the client is a delay client. 

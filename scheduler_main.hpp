@@ -61,7 +61,8 @@ int AoI = 1;
 int time_since_aoi_packet_generated = 0; // for AoI clients only.
 
 int activations; // only for VWD policy (equal to A_t + U_t).
-
+std::vector<int> aoi_values;
+int final_aoi_value; 
 
 double deficit = 0.0; // For VWD, WLD, and DBLDF.
 
