@@ -37,8 +37,8 @@ std::string client_type; // client can either be a "aoi" or "delay" client.
 
 
 //Client(int idx_value) : idx(idx_value) {}
-Client(int idx_value, double delay_value, double period_value, 
-double p_value, double q_value, double mean_value, double variance_value, double weight_value) : idx(idx_value),delay(delay_value), period(period_value), p(p_value), q(q_value), mean(mean_value), variance(variance_value), weight(weight_value) {}
+Client(int idx_value, double delay_value, double period_value, double p_value, double q_value, double mean_value, double variance_value, double weight_value, double lambda_value) 
+: idx(idx_value),delay(delay_value), period(period_value), p(p_value), q(q_value), mean(mean_value), variance(variance_value), weight(weight_value), lambda(lambda_value) {}
 
 const int idx;
 const int delay;
@@ -48,6 +48,7 @@ const double q;
 const double mean;
 const double variance;
 const double weight; 
+const double lambda;
 int buffer = 0;
 
 std::vector<double> delay_values_per_time;
@@ -56,6 +57,8 @@ std::vector<double> aoi_values_per_time;
 int A_t = 0; // number of activations up to time t.
 int U_t = 0; // number of dummy packets up to time t.
 int D_t = 0; // number of dropped packets up to time t.
+int AoI = 1;
+int time_since_aoi_packet_generated = 0; // for AoI clients only.
 
 int activations; // only for VWD policy (equal to A_t + U_t).
 
@@ -86,12 +89,13 @@ public:
     
     const InputParams params;
     bool* states;
+    bool* aoi_packets;
     int client_to_schedule; // index to schedule a client in a timestep
 
     std::vector<int> check_clients_in_on_channel();
 
     BaseScheduler(InputParams params) 
-        : generator{}, distribution{0.0, 1.0}, params{params}, states{new bool[params.num_clients]}
+        : generator{}, distribution{0.0, 1.0}, params{params}, states{new bool[params.num_clients]}, aoi_packets{new bool[params.num_clients]}
     {}
     
     void get_clients();
@@ -101,6 +105,7 @@ public:
     void save_results();
     void print_clients_values();
     int pick_client_to_schedule();
+    void aoi_client_packet_arrival(int current_timestep);
     void schedule_client_and_update_values(int current_timestep);
     virtual void update_client_parameters() const;
 

@@ -84,6 +84,9 @@ for (auto it = my_clients.begin(); it != my_clients.end(); it++){
     std::cout << "dummy packet U_t: " << it->U_t << std::endl;
     std::cout << "Dropped packets: " << it->D_t << std::endl;
     std::cout << "remaining packets in buffer: " << it->buffer << std::endl;
+    std::cout << "activations for AoI clients: " << it->activations << std::endl;
+    std::cout << "AoI for AoI clients: " << it->AoI << std::endl;
+    std::cout << "Lambda for AoI clients: " << it->lambda << std::endl;
 }
 
 }; // void print_clients_values
@@ -111,9 +114,10 @@ void BaseScheduler::read_values_from_file(int client_index, const std::string& f
     std::ifstream file(filepath+fileName);
 
     if (file.is_open()) {
-        double delay, period, p, q, mean, variance, weight;
-        while (file >> delay >> period >> p >> q >> mean >> variance >> weight) {
-            Client client(client_index+1, delay, period, p, q, mean, variance, weight);
+        
+        double delay, period, p, q, mean, variance, weight, lambda;
+        while (file >> delay >> period >> p >> q >> mean >> variance >> weight >> lambda) {
+            Client client(client_index+1, delay, period, p, q, mean, variance, weight, lambda);
             my_clients.push_back(client);
         }
         file.close();
@@ -144,7 +148,22 @@ void BaseScheduler::get_clients_channel_states() {
 
 }; // void BaseScheduler::get_clients_channel_states
 
+void BaseScheduler::aoi_client_packet_arrival(int current_timestep){
+int i = 0;
 
+for(auto it = my_clients.begin(); it != my_clients.end(); ++it) {
+
+double number = distribution(generator);
+if(it->lambda > number){
+        aoi_packets[i] = 1;
+        it->time_since_aoi_packet_generated = current_timestep; // store the timestep where the packet was generated
+}else{
+        aoi_packets[i] = 0;
+    }
+
+++i;
+}
+};
 
 std::vector<int> BaseScheduler::check_clients_in_on_channel() {
     std::vector<int> clients_on_channel;
@@ -163,24 +182,31 @@ void BaseScheduler::start_scheduler_loop() {
 
 for(int current_timestep = 0; current_timestep < params.timesteps; current_timestep++){
     get_clients_channel_states(); // update clients' ON-OFF channel states.
+    aoi_client_packet_arrival(current_timestep); // for AoI clients.
     client_to_schedule = pick_client_to_schedule(); // picks client in ON channel
     schedule_client_and_update_values(current_timestep); // performs scheduling depending on the selected regime
     //update_client_parameters(); // updates values related to deficit (depends on policy)
 
 
-
+/*
     // for printing the ON channel vector.
-    //for (int i = 0; i < params.num_clients; i++) {
-    //    std::cout << states[i] << " ";
-    //}
-    //std::cout << "client to schedule is: " << client_to_schedule + 1<< std::endl;
-    
-    //std::cout << "client index    A_t    U_t    D_t   buffer" << std::endl;
-    //for (auto it = my_clients.begin(); it != my_clients.end(); it++){
-    //    std::cout << "client " << it->idx << " " << it->A_t << " " << it->U_t << " " << it->D_t << " " << it->buffer << std::endl;
-    //}
-    //std::cout << std::endl << "----------------------" << std::endl;
+    for (int i = 0; i < params.num_clients; i++) {
+        std::cout << states[i] << " ";
+    }
+    std::cout << std::endl;
+    for (int i = 0; i < params.num_clients; i++) {
+        std::cout << aoi_packets[i]  << " ";
+    }
+    std::cout << std::endl;
 
+    std::cout << "client to schedule is: " << client_to_schedule  << " at timestep " << current_timestep << std::endl;
+    
+    std::cout << "client index    A_t    U_t    D_t   buffer  AoI" << std::endl;
+    for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+        std::cout << "client " << it->idx << " " << it->A_t << " " << it->U_t << " " << it->D_t << " " << it->buffer << " " << it->AoI << " " << std::endl;
+    }
+    std::cout << std::endl << "----------------------" << std::endl;
+*/
 }
 
 };
@@ -192,8 +218,16 @@ int i = 0;
 
 for (auto it = my_clients.begin(); it != my_clients.end(); it++){
 
-if(params.regime_selection == 1 && i <= floor(params.num_clients/2)){ // if the client is an AoI client (when selected regime is 1).
+if(params.regime_selection == 1 && (i <= floor(params.num_clients/2) - 1)){ // if the client is an AoI client (when selected regime is 1).
 
+if(client_to_schedule == i){
+    it->activations = it->activations + 1; // used by vwd only.
+
+    it->AoI = current_timestep + 1 - it->time_since_aoi_packet_generated;
+    
+}else{
+    it->AoI = it->AoI + 1;
+}
 
 
 }else{ // if the client is a delay client. 
