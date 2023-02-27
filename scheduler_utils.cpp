@@ -3,12 +3,13 @@
 
 #include "scheduler_main.hpp"
 
+
 InputParams parse_input_params(int argc, char **argv) {
     InputParams params;
 
     int opt;
-    bool n_set = false, r_set = false, p_set = false, t_set = false, s_set = false;
-    while ((opt = getopt(argc, argv, "n:r:p:t:s:")) != -1) {
+    bool n_set = false, r_set = false, p_set = false, t_set = false, s_set = false, run_set = false;
+    while ((opt = getopt(argc, argv, "n:r:p:t:s:m:")) != -1) {
         switch (opt) {
             case 'n':
                 params.num_clients = atoi(optarg);
@@ -46,16 +47,24 @@ InputParams parse_input_params(int argc, char **argv) {
                 params.seed_value = atoi(optarg);
                 s_set = true;
                 break;
+            case 'm':
+                params.num_runs = atoi(optarg);
+                if (params.num_runs <= 0) {
+                    std::cerr << "Error: number of runs must be a positive integer." << std::endl;
+                    exit(1);
+                }
+                run_set = true;
+                break;
             default:
-                std::cerr << "Usage: " << argv[0] << " -n num_clients -r regime_selection -p policy -t timesteps -s seed_value" << std::endl;
+                std::cerr << "Usage: " << argv[0] << " -n num_clients -r regime_selection -p policy -t timesteps -s seed_value -m num_runs" << std::endl;
                 exit(1);
         }
     }
 
     // Check that all input parameters have been set
-    if (!n_set || !r_set || !p_set || !t_set || !s_set) {
+    if (!n_set || !r_set || !p_set || !t_set || !s_set || !run_set) {
         std::cerr << "Error: Missing input parameter." << std::endl;
-        std::cerr << "Usage: " << argv[0] << " -n num_clients -r regime_selection -p policy -t timesteps -s seed_value" << std::endl;
+        std::cerr << "Usage: " << argv[0] << " -n num_clients -r regime_selection -p policy -t timesteps -s seed_value -m num_runs" << std::endl;
         exit(1);
     }
 
@@ -64,10 +73,10 @@ InputParams parse_input_params(int argc, char **argv) {
     std::cout << "policy = " << params.policy << std::endl;
     std::cout << "timesteps = " << params.timesteps << std::endl;
     std::cout << "seed value = " << params.seed_value << std::endl;
+    std::cout << "run value = " << params.num_runs << std::endl;
 
     return params;
 }
-
 
 void BaseScheduler::print_clients_values(){
 //std::cout << "im in function print_clients_values()" << std::endl;
@@ -170,7 +179,7 @@ if(it->lambda > number){
 
 void BaseScheduler::start_scheduler_loop() {
 
-for(int current_timestep = 0; current_timestep < params.timesteps-9999900; current_timestep++){
+for(int current_timestep = 0; current_timestep < params.timesteps; current_timestep++){
     get_clients_channel_states(); // update clients' ON-OFF channel states.
     aoi_client_packet_arrival(current_timestep); // for AoI clients.
     update_client_parameters(current_timestep); // updates values related to deficit (depends on policy)

@@ -28,7 +28,7 @@ if (params.policy == 6) {
 scheduler_ptr->get_clients();          // initialize clients given their parameters (e.g. p,q, mean, etc)
 scheduler_ptr->start_scheduler_loop(); // main scheduling loop
 scheduler_ptr->print_clients_values(); // print onto terminal
-scheduler_ptr->save_results(1);      // save results to directory
+scheduler_ptr->save_results(params.num_runs);      // save results to directory
 
 
 return 0;

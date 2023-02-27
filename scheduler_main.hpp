@@ -29,7 +29,7 @@ struct InputParams {
     int policy;
     int timesteps;	
     int seed_value;
-    int current_run;
+    int num_runs;
 }; // struct input_params
 
 
