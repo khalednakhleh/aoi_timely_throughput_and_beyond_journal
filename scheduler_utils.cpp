@@ -277,7 +277,8 @@ void BaseScheduler::save_results(int current_run){ // saves the arrays from each
 int i = 0;
 for (auto it = my_clients.begin(); it != my_clients.end(); it++){
 
-std::string filename = "client_" + std::to_string(it->idx) +"_run_" + std::to_string(current_run) + "_results.txt";
+std::string filename = "client_" + std::to_string(it->idx) +"_run_" + std::to_string(current_run)\
++ "_policy_" + std::to_string(params.policy) + "_regime_" + std::to_string(params.regime_selection) + "_results.txt";
 
 
 std::ofstream outfile(filepath+filename);
@@ -379,26 +380,3 @@ it->deficit = ((it->mean * (double)current_timestep ) - (it->A_t + it->U_t));
 
 
 
-/*
-void BaseScheduler::reset_clients(){
-for (auto it = my_clients.begin(); it != my_clients.end(); it++){
-
-it->buffer = 0;
-it->A_t = 0;
-it->U_t = 0;
-it->D_t = 0;
-it->AoI = 1;
-it->time_since_aoi_packet_generated = 0;
-
-it->aoi_values.clear();
-it->delay_values.clear();
-
-it->final_aoi_value = 0;
-it->deficit = 0.0;
-
-
-
-}
-
-}
-*/

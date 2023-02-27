@@ -12,7 +12,7 @@ global periods tot_timesteps date_file_name lambdas clients delay_counter
 %% Constants
 delay_counter = 0;
 RUNS = 1;
-num_clients = 1; 
+num_clients = 5; 
 tot_timesteps = 300000;
 selected_policy = 6  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
 regime_selection = 2 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
@@ -34,11 +34,10 @@ if not(isfolder(date_file_name))
     mkdir(date_file_name);
 end
 
-values_file_name = sprintf('num_clients_%d', num_clients);
+foldername = sprintf('num_clients_%d', num_clients);
 
-values_date_file_name = strcat(date_file_name, values_file_name);
+values_date_file_name = strcat(date_file_name, foldername);
 
-foldername = sprintf('policy_%d_regime_selection_%d_tot_timesteps_%d_num_clients_%d', selected_policy, regime_selection, tot_timesteps, num_clients);
 
 date_file_name = strcat(date_file_name, foldername);
 %% get theoretical mean and variance values
@@ -63,28 +62,23 @@ end
 
 
 
-%{
+
 for x = 1 : num_clients
    
  client_array = [delays(x), periods(x), p(x), q(x), mu(x), clientVars(x), weights(x)]';
-if not(isfolder(values_date_file_name))
-    mkdir(values_date_file_name);
+if not(isfolder(foldername))
+    mkdir(foldername);
 end
 
    current_client_file = sprintf('/client_%d_values.txt', x);
-   client_filename = strcat(values_date_file_name, current_client_file);
+   client_filename = strcat(foldername, current_client_file);
    save(client_filename, 'client_array', '-ascii');
 
 end
-%}
+
 %% Generate the channel sequences for the clients
 
-for current_run = 1 : RUNS
-    fprintf('++++++++++++++++++++++++++++++++++++++++++++++\n')
-    fprintf('RUN %d\n', current_run)
 
-  rng(SEED + current_run*100); % reseeding for each run
-  
   clients = repmat(struct('idx', {}, 'clientVars', {}, 'period', {}, 'p', {}, 'q', {}, 'activations', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {},...
   'theoretical_vwd_rate', {}, 'theoretical_wld_rate', {}, 'theoretical_dbldf_rate', {}, 'vwd_deficit', {},'packet_deadline_array', {}, 'delay_time_array', {}, ...
   'mc', {}, 'channel_states', {}, 'mu' , {}, 'delay', {}), num_clients);
@@ -92,45 +86,6 @@ for current_run = 1 : RUNS
   create_clients(clients, delays, periods, p, q, num_clients, mu, clientVars, lambdas);
   calculate_theoretical_interrupt_rate(clients, num_clients, sqrt(varChannel), delays, regime_selection);
 
-vwd_sum_theoretical_value = 0;
-wld_sum_theoretical_value = 0;
-dbldf_sum_theoretical_value = 0;
-
-  for x = 1 : num_clients
-      
-vwd_sum_theoretical_value = vwd_sum_theoretical_value + clients(x).theoretical_vwd_rate;
-wld_sum_theoretical_value = wld_sum_theoretical_value + clients(x).theoretical_wld_rate;
-dbldf_sum_theoretical_value = dbldf_sum_theoretical_value + clients(x).theoretical_dbldf_rate;
-
-end
-vwd_sum_theoretical_value
-wld_sum_theoretical_value
-dbldf_sum_theoretical_value
-
-
-if num_clients == 1 % to print the table if there's one client (for debugging).
-    structArray(1) = clients;
-    structArray(2) = clients;
-    one_client_table = struct2table(structArray);
-end
-
-    % actual scheduling loop.
-    if selected_policy == 1
-       WLD(clients, num_clients, tot_timesteps, regime_selection);
-    
-    elseif selected_policy == 3
-       EDF(clients, num_clients, tot_timesteps, regime_selection);
-    
-    elseif selected_policy == 4
-       DBLDF(clients, num_clients, tot_timesteps, regime_selection);
-
-    elseif selected_policy == 6
-       VWD(clients, num_clients, tot_timesteps, regime_selection);
-  
-    else
-       error("ERROR: selected policy not found.");
-        
-    end
 
 % print the run values
 if num_clients == 1 % to print the table if there's one client.
@@ -145,10 +100,9 @@ end
 
 
 
-    %save_run_results(clients, num_clients, current_run, regime_selection); % to save theoretical values as well.
+save_run_results(clients, num_clients); % to save theoretical values as well.
 
 
-end
 
 
 disp('DONE')
@@ -156,14 +110,12 @@ disp('DONE')
 
 %% utility functions
 
-function save_run_results(clients, num_clients, current_run, regime_selection)
+function save_run_results(clients, num_clients)
 
 global clients num_clients date_file_name
 
 
-if not(isfolder(date_file_name))
-mkdir(date_file_name)
-end
+
 
 for x = 1 : num_clients % clearing out the arrays before saving the final results.
     clients(x).packet_deadline_array = [];
@@ -172,33 +124,8 @@ for x = 1 : num_clients % clearing out the arrays before saving the final result
 end
 
 
-for x = 1 : num_clients
-current_client_file = sprintf('/client_%d_run_%d.csv', x, current_run);
-client_filename = strcat(date_file_name, current_client_file);
 
-
-if (regime_selection == 1 && x <= floor(num_clients/2)) % aoi client 
-
-aoi_vals_per_time = clients(x).current_aoi_array';
-clients(x).current_aoi_array = []; % empty out after storing the values. 
-clients(x).avg_tot_aoi_value = [];
-time_table = table(aoi_vals_per_time);
-writetable(time_table, client_filename);
-
-else
-delay_vals_per_time = clients(x).avg_tot_interrupt_rate_per_timestep';
-clients(x).avg_tot_interrupt_rate_per_timestep = [];
-
-time_table = table(delay_vals_per_time);
-writetable(time_table, client_filename);
-
-end
-
-
-end
-
-
-current_run = sprintf('/run_%d.csv', current_run);
+current_run = '/theoretical_values.csv';
 filename = strcat(date_file_name,  current_run);
 
 
