@@ -12,10 +12,10 @@ global periods tot_timesteps date_file_name lambdas clients delay_counter
 %% Constants
 delay_counter = 0;
 RUNS = 1;
-num_clients = 20; 
+num_clients = 5; 
 tot_timesteps = 300000;
 selected_policy = 6  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
-regime_selection = 1 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
+regime_selection = 2 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
 %% Making directories
 
@@ -63,7 +63,7 @@ end
 
 for x = 1 : num_clients
    
- client_array = [delays(x), periods(x), p(x), q(x), mu(x), clientVars(x), weights(x)]';
+ client_array = [delays(x), periods(x), p(x), q(x), mu(x), clientVars(x), weights(x), lambdas(x)]';
 
    current_client_file = sprintf('/client_%d_values.txt', x);
    client_filename = strcat(date_file_name, current_client_file);
