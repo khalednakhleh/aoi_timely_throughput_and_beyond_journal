@@ -117,7 +117,7 @@ void BaseScheduler::read_values_from_file(int client_index, const std::string& f
 
     
     filepath = std::string("results/")+std::string("num_clients_")+\
-    std::to_string(params.num_clients)+std::string("/");
+    std::to_string(params.num_clients)+std::string("_regime_")+std::to_string(params.regime_selection)+std::string("/");
     
 
     std::ifstream file(filepath+fileName);
@@ -348,7 +348,7 @@ void WLD::update_client_parameters(int current_timestep) {
 
 for (auto it = my_clients.begin(); it != my_clients.end(); it++){
 
-it->deficit = ((it->mean * (double)current_timestep ) - (it->A_t + it->U_t)) / pow((it->delay), 2) ; 
+it->deficit = ((it->mean * (double)current_timestep ) - (it->A_t + it->U_t)) / it->delay ; 
 
 }
 

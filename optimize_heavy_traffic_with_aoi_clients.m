@@ -3,7 +3,7 @@
 % regime
 
 
-function [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_aoi_clients(num_clients, p, q, periods, delays, lambdas)
+function [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic_with_aoi_clients(num_clients, p, q, periods, delays, lambdas)
 
 % lambdas are the arrival rates
 kIterator = 100;
@@ -26,7 +26,7 @@ aoi_clients_num = floor(num_clients/2); % will be 2 for the case of 5 clients. 5
 throughput_clients_num = num_clients - aoi_clients_num;
 
 assert(throughput_clients_num + aoi_clients_num == num_clients);
-
+weights = ones(1,num_clients);
 mu = 1./periods;
 
 % AoI objective function according to equation 14.

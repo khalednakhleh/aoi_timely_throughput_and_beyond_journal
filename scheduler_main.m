@@ -12,10 +12,10 @@ global periods tot_timesteps date_file_name lambdas clients delay_counter
 %% Constants
 delay_counter = 0;
 RUNS = 1;
-num_clients = 5; 
+num_clients = 20; 
 tot_timesteps = 300000;
 selected_policy = 6  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
-regime_selection = 2 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
+regime_selection = 3 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
 %% Making directories
 
@@ -29,17 +29,15 @@ if not(isfolder('results'))
     mkdir('results')
 end
 
-date_file_name = sprintf('results/');
+
+
+date_file_name = sprintf('results/num_clients_%d_regime_%d/', num_clients, regime_selection);
+
+
 if not(isfolder(date_file_name))
     mkdir(date_file_name);
 end
 
-foldername = sprintf('num_clients_%d', num_clients);
-
-values_date_file_name = strcat(date_file_name, foldername);
-
-
-date_file_name = strcat(date_file_name, foldername);
 %% get theoretical mean and variance values
 
 SEED = 79436827;
@@ -51,7 +49,7 @@ rng(SEED);
 
 
 if (regime_selection == 1)
-  [MS, varChannel, mu, clientVars] = optimize_heavy_traffic_with_aoi_clients(num_clients, p, q, periods, delays, lambdas);
+  [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic_with_aoi_clients(num_clients, p, q, periods, delays, lambdas);
 elseif(regime_selection == 2)
   [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic(num_clients, p, q, periods, delays);
 elseif(regime_selection == 3)
@@ -66,12 +64,9 @@ end
 for x = 1 : num_clients
    
  client_array = [delays(x), periods(x), p(x), q(x), mu(x), clientVars(x), weights(x)]';
-if not(isfolder(foldername))
-    mkdir(foldername);
-end
 
    current_client_file = sprintf('/client_%d_values.txt', x);
-   client_filename = strcat(foldername, current_client_file);
+   client_filename = strcat(date_file_name, current_client_file);
    save(client_filename, 'client_array', '-ascii');
 
 end
@@ -85,6 +80,23 @@ end
 
   create_clients(clients, delays, periods, p, q, num_clients, mu, clientVars, lambdas);
   calculate_theoretical_interrupt_rate(clients, num_clients, sqrt(varChannel), delays, regime_selection);
+
+
+
+vwd_sum_theoretical_value = 0;
+wld_sum_theoretical_value = 0;
+dbldf_sum_theoretical_value = 0;
+
+  for x = 1 : num_clients
+      
+vwd_sum_theoretical_value = vwd_sum_theoretical_value + clients(x).theoretical_vwd_rate;
+wld_sum_theoretical_value = wld_sum_theoretical_value + clients(x).theoretical_wld_rate;
+dbldf_sum_theoretical_value = dbldf_sum_theoretical_value + clients(x).theoretical_dbldf_rate;
+
+end
+vwd_sum_theoretical_value
+wld_sum_theoretical_value
+dbldf_sum_theoretical_value
 
 
 % print the run values
