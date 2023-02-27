@@ -15,7 +15,7 @@ RUNS = 1;
 num_clients = 20; 
 tot_timesteps = 300000;
 selected_policy = 6  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
-regime_selection = 3 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
+regime_selection = 1 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
 %% Making directories
 
@@ -40,7 +40,7 @@ end
 
 %% get theoretical mean and variance values
 
-SEED = 79436827;
+SEED = 489578;
 
 rng(SEED);
 
