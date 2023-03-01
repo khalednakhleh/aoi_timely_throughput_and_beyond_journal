@@ -185,6 +185,10 @@ for(int current_timestep = 0; current_timestep < params.timesteps; current_times
     update_client_parameters(current_timestep); // updates values related to deficit (depends on policy)
     client_to_schedule = pick_client_to_schedule(); // picks client in ON channel
     schedule_client_and_update_values(current_timestep); // performs scheduling depending on the selected regime
+
+    if (current_timestep % 10000000 == 0){
+        std::cout << "current timestep: " << current_timestep << std::endl;
+    }
     
 
 /*
@@ -210,9 +214,9 @@ for(int current_timestep = 0; current_timestep < params.timesteps; current_times
 
 }
 
-for (auto it = my_clients.begin(); it != my_clients.end(); it++){
-    it->final_aoi_value = std::accumulate(it->aoi_values.begin(), it->aoi_values.end(), 0.0);
-}
+//for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+//    it->final_aoi_value = std::accumulate(it->aoi_values.begin(), it->aoi_values.end(), 0.0);
+//}
 
 
 }; // BaseScheduler::start_scheduler_loop
@@ -235,8 +239,10 @@ if(client_to_schedule == i){
     it->AoI = it->AoI + 1;
 }
 
-it->aoi_values.push_back(it->AoI);
 
+if(current_timestep % 20000000 == 0 || current_timestep + 1 == params.timesteps){
+it->aoi_values.push_back(it->AoI);
+}
 
 }else{ // if the client is a delay client. 
 
@@ -259,7 +265,9 @@ if(it->buffer <= 0){
     it->buffer = it->buffer - 1;
 }
 }
+if(current_timestep % 20000000 == 0 || current_timestep + 1 == params.timesteps){
 it->delay_values.push_back(it->D_t);
+}
 it->activations = it->A_t + it->U_t; // activations for delay clients.
 } // end of delay client functions
 
@@ -325,7 +333,7 @@ return client_to_schedule;
 
 
 void BaseScheduler::update_client_parameters(int current_timestep) {
-// nothing implemented here since it depends on policy.
+// continue.
 };
 
 

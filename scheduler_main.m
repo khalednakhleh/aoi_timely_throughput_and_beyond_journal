@@ -12,10 +12,10 @@ global periods tot_timesteps date_file_name lambdas clients delay_counter
 %% Constants
 delay_counter = 0;
 RUNS = 1;
-num_clients = 5; 
+num_clients = 20; 
 tot_timesteps = 300000;
 selected_policy = 6  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
-regime_selection = 2 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
+regime_selection = 1 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
 %% Making directories
 
@@ -104,7 +104,7 @@ if num_clients == 1 % to print the table if there's one client.
 structArray(1) = clients;
 structArray(2) = clients;
 one_client_table = struct2table(structArray)
-%first_client_asymptotics = asymptotics(clients(1).mc)
+first_client_asymptotics = asymptotics(clients(1).mc)
 else
 all_clients_table = struct2table(clients)
 end
@@ -112,7 +112,7 @@ end
 
 
 
-save_run_results(clients, num_clients); % to save theoretical values as well.
+%save_run_results(clients, num_clients); % to save theoretical values as well.
 
 
 
