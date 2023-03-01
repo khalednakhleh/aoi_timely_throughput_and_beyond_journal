@@ -12,10 +12,10 @@ global periods tot_timesteps date_file_name lambdas clients delay_counter
 %% Constants
 delay_counter = 0;
 RUNS = 1;
-num_clients = 20; 
+num_clients =  5; 
 tot_timesteps = 300000;
 selected_policy = 6  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
-regime_selection = 1 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
+regime_selection = 2  % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
 %% Making directories
 
@@ -67,16 +67,16 @@ for x = 1 : num_clients
 
    current_client_file = sprintf('/client_%d_values.txt', x);
    client_filename = strcat(date_file_name, current_client_file);
-   save(client_filename, 'client_array', '-ascii');
+   %save(client_filename, 'client_array', '-ascii');
 
 end
 
 %% Generate the channel sequences for the clients
 
 
-  clients = repmat(struct('idx', {}, 'clientVars', {}, 'period', {}, 'p', {}, 'q', {}, 'activations', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {},...
+  clients = repmat(struct('idx', {}, 'clientVars', {}, 'period', {}, 'p', {}, 'q', {}, 'delay', {},...
   'theoretical_vwd_rate', {}, 'theoretical_wld_rate', {}, 'theoretical_dbldf_rate', {}, 'vwd_deficit', {},'packet_deadline_array', {}, 'delay_time_array', {}, ...
-  'mc', {}, 'channel_states', {}, 'mu' , {}, 'delay', {}), num_clients);
+  'mc', {}, 'channel_states', {}, 'mu' , {}, 'activations', {}, 'A_t', {}, 'U_t', {}, 'D_t', {}, 'tot_interrupt_rate', {}), num_clients);
 
   create_clients(clients, delays, periods, p, q, num_clients, mu, clientVars, lambdas);
   calculate_theoretical_interrupt_rate(clients, num_clients, sqrt(varChannel), delays, regime_selection);

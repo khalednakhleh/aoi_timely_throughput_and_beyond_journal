@@ -96,7 +96,7 @@ for (auto it = my_clients.begin(); it != my_clients.end(); it++){
     std::cout << "Dropped packets: " << it->D_t << std::endl;
     std::cout << "remaining packets in buffer: " << it->buffer << std::endl;
     std::cout << "activations for AoI clients: " << it->activations << std::endl;
-    std::cout << "Empirical AoI for AoI clients: " << it->final_aoi_value << std::endl;
+    std::cout << "Empirical AoI for AoI clients: " << it->aoi_values << std::endl;
     std::cout << "Lambda for AoI clients: " << it->lambda << std::endl;
 }
 
@@ -214,9 +214,6 @@ for(int current_timestep = 0; current_timestep < params.timesteps; current_times
 
 }
 
-//for (auto it = my_clients.begin(); it != my_clients.end(); it++){
-//    it->final_aoi_value = std::accumulate(it->aoi_values.begin(), it->aoi_values.end(), 0.0);
-//}
 
 
 }; // BaseScheduler::start_scheduler_loop
@@ -240,9 +237,12 @@ if(client_to_schedule == i){
 }
 
 
-if(current_timestep % 20000000 == 0 || current_timestep + 1 == params.timesteps){
-it->aoi_values.push_back(it->AoI);
+it->aoi_values = it->aoi_values + it->AoI;
+
+if (current_timestep % 20000000 == 0 || current_timestep + 1 == params.timesteps){
+    it->aoi_values_vector.push_back(it->aoi_values);
 }
+
 
 }else{ // if the client is a delay client. 
 
@@ -292,7 +292,7 @@ std::string filename = "client_" + std::to_string(it->idx) +"_run_" + std::to_st
 std::ofstream outfile(filepath+filename);
     
 if(params.regime_selection == 1 && (i <= floor(params.num_clients/2) - 1)){ // storing aoi values
- for (const auto& aoi_value : it->aoi_values){
+ for (const auto& aoi_value : it->aoi_values_vector){
     outfile << aoi_value << "\n";
 }
     }else{ // storing delay values

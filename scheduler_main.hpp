@@ -66,7 +66,8 @@ int AoI = 0;
 int time_since_aoi_packet_generated = 0; // for AoI clients only.
 
 int activations = 0; // only for VWD policy (equal to A_t + U_t).
-std::vector<int> aoi_values;
+long long aoi_values = 0; // summation of AoI values
+std::vector<int> aoi_values_vector; 
 std::vector<int> delay_values;
 int final_aoi_value; 
 
