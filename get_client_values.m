@@ -16,8 +16,9 @@ elseif num_clients == 5
 interval = 0.1;
 starting_q = 0.3;
 starting_factor = 0.9;
-initial_delay_value = [20, 30, 40, 50, 60];
-%[10, 20, 30, 40, 50]; % for regime 2
+initial_delay_value = [10, 20, 30, 40, 50]; % for regime 2
+%[5, 5, 10, 20, 30]
+%[20, 30, 40, 50, 60];
 %[5, 5, 10, 20, 30] % for regime 1
 
 elseif num_clients == 10
@@ -38,6 +39,7 @@ starting_factor = 0.95;
 initial_delay_value = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
 % [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] % for regime 1
 %[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200]; % for regime 2
+
 else
     error("number of clients not implemented. exiting.");
 end

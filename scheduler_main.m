@@ -12,13 +12,12 @@ global periods tot_timesteps date_file_name lambdas clients delay_counter
 %% Constants
 delay_counter = 0;
 RUNS = 1;
-num_clients =  5; 
+num_clients =  20; 
 tot_timesteps = 300000;
 selected_policy = 6  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
 regime_selection = 2  % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
 %% Making directories
-
 
 if regime_selection == 1
 assert(selected_policy == 6)
@@ -40,7 +39,7 @@ end
 
 %% get theoretical mean and variance values
 
-SEED = 489578;
+SEED = 5798; %489578  %5798 for 20 clients regime 1
 
 rng(SEED);
 
@@ -59,7 +58,7 @@ else
 end
 
 
-
+sigma_tot = sqrt(varChannel)
 
 for x = 1 : num_clients
    
