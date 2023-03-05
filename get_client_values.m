@@ -21,6 +21,15 @@ initial_delay_value = [10, 20, 30, 40, 50]; % for regime 2
 %[20, 30, 40, 50, 60];
 %[5, 5, 10, 20, 30] % for regime 1
 
+
+elseif num_clients == 6 % for regime 1
+% for 5 clients
+interval = 0.1;
+starting_q = 0.3;
+starting_factor = 0.9;
+initial_delay_value = [10, 20, 30, 40, 50, 60]; % for regime 2
+
+
 elseif num_clients == 10
 % for 10 clients
 interval = 0.05;

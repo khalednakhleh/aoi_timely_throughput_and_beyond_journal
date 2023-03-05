@@ -7,15 +7,12 @@ format long
 clc, clear all
 warning('off','all')
 global mu MS varChannel clientVars delays num_clients p q weights
-global periods tot_timesteps date_file_name lambdas clients delay_counter
+global periods date_file_name lambdas clients delay_counter
 
-%% Constants
-delay_counter = 0;
-RUNS = 1;
-num_clients =  20; 
-tot_timesteps = 300000;
+%% Constantss
+num_clients =  5; 
 selected_policy = 6  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
-regime_selection = 2  % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
+regime_selection = 3  % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
 %% Making directories
 
@@ -28,8 +25,6 @@ if not(isfolder('results'))
     mkdir('results')
 end
 
-
-
 date_file_name = sprintf('results/num_clients_%d_regime_%d/', num_clients, regime_selection);
 
 
@@ -39,7 +34,7 @@ end
 
 %% get theoretical mean and variance values
 
-SEED = 5798; %489578  %5798 for 20 clients regime 1
+SEED = 7541617; 
 
 rng(SEED);
 
@@ -52,7 +47,7 @@ if (regime_selection == 1)
 elseif(regime_selection == 2)
   [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic(num_clients, p, q, periods, delays);
 elseif(regime_selection == 3)
-  [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods, delays);
+  [MS, varChannel, mu, clientVars, weights, delays] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods);
 else
     error("ERROR: selected regime is not implemeneted. Exiting.");
 end
@@ -66,7 +61,7 @@ for x = 1 : num_clients
 
    current_client_file = sprintf('/client_%d_values.txt', x);
    client_filename = strcat(date_file_name, current_client_file);
-   %save(client_filename, 'client_array', '-ascii');
+   save(client_filename, 'client_array', '-ascii');
 
 end
 
@@ -92,7 +87,8 @@ vwd_sum_theoretical_value = vwd_sum_theoretical_value + clients(x).theoretical_v
 wld_sum_theoretical_value = wld_sum_theoretical_value + clients(x).theoretical_wld_rate;
 dbldf_sum_theoretical_value = dbldf_sum_theoretical_value + clients(x).theoretical_dbldf_rate;
 
-end
+  end
+
 vwd_sum_theoretical_value
 wld_sum_theoretical_value
 dbldf_sum_theoretical_value
@@ -110,23 +106,14 @@ end
 
 
 
+save_run_results(clients, num_clients); % to save theoretical values as well.
 
-%save_run_results(clients, num_clients); % to save theoretical values as well.
-
-
-
-
-disp('DONE')
-%disp(delay_counter)
 
 %% utility functions
 
 function save_run_results(clients, num_clients)
 
 global clients num_clients date_file_name
-
-
-
 
 for x = 1 : num_clients % clearing out the arrays before saving the final results.
     clients(x).packet_deadline_array = [];

@@ -21,7 +21,7 @@ prob = optimproblem('ObjectiveSense', 'minimize');
 vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', 100000);
 
 
-aoi_clients_num = floor(num_clients/2); % will be 2 for the case of 5 clients. 5 for 10 total clients, and 10 for 20 total clients.
+aoi_clients_num = floor(num_clients/2); % will be 3 for the case of 6 clients. 5 for 10 total clients, and 10 for 20 total clients.
 
 throughput_clients_num = num_clients - aoi_clients_num;
 

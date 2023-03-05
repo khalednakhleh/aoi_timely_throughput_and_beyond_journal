@@ -3,49 +3,56 @@
 % regime
 
 
-function [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods, delays)
+
+
+function [MS, varChannel, mu, clientVars, weights, delays] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods)
 
 % lambdas are the arrival rates
 kIterator = 100;
 
-assert( length(p) == num_clients);
-assert( length(q) == num_clients);
-
+assert(length(p) == num_clients);
+assert(length(q) == num_clients);
 
 %%%%%%%%%%%%%%%%%%% optimization %%%%%%%%%%%%%%%%%%%%%%%
 MS = CalculateMeans(num_clients, p, q); % ms for the entire set
-varChannel = calculateChannelVar(num_clients, p,q, kIterator);
+varChannel = calculateChannelVar(num_clients, p, q, kIterator);
 
-prob = optimproblem('ObjectiveSense', 'minimize');
+vars0 = rand(num_clients, 1);
+delays0 = rand(num_clients, 1);
 
-vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', 100000);
+weights = randi([10 100], 1, num_clients);
 
+% objective function
+objFun = @(x) sum((x(1:num_clients) ./ (2.*x(num_clients+1:end))) + (weights.*(x(num_clients+1:end).^2)));
 
-weights = randi([10 100], 1, num_clients) % pick random integers in range for the number of clients we have.
+% constraint function
+nonlcon = @(x) deal(sum(sqrt(x(1:num_clients))) - sqrt(varChannel), []);
 
-objectiveFunction = sum((vars ./ (2.*delays)) + (weights.*(delays.^2)));
+% variable bounds
+lb = [zeros(num_clients, 1); ones(num_clients, 1)];
+ub = [100000*ones(num_clients, 1); 100000*ones(num_clients, 1)];
 
-prob.Objective = objectiveFunction;
+options = optimoptions('surrogateopt','MaxFunctionEvaluations',200);
 
-prob.Constraints.varConstraint = sum(sqrt(vars)) == sqrt(varChannel);
+% solve optimization problem
+[x, fval] = surrogateopt(objFun);
 
-
-x0.vars = rand(size(vars));
-
-solution = solve(prob, x0)
+clientVars = x(1:num_clients);
+delays = x(num_clients+1:end);
 
 for i = 1:num_clients
-    fprintf("client %d variance: %.14f\n",i, solution.vars(i))
+    fprintf("client %d variance: %.14f\n",i, clientVars(i))
+    fprintf("delays: %.14f\n", delays(i))
 end
 
 fprintf("channel mean: %.16f\n", MS)
 fprintf("channel variance: %.16f\n", varChannel)
 
-clientVars = solution.vars;
-
 mu = 1./periods;
 
 end
+
+
 
 %% functions 
 function MS = CalculateMeans(numClients, p, q)
