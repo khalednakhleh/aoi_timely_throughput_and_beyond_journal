@@ -7,7 +7,7 @@ format long
 clc, clear all
 warning('off','all')
 global mu MS varChannel clientVars delays num_clients p q weights
-global periods date_file_name lambdas clients delay_counter
+global periods date_file_name lambdas clients
 
 %% Constantss
 num_clients =  5; 
@@ -54,6 +54,9 @@ end
 
 
 sigma_tot = sqrt(varChannel)
+
+delays
+clientVars
 
 for x = 1 : num_clients
    

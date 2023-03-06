@@ -3,58 +3,69 @@
 % regime
 
 
-
-
 function [MS, varChannel, mu, clientVars, weights, delays] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods)
 
 % lambdas are the arrival rates
 kIterator = 100;
 
-assert(length(p) == num_clients);
-assert(length(q) == num_clients);
+assert( length(p) == num_clients);
+assert( length(q) == num_clients);
 
 %%%%%%%%%%%%%%%%%%% optimization %%%%%%%%%%%%%%%%%%%%%%%
 MS = CalculateMeans(num_clients, p, q); % ms for the entire set
 varChannel = calculateChannelVar(num_clients, p, q, kIterator);
 
-vars0 = rand(num_clients, 1);
-delays0 = rand(num_clients, 1);
+weights = randi([100 1000], 1, num_clients); % pick random integers in range for the number of clients we have.
 
-weights = randi([10 100], 1, num_clients);
 
-% objective function
-objFun = @(x) sum((x(1:num_clients) ./ (2.*x(num_clients+1:end))) + (weights.*(x(num_clients+1:end).^2)));
+% Define the objective function
+objfun = @(x) objectivefunction(x, num_clients, weights); % The objective function is the sum of the first 5 variables
 
-% constraint function
-nonlcon = @(x) deal(sum(sqrt(x(1:num_clients))) - sqrt(varChannel), []);
 
-% variable bounds
-lb = [zeros(num_clients, 1); ones(num_clients, 1)];
-ub = [100000*ones(num_clients, 1); 100000*ones(num_clients, 1)];
+% Define the bounds for the variables
+lb = [zeros(1,5) 10*ones(1,5)]; % Lower bounds
+ub = [100000*ones(1,5) 100000*ones(1,5)]; % Upper bounds
 
-options = optimoptions('surrogateopt','MaxFunctionEvaluations',200);
+% Define the integer constraint for the last 5 variables
+intcon = [6 7 8 9 10];
 
-% solve optimization problem
-[x, fval] = surrogateopt(objFun);
 
-clientVars = x(1:num_clients);
-delays = x(num_clients+1:end);
+
+Aeq = [ones(1,num_clients), zeros(1, num_clients)];
+beq = sqrt(varChannel);
+
+options = optimoptions('surrogateopt','Display','none');
+
+% Call the surrogateopt function
+[x,fval] = surrogateopt(objfun,lb,ub,intcon, [], [], Aeq, beq, options);
+
+% Display the results
+disp(['Optimal solution: ' num2str(x)])
+disp(['Optimal objective value: ' num2str(fval)])
 
 for i = 1:num_clients
-    fprintf("client %d variance: %.14f\n",i, clientVars(i))
-    fprintf("delays: %.14f\n", delays(i))
+    fprintf("client %d variance: %.14f\n", i, x(i))
 end
 
 fprintf("channel mean: %.16f\n", MS)
 fprintf("channel variance: %.16f\n", varChannel)
+
+clientVars = x(1:num_clients);
+delays = x(num_clients+1:end);
 
 mu = 1./periods;
 
 end
 
 
-
 %% functions 
+
+
+function [f] = objectivefunction(x, num_clients, weights)
+    f = sum((x(1:num_clients).^2 ./ (2.*x(num_clients+1:end))) + (weights.*(x(num_clients+1:end).^2)));
+end
+
+
 function MS = CalculateMeans(numClients, p, q)
 
 pOverQ = [];
