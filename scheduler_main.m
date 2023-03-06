@@ -10,9 +10,9 @@ global mu MS varChannel clientVars delays num_clients p q weights
 global periods date_file_name lambdas clients
 
 %% Constantss
-num_clients =  5; 
+num_clients =  20; 
 selected_policy = 6  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
-regime_selection = 2  % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
+regime_selection = 1  % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
 %% Making directories
 
@@ -34,7 +34,7 @@ end
 
 %% get theoretical mean and variance values
 
-SEED = 4658215; 
+SEED = 489578; 
 
 rng(SEED);
 

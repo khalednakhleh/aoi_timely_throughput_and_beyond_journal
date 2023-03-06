@@ -27,7 +27,7 @@ elseif num_clients == 6 % for regime 1
 interval = 0.1;
 starting_q = 0.3;
 starting_factor = 0.9;
-initial_delay_value = [10, 20, 30, 40, 50, 60]; % for regime 2
+initial_delay_value = [5, 5, 5, 10, 20, 30]; % for regime 2
 
 
 elseif num_clients == 10
@@ -35,8 +35,8 @@ elseif num_clients == 10
 interval = 0.05;
 starting_q = 0.2326;
 starting_factor = 0.9;
-initial_delay_value = [15, 25, 35, 45, 55, 65, 75, 85, 95, 105];
-%[10, 10, 10, 10, 10, 15, 25, 35, 45, 55]; % for regime 1
+initial_delay_value = [15, 25, 35, 45, 55, 65, 75, 85, 95, 105]; % for regime 2
+% [10, 10, 10, 10, 10, 15, 25, 35, 45, 55]; % for regime 1
 %[15, 25, 35, 45, 55, 65, 75, 85, 95, 105]; % for regime 2
 
 
@@ -45,7 +45,7 @@ elseif num_clients == 20
 interval = 0.025;
 starting_q = 0.15;
 starting_factor = 0.95;
-initial_delay_value = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
+initial_delay_value =  [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] % for regime 1
 % [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] % for regime 1
 %[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200]; % for regime 2
 

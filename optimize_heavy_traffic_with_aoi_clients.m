@@ -22,7 +22,6 @@ vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'Upper
 aoi_means = optimvar('aoi_means', 1, floor(num_clients/2), 'Type', 'continuous', 'LowerBound',0, 'UpperBound', 100000);
 
 
-
 aoi_clients_num = floor(num_clients/2); % will be 3 for the case of 6 clients. 5 for 10 total clients, and 10 for 20 total clients.
 
 realtime_clients_num = num_clients - aoi_clients_num;
@@ -31,15 +30,13 @@ assert(realtime_clients_num + aoi_clients_num == num_clients);
 weights = ones(1,num_clients); % not used here.
 
 
-
-
 realtime_means = 1./periods;
 realtime_means = realtime_means(1:realtime_clients_num);
 
 
 % AoI objective function according to equation 14.
 obj_func_aoi = sum(0.5.*(vars(1:aoi_clients_num)./(aoi_means.^2) + (1./aoi_means)) + (1./lambdas(1:aoi_clients_num)) - 0.5);
-obj_func_throughput = sum((delays(1:realtime_clients_num).^2).*(vars(aoi_clients_num+1:num_clients) ./ (2.*delays(1:realtime_clients_num))));
+obj_func_throughput = sum((delays(realtime_clients_num+1:num_clients).^2).*(vars(realtime_clients_num+1:num_clients) ./ (2.*delays(realtime_clients_num+1:num_clients))));
 
 objectiveFunction = obj_func_aoi + obj_func_throughput;
 prob.Objective = objectiveFunction;

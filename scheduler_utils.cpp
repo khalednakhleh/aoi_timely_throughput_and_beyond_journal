@@ -13,8 +13,8 @@ InputParams parse_input_params(int argc, char **argv) {
         switch (opt) {
             case 'n':
                 params.num_clients = atoi(optarg);
-                if (params.num_clients != 1 && params.num_clients != 5 && params.num_clients != 10 && params.num_clients != 20) {
-                    std::cerr << "Error: number of clients must be 1, 5, 10, or 20." << std::endl;
+                if (params.num_clients != 1 && params.num_clients != 5 && params.num_clients != 6 && params.num_clients != 10 && params.num_clients != 20) {
+                    std::cerr << "Error: number of clients must be 1, 5, 6, 10, or 20." << std::endl;
                     exit(1);
                 }
                 n_set = true;

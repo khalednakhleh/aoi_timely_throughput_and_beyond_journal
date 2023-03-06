@@ -4,18 +4,19 @@ import numpy as np
 
 
 regime_selection = 2
-num_clients = [5]#, 10, 20]
+num_clients = [5, 10, 20]
 
-timeslots = 100000000
-policies = [6]#[1,3,4,6]
-labels = ['VWD', 'EDF', 'DBLDF', 'VWD'] # labels must match the policies order
-theoretical_labels = ['Theoretical VWD', 'Theoretical EDF', 'Theoretical DBLDF', 'Theoretical VWD']
-num_runs = 1
-plotting_interval = 2000000
+timeslots = 1000000000
+policies = [1,3,4,6]
+labels = ['WLD', 'EDF', 'DBLDF', 'VWD'] # labels must match the policies order
+theoretical_labels = ['Theoretical WLD', 'Theoretical DBLDF', 'Theoretical VWD']
+num_runs = 3
+plotting_interval = 20000000
 
-graph_interval = 20000000
-delays = [10,20,30,40,50]
-
+graph_interval = 100000000
+delays_five_clients = [10,20,30,40,50]
+delays_ten_clients = [15, 25, 35, 45, 55, 65, 75, 85, 95, 105]
+delays_twenty_clients = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200]
 
 empirical_colors = ['C1', 'C2', 'C3', 'C4']
 theoretical_colors = ['C5', 'C6', 'C7']
@@ -26,6 +27,12 @@ theoretical_styles = [(0, (1, 1)), 'dotted', 'dashdot']
 
 def average_results(current_policy, current_num_clients, regime_selection):
 
+    if current_num_clients == 5: 
+        delays = delays_five_clients
+    elif current_num_clients == 10:
+        delays = delays_ten_clients
+    elif current_num_clients == 20:
+        delays = delays_twenty_clients
 
     directory = (f"results/num_clients_{current_num_clients}_regime_{regime_selection}/")
     
@@ -96,14 +103,18 @@ i = 0
 for current_client in num_clients:
     
     selected_label = 0
+    theoretical_label_count = 0
     for current_policy in policies:
-        y = average_results(current_policy, current_client, regime_selection) # averaged value for a policy for n number of clients.
-        theoretical_value = plot_theoretical_values(current_policy, current_client, regime_selection)
-        y = y / np.arange(1,timeslots+plotting_interval, plotting_interval)
-        #print(theoretical_value)
-        #print(y)
-        axs[i].plot(x, y, label=labels[selected_label], color = empirical_colors[selected_label], linestyle=empirical_styles[selected_label])
-        axs[i].axhline(xmin=0, xmax=timeslots, y=theoretical_value, color=theoretical_colors[selected_label], linestyle=theoretical_styles[selected_label], label=theoretical_labels[selected_label])
+
+        if current_policy != 3:
+            y = average_results(current_policy, current_client, regime_selection) # averaged value for a policy for n number of clients.
+            theoretical_value = plot_theoretical_values(current_policy, current_client, regime_selection)
+            #sprint(selected_label)
+            axs[i].axhline(xmin=0, xmax=timeslots, y=theoretical_value, color=theoretical_colors[theoretical_label_count], linestyle=theoretical_styles[theoretical_label_count], label=theoretical_labels[theoretical_label_count])
+            theoretical_label_count = theoretical_label_count + 1
+            y = y / np.arange(1,timeslots+plotting_interval, plotting_interval)
+
+            axs[i].plot(x, y, label=labels[selected_label], color = empirical_colors[selected_label], linestyle=empirical_styles[selected_label])
         selected_label += 1
 
 
@@ -111,20 +122,21 @@ for current_client in num_clients:
     #axs[i].set_title('N = {}'.format(current_client))
     if i == 0:
         axs[i].set_ylabel(r'$\sum_i \alpha_i \cdot Q_i$', size=14)
+        axs[i].legend()
 
     if i == 1:
         axs[i].set_xlabel('Timesteps', size=14)
     
 
     axs[i].set_xticks(np.arange(0,timeslots+graph_interval-1,graph_interval))
-    axs[i].set_yticks(np.arange(0,3.5,0.5))
-    axs[i].legend()
+    #axs[i].set_yticks(np.arange(0,3.5,0.5))
+    
     #axs[i].title()
     i += 1
 
 
 
-axs[0].legend(loc='lower right', bbox_to_anchor=(1.27, 1.02) , borderaxespad=0., ncol=7, frameon=False)
+axs[0].legend(loc='lower right', bbox_to_anchor=(3.27, 1.02) , borderaxespad=0., ncol=7, frameon=False)
 
 
 # adjust the spacing between the subplots
