@@ -19,29 +19,41 @@ varChannel = calculateChannelVar(num_clients, p,q, kIterator);
 prob = optimproblem('ObjectiveSense', 'minimize');
 
 vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', 100000);
+aoi_means = optimvar('aoi_means', 1, floor(num_clients/2), 'Type', 'continuous', 'LowerBound',0, 'UpperBound', 100000);
+
 
 
 aoi_clients_num = floor(num_clients/2); % will be 3 for the case of 6 clients. 5 for 10 total clients, and 10 for 20 total clients.
 
-throughput_clients_num = num_clients - aoi_clients_num;
+realtime_clients_num = num_clients - aoi_clients_num;
 
-assert(throughput_clients_num + aoi_clients_num == num_clients);
-weights = ones(1,num_clients);
-mu = 1./periods;
+assert(realtime_clients_num + aoi_clients_num == num_clients);
+weights = ones(1,num_clients); % not used here.
+
+
+
+
+realtime_means = 1./periods;
+realtime_means = realtime_means(1:realtime_clients_num);
+
 
 % AoI objective function according to equation 14.
-obj_func_aoi = sum(0.5.*(vars(1:aoi_clients_num)./(mu(1:aoi_clients_num).^2) + (1./mu(1:aoi_clients_num))) + (1./lambdas(1:aoi_clients_num)) - 0.5);
-obj_func_throughput = sum((delays(aoi_clients_num+1:num_clients).^2).*(vars(aoi_clients_num+1:num_clients) ./ (2.*delays(aoi_clients_num+1:num_clients))));
+obj_func_aoi = sum(0.5.*(vars(1:aoi_clients_num)./(aoi_means.^2) + (1./aoi_means)) + (1./lambdas(1:aoi_clients_num)) - 0.5);
+obj_func_throughput = sum((delays(1:realtime_clients_num).^2).*(vars(aoi_clients_num+1:num_clients) ./ (2.*delays(1:realtime_clients_num))));
 
 objectiveFunction = obj_func_aoi + obj_func_throughput;
 prob.Objective = objectiveFunction;
 
 prob.Constraints.varConstraint = sum(sqrt(vars)) == sqrt(varChannel);
-
+prob.Constraints.aoimeanConstraint = sum(aoi_means) == (MS - sum(realtime_means));
 
 x0.vars = rand(size(vars));
+x0.aoi_means = rand(size(aoi_means));
 
 solution = solve(prob, x0)
+
+
+MS 
 
 for i = 1:num_clients
     fprintf("client %d variance: %.14f\n",i, solution.vars(i))
@@ -51,7 +63,9 @@ fprintf("channel mean: %.16f\n", MS)
 fprintf("channel variance: %.16f\n", varChannel)
 
 clientVars = solution.vars;
+aoi_means = solution.aoi_means;
 
+mu = [aoi_means realtime_means]
 
 end
 
