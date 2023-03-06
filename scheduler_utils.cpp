@@ -239,7 +239,7 @@ if(client_to_schedule == i){
 
 it->aoi_values = it->aoi_values + it->AoI;
 
-if (current_timestep % 20000000 == 0 || current_timestep + 1 == params.timesteps){
+if (current_timestep % save_results_interval == 0 || current_timestep + 1 == params.timesteps){
     it->aoi_values_vector.push_back(it->aoi_values);
 }
 
@@ -265,7 +265,7 @@ if(it->buffer <= 0){
     it->buffer = it->buffer - 1;
 }
 }
-if(current_timestep % 20000000 == 0 || current_timestep + 1 == params.timesteps){
+if(current_timestep % save_results_interval == 0 || current_timestep + 1 == params.timesteps){
 it->delay_values.push_back(it->D_t);
 }
 it->activations = it->A_t + it->U_t; // activations for delay clients.

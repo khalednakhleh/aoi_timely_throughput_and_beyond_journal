@@ -40,8 +40,6 @@ class Client {
 public: // defining the variables, setters, and getters.
 std::string client_type; // client can either be a "aoi" or "delay" client.
 
-
-//Client(int idx_value) : idx(idx_value) {}
 Client(int idx_value, double delay_value, double period_value, double p_value, double q_value, double mean_value, double variance_value, double weight_value, double lambda_value) 
 : idx(idx_value),delay(delay_value), period(period_value), p(p_value), q(q_value), mean(mean_value), variance(variance_value), weight(weight_value), lambda(lambda_value) {}
 
@@ -54,6 +52,8 @@ const double mean;
 const double variance;
 const double weight; 
 const double lambda;
+
+
 int buffer = 0;
 
 std::vector<double> delay_values_per_time;
@@ -83,6 +83,7 @@ public:
 
     std::list<Client> my_clients;
     const int seed_value;
+    const int save_results_interval = 200000;
     std::default_random_engine generator;
     std::uniform_real_distribution<double> distribution;
     
@@ -108,6 +109,7 @@ public:
     void aoi_client_packet_arrival(int current_timestep);
     void schedule_client_and_update_values(int current_timestep);
     virtual void update_client_parameters(int current_timestep);
+    void reset_values_for_new_run();
 
     
 }; // class BaseScheduler
