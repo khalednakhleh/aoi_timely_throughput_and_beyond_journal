@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
+# for plotting regime 2.
 
 regime_selection = 2
 num_clients = [5, 10, 20]
@@ -10,11 +11,11 @@ timeslots = 1000000000
 policies = [1,3,4,6]
 labels = ['WLD', 'EDF', 'DBLDF', 'VWD'] # labels must match the policies order
 theoretical_labels = ['Theoretical WLD', 'Theoretical DBLDF', 'Theoretical VWD']
-num_runs = 3
+num_runs = 2
 plotting_interval = 20000000
 
 graph_interval = 100000000
-delays_five_clients = [10,20,30,40,50]
+delays_five_clients = [10,20,30,40,50] 
 delays_ten_clients = [15, 25, 35, 45, 55, 65, 75, 85, 95, 105]
 delays_twenty_clients = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200]
 
