@@ -19,7 +19,7 @@
 #include <cmath>
 #include <memory>
 #include <iomanip>
-
+#include <cfloat>
 
 
 
@@ -83,7 +83,7 @@ public:
 
     std::list<Client> my_clients;
     const int seed_value;
-    const int save_results_interval = 2000000;
+    const int save_results_interval = 20000000;
     std::default_random_engine generator;
     std::uniform_real_distribution<double> distribution;
     
@@ -91,6 +91,7 @@ public:
     bool* states;
     bool* aoi_packets;
     int client_to_schedule; // index to schedule a client in a timestep
+    double tot_on_means;
 
     std::string filepath;
 
@@ -162,6 +163,16 @@ public:
 };
 
 
+class STATIONARY_DBLDF : public BaseScheduler {
+public:
+    // constructor that calls BaseScheduler constructor
+    STATIONARY_DBLDF(InputParams params, int seed_value) : BaseScheduler(params, seed_value) {}
+
+    void update_client_parameters(int current_timestep) override;
+
+    void stationary_random_selection(int current_timestep);
+    // additional member functions for STATIONARY_DBLDF class
+};
 
 
 

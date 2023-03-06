@@ -29,8 +29,8 @@ InputParams parse_input_params(int argc, char **argv) {
                 break;
             case 'p':
                 params.policy = atoi(optarg);
-                if (params.policy != 1 && params.policy != 3 && params.policy != 4 && params.policy != 6) {
-                    std::cerr << "Error: policy must be 1 (WLD), 3 (EDF), 4 (DBLDF), or 6 (VWD)." << std::endl;
+                if (params.policy != 1 && params.policy != 3 && params.policy != 4 && params.policy != 6 && params.policy != 7) {
+                    std::cerr << "Error: policy must be 1 (WLD), 3 (EDF), 4 (DBLDF), 6 (VWD), or 7 (STATIONARY_DBLDF)." << std::endl;
                     exit(1);
                 }
                 p_set = true;
@@ -139,11 +139,13 @@ void BaseScheduler::read_values_from_file(int client_index, const std::string& f
 
 void BaseScheduler::get_clients_channel_states() {
     int i = 0;
+    tot_on_means = 0.0;
     for (auto it = my_clients.begin(); it != my_clients.end(); ++it) {
         
         double number = distribution(generator);
         //std::cout << it->p << " " << it->q << " " << number << std::endl;
         if (states[i]) {
+            tot_on_means = tot_on_means + it->mean;
             if (number < it->p) {
                 states[i] = 0;
             }
@@ -382,6 +384,48 @@ for (auto it = my_clients.begin(); it != my_clients.end(); it++){
 
 it->deficit = ((it->mean * (double)current_timestep ) - (it->A_t + it->U_t)); 
 
+}
+
+}
+
+void STATIONARY_DBLDF::update_client_parameters(int current_timestep) {
+
+
+for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+
+if(current_timestep % 2){ // current timestep is odd, so do DBLDF selection rule.
+
+it->deficit = ((it->mean * (double)current_timestep ) - (it->A_t + it->U_t)); // updating the deficit for when choosing DBLDF.
+
+}else{ // current timestep is even, so do stationary random selection rule.
+
+int i = 0;
+std::vector<double> on_probabilities; 
+
+for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+if(states[i]){ on_probabilities.push_back(it->mean / tot_on_means);}
+else{on_probabilities.push_back(0.0);}
+}
+
+double rand_num = static_cast<double>(rand()) / RAND_MAX;
+
+double prob_sum = 0.0;
+int selected_idx = -1;
+for (int i = 0; i < on_probabilities.size(); i++) {
+    prob_sum += on_probabilities[i];
+    if (rand_num <= prob_sum) {
+        selected_idx = i;
+        break;
+    }
+}
+
+for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+if(it->idx == selected_idx+1){ it->deficit = DBL_MAX;}
+else{it->deficit = 0.0;}
+}
+
+
+}
 }
 
 }; // function DBLDF::update_client_parameters

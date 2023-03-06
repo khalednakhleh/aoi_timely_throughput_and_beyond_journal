@@ -26,7 +26,10 @@ if (params.policy == 6) {
     scheduler_ptr = std::unique_ptr<BaseScheduler>(new EDF(params, seed));
 } else if (params.policy == 4) {
     scheduler_ptr = std::unique_ptr<BaseScheduler>(new DBLDF(params, seed));
-} else {
+} else if (params.policy == 7) {
+    scheduler_ptr = std::unique_ptr<BaseScheduler>(new STATIONARY_DBLDF(params, seed));
+} 
+else {
     std::cout << "Invalid policy\n";
     return 1;
 }
