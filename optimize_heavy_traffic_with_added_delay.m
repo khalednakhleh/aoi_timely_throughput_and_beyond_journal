@@ -29,6 +29,11 @@ ub = [100000*ones(1,5) 100000*ones(1,5)]; % Upper bounds
 % Define the integer constraint for the last 5 variables
 intcon = [6 7 8 9 10];
 
+lb(10) = 15;
+lb(9) = 14;
+lb(8) = 13; 
+lb(7) = 12;
+lb(6) = 11;
 
 
 Aeq = [ones(1,num_clients), zeros(1, num_clients)];

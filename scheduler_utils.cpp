@@ -243,6 +243,7 @@ it->aoi_values = it->aoi_values + it->AoI;
 
 if (current_timestep % save_results_interval == 0 || current_timestep + 1 == params.timesteps){
     it->aoi_values_vector.push_back(it->aoi_values);
+    it->aoi_values = 0;
 }
 
 

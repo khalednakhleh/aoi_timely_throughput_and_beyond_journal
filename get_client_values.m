@@ -16,7 +16,8 @@ elseif num_clients == 5
 interval = 0.1;
 starting_q = 0.3;
 starting_factor = 0.9;
-initial_delay_value = [10, 20, 30, 40, 50]; % for regime 2
+initial_delay_value = [10, 20, 30, 40, 50];
+%[10, 20, 30, 40, 50]; % for regime 2
 %[5, 5, 10, 20, 30]
 %[20, 30, 40, 50, 60];
 %[5, 5, 10, 20, 30] % for regime 1
@@ -35,7 +36,7 @@ elseif num_clients == 10
 interval = 0.05;
 starting_q = 0.2326;
 starting_factor = 0.9;
-initial_delay_value = [15, 25, 35, 45, 55, 65, 75, 85, 95, 105]; % for regime 2
+initial_delay_value = [10, 10, 10, 10, 10, 15, 25, 35, 45, 55]; % for regime 1
 % [10, 10, 10, 10, 10, 15, 25, 35, 45, 55]; % for regime 1
 %[15, 25, 35, 45, 55, 65, 75, 85, 95, 105]; % for regime 2
 
@@ -97,8 +98,8 @@ end
 % for aoi clients only (generate for total number of clients even though we use floor(num_clients/2))
 
 
-lambda_max_range = 2 / num_clients;
-lambda_min_range = 0.5 / num_clients;
+lambda_max_range = 1 / num_clients;
+lambda_min_range = 0.1 / num_clients;
 
 lambdas = (lambda_max_range-lambda_min_range).*rand(1,num_clients) + lambda_min_range;
 

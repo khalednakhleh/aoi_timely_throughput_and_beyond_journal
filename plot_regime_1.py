@@ -4,13 +4,13 @@ import numpy as np
 
 
 regime_selection = 1
-num_clients = [6, 10, 20]
+num_clients = [6]#, 10]#, 20]
 
 timeslots = 1000000000
 policies = [6, 7]
 labels = ['VWD', 'Stationary and DBLDF'] # labels must match the policies order
 theoretical_labels = ['Theoretical VWD']
-num_runs = 5
+num_runs = 1
 plotting_interval = 20000000
 
 graph_interval = 100000000
@@ -34,11 +34,10 @@ def average_results(current_policy, current_num_clients, regime_selection):
     elif current_num_clients == 20:
         delays = delays_twenty_clients
 
-
-    if current_policy == 7:
-        num_runs = 1
-    else:
-        num_runs = 5
+    #if current_policy == 7:
+    #    num_runs = 1
+    #else:
+    #    num_runs = 2
 
 
     directory = (f"results/num_clients_{current_num_clients}_regime_{regime_selection}/")
@@ -48,19 +47,23 @@ def average_results(current_policy, current_num_clients, regime_selection):
     clients_value_per_policy = []
     for current_client in np.arange(1, current_num_clients+1):
         client_avg_over_runs = []
-        for current_run in np.arange(1, num_runs + 1):
-
+        
+        for current_run in np.arange(6, num_runs + 6):
+            
             df = pd.read_csv(directory+f"client_{current_client}_run_{current_run}_policy_{current_policy}_regime_{regime_selection}_results.txt", header=None)
-
+            
             value_to_plot = df.iloc[:,0]
+           
         
             if (regime_selection == 1 and current_client <= np.floor(current_num_clients/2)):
-               
+                
                 value_to_plot = np.cumsum(value_to_plot)
+                
             else: 
                 value_to_plot = df.iloc[:,0]
 
             client_avg_over_runs.append(value_to_plot)
+            #print(client_avg_over_runs)
 
         client_avg_over_runs = np.divide((np.sum(np.array(client_avg_over_runs), axis = 0)), num_runs) 
         
@@ -69,7 +72,7 @@ def average_results(current_policy, current_num_clients, regime_selection):
             realtime_counter = realtime_counter + 1;
 
         clients_value_per_policy.append(client_avg_over_runs)
-
+        #print(client_avg_over_runs)
     clients_value_per_policy = np.sum(np.array(clients_value_per_policy), axis=0)
 
 
