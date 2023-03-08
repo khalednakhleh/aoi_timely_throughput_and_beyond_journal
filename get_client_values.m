@@ -24,7 +24,7 @@ initial_delay_value = [10, 20, 30, 40, 50];
 
 
 elseif num_clients == 6 % for regime 1
-% for 5 clients
+% for 6 clients
 interval = 0.1;
 starting_q = 0.3;
 starting_factor = 0.9;

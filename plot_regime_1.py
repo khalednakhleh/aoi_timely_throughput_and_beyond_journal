@@ -4,7 +4,7 @@ import numpy as np
 
 
 regime_selection = 1
-num_clients = [6]#, 10]#, 20]
+num_clients = [6, 10, 20]
 
 timeslots = 1000000000
 policies = [6, 7]
@@ -111,7 +111,7 @@ def plot_theoretical_values(current_policy, current_num_clients, regime_selectio
 
 
 # create a figure with three subplots side by side
-fig, axs = plt.subplots(1, 3, figsize=(15,5))
+fig, axs = plt.subplots(1, 3, figsize=(15,3.5))
 
 x = np.arange(0,timeslots+plotting_interval, plotting_interval) # timeslots 
 
@@ -139,11 +139,11 @@ for current_client in num_clients:
     # set the title and axis labels
     #axs[i].set_title('N = {}'.format(current_client))
     if i == 0:
-        axs[i].set_ylabel(r'$\sum_i \alpha_i \cdot Q_i$', size=14)
+        axs[i].set_ylabel(r'$\sum_{i=1}^{N/2} \overline{AoI}+ \sum_{j=N/2 +1}^{N} \alpha_j \cdot Q_j$', size=14)
         axs[i].legend()
 
     if i == 1:
-        axs[i].set_xlabel('Timesteps', size=14)
+        axs[i].set_xlabel('Timeslots', size=14)
     
 
     axs[i].set_xticks(np.arange(0,timeslots+graph_interval-1,graph_interval))
@@ -160,8 +160,9 @@ axs[0].legend(loc='lower right', bbox_to_anchor=(2.7, 1.02) , borderaxespad=0., 
 # adjust the spacing between the subplots
 plt.subplots_adjust(wspace=0.3)
 
+plt.savefig(f"regime_{regime_selection}.pdf")
+
 # show the plot
 plt.show()
 
 
-plt.savefig(f"regime_{regime_selection}.pdf")

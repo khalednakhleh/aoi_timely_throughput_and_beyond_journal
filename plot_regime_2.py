@@ -106,7 +106,7 @@ def plot_theoretical_values(current_policy, current_num_clients, regime_selectio
 
 
 # create a figure with three subplots side by side
-fig, axs = plt.subplots(1, 3, figsize=(15,5))
+fig, axs = plt.subplots(1, 3, figsize=(15,3.5))
 
 x = np.arange(0,timeslots+plotting_interval, plotting_interval) # timeslots 
 
@@ -140,7 +140,7 @@ for current_client in num_clients:
         axs[i].legend()
 
     if i == 1:
-        axs[i].set_xlabel('Timesteps', size=14)
+        axs[i].set_xlabel('Timeslots', size=14)
     
 
     axs[i].set_xticks(np.arange(0,timeslots+graph_interval-1,graph_interval))
