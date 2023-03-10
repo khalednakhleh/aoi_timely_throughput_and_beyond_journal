@@ -10,7 +10,7 @@ global mu MS varChannel clientVars delays num_clients p q weights
 global periods date_file_name lambdas clients
 
 %% Constantss
-num_clients =  20; 
+num_clients =  6; 
 selected_policy = 6  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
 regime_selection = 1  % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
@@ -65,7 +65,7 @@ for x = 1 : num_clients
 
    current_client_file = sprintf('/client_%d_values.txt', x);
    client_filename = strcat(date_file_name, current_client_file);
-   save(client_filename, 'client_array', '-ascii');
+   %save(client_filename, 'client_array', '-ascii');
 
 end
 
@@ -110,7 +110,7 @@ end
 
 
 
-save_run_results(clients, num_clients); % to save theoretical values as well.
+%save_run_results(clients, num_clients); % to save theoretical values as well.
 
 
 %% utility functions

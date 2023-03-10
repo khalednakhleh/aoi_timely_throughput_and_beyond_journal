@@ -83,7 +83,7 @@ public:
 
     std::list<Client> my_clients;
     const int seed_value;
-    const int save_results_interval = 20000000;
+    const int save_results_interval = 2000000;
     std::default_random_engine generator;
     std::uniform_real_distribution<double> distribution;
     
