@@ -10,8 +10,8 @@ timeslots = 1000000000
 policies = [6, 7]
 labels = ['VWD', 'Stationary and DBLDF'] # labels must match the policies order
 theoretical_labels = ['Theoretical VWD']
-num_runs = 1
-plotting_interval = 20000000
+num_runs = 5
+plotting_interval = 2000000
 
 graph_interval = 100000000
 delays_six_clients = [10,20,30] 
@@ -34,12 +34,6 @@ def average_results(current_policy, current_num_clients, regime_selection):
     elif current_num_clients == 20:
         delays = delays_twenty_clients
 
-    #if current_policy == 7:
-    #    num_runs = 1
-    #else:
-    #    num_runs = 2
-
-
     directory = (f"results/num_clients_{current_num_clients}_regime_{regime_selection}/")
     
     realtime_counter = 0
@@ -48,7 +42,7 @@ def average_results(current_policy, current_num_clients, regime_selection):
     for current_client in np.arange(1, current_num_clients+1):
         client_avg_over_runs = []
         
-        for current_run in np.arange(6, num_runs + 6):
+        for current_run in np.arange(1, num_runs+1):
             
             df = pd.read_csv(directory+f"client_{current_client}_run_{current_run}_policy_{current_policy}_regime_{regime_selection}_results.txt", header=None)
             
@@ -63,13 +57,12 @@ def average_results(current_policy, current_num_clients, regime_selection):
                 value_to_plot = df.iloc[:,0]
 
             client_avg_over_runs.append(value_to_plot)
-            #print(client_avg_over_runs)
 
         client_avg_over_runs = np.divide((np.sum(np.array(client_avg_over_runs), axis = 0)), num_runs) 
         
         if (current_client > np.floor(current_num_clients/2)):
             client_avg_over_runs = (delays[realtime_counter]**2) * client_avg_over_runs
-            realtime_counter = realtime_counter + 1;
+            realtime_counter = realtime_counter + 1
 
         clients_value_per_policy.append(client_avg_over_runs)
         #print(client_avg_over_runs)
