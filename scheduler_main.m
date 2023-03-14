@@ -10,9 +10,9 @@ global mu MS varChannel clientVars delays num_clients p q weights
 global periods date_file_name lambdas clients
 
 %% Constantss
-num_clients =  6; 
+num_clients =  5; 
 selected_policy = 6  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
-regime_selection = 1  % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
+regime_selection = 3  % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
 %% Making directories
 
@@ -47,13 +47,44 @@ if (regime_selection == 1)
 elseif(regime_selection == 2)
   [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic(num_clients, p, q, periods, delays);
 elseif(regime_selection == 3)
-  [MS, varChannel, mu, clientVars, weights, delays] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods);
+  [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods, selected_policy);
 else
     error("ERROR: selected regime is not implemeneted. Exiting.");
 end
 
 
+% Delays here and the ones displayed for regime 3 are the VWD delay
+% values. WLD and DBLDF are calculated in the
+% calculate_theoretical_interruprt_rate.m file for regime 3.
+
+
 sigma_tot = sqrt(varChannel)
+
+
+if num_clients == 5 % using it in regime 3
+    delay_tot = 150;
+
+elseif num_clients == 10
+   delay_tot = 600;
+elseif num_clients == 20
+   delay_tot = 2100;
+elseif num_clients == 6
+    %do nothing
+else
+    error("number of selected clients is not in the list.");
+end
+
+if (regime_selection == 3 && selected_policy == 6)
+    disp('calculating delay for VWD')
+    delays = (clientVars.^(2/3) ./ (4.*weights).^(1/3));
+elseif (regime_selection == 3 && selected_policy == 1) % WLD for regime 3
+    delays = (clientVars ./sigma_tot) * delay_tot;
+elseif (regime_selection ==3 && selected_policy == 4) % DBLDF for regime 3
+    delays = delay_tot ./ num_clients;
+end
+
+
+
 
 delays
 clientVars

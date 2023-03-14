@@ -7,6 +7,19 @@ function calculate_theoretical_interrupt_rate(clients, num_clients, sigma_tot, d
 
 global clients num_clients
 
+if num_clients == 5 % using it in regime 3
+    delay_tot = 150;
+
+elseif num_clients == 10
+   delay_tot = 600;
+elseif num_clients == 20
+   delay_tot = 2100;
+elseif num_clients == 6
+    %do nothing
+else
+    error("number of selected clients is not in the list.");
+end
+
    
 for x = 1 : num_clients
 
@@ -27,9 +40,10 @@ for x = 1 : num_clients
 
     elseif(regime_selection == 3)
 
-     clients(x).theoretical_vwd_rate = (clients(x).clientVars / (2*clients(x).delay)) + clients(x).weight * (clients(x).delay^2);
-     clients(x).theoretical_wld_rate = ((sigma_tot^2 * clients(x).delay) / (2*(sum(delays))^2)) + clients(x).weight * (clients(x).delay^2);
-     clients(x).theoretical_dbldf_rate = ((sigma_tot/num_clients)^2 / (2*clients(x).delay)) + clients(x).weight * (clients(x).delay^2);
+
+     clients(x).theoretical_vwd_rate = (3*clients(x).weight*sqrt(clients(x).clientVars)^(4/3)) / ((4 * clients(x).weight)^(2/3));
+     clients(x).theoretical_wld_rate = (clients(x).clientVars * delay_tot) / (2 * (sum(delays))^2);
+     clients(x).theoretical_dbldf_rate = sigma_tot^2 / (2 * num_clients * sum(delays));
 
     else
       error("Selected regime does not have theoretical value. Exiting.");
