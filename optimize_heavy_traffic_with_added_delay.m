@@ -3,7 +3,7 @@
 % regime
 
 
-function [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods, selected_policy)
+function [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods)
 
 % lambdas are the arrival rates
 kIterator = 100;
@@ -20,10 +20,13 @@ prob = optimproblem('ObjectiveSense', 'minimize');
 
 vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', 100000);
 
+weight_min_range = 0.000000001
+weight_max_range = 0.00000001
+weights = (weight_max_range-weight_min_range).*rand(1, num_clients) + weight_min_range  % pick random integers in range for the number of clients we have.
+%weights = [0.000001, 0.000001, 0.0000001, 0.000001, 0.0000001]
 
-weights = randi([10 100], 1, num_clients) % pick random integers in range for the number of clients we have.
 
-objectiveFunction = sum((3 .* weights .* vars.^(4/3))./((4 .* weights).^(2/3))); %sum((vars ./ (2.*delays)) + (weights.*(delays.^2)));
+objectiveFunction = sum((3 .* weights .* (sqrt(vars).^(4/3)))./((4 .* weights).^(2/3)));
 
 prob.Objective = objectiveFunction;
 
@@ -45,6 +48,7 @@ clientVars = solution.vars;
 
 mu = 1./periods;
 
+end
 
 %% functions 
 function MS = CalculateMeans(numClients, p, q)

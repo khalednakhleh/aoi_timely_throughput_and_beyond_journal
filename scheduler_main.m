@@ -11,7 +11,7 @@ global periods date_file_name lambdas clients
 
 %% Constantss
 num_clients =  5; 
-selected_policy = 6  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
+selected_policy = 1  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
 regime_selection = 3  % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
 %% Making directories
@@ -34,7 +34,7 @@ end
 
 %% get theoretical mean and variance values
 
-SEED = 489578; 
+SEED = 57833 %489578; 
 
 rng(SEED);
 
@@ -47,7 +47,7 @@ if (regime_selection == 1)
 elseif(regime_selection == 2)
   [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic(num_clients, p, q, periods, delays);
 elseif(regime_selection == 3)
-  [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods, selected_policy);
+  [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods);
 else
     error("ERROR: selected regime is not implemeneted. Exiting.");
 end
@@ -63,7 +63,6 @@ sigma_tot = sqrt(varChannel)
 
 if num_clients == 5 % using it in regime 3
     delay_tot = 150;
-
 elseif num_clients == 10
    delay_tot = 600;
 elseif num_clients == 20
@@ -74,15 +73,14 @@ else
     error("number of selected clients is not in the list.");
 end
 
-if (regime_selection == 3 && selected_policy == 6)
+if (regime_selection == 3 && selected_policy == 6) % VWD for regime 3
     disp('calculating delay for VWD')
-    delays = (clientVars.^(2/3) ./ (4.*weights).^(1/3));
+    delays = floor(((sqrt(clientVars).^(2/3)) ./ (4.*weights).^(1/3)));
 elseif (regime_selection == 3 && selected_policy == 1) % WLD for regime 3
-    delays = (clientVars ./sigma_tot) * delay_tot;
+    delays = floor((sqrt(clientVars) ./sigma_tot) * delay_tot);
 elseif (regime_selection ==3 && selected_policy == 4) % DBLDF for regime 3
-    delays = delay_tot ./ num_clients;
+    delays = floor(repelem(delay_tot / num_clients, num_clients));
 end
-
 
 
 

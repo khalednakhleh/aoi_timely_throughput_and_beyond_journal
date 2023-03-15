@@ -42,7 +42,7 @@ for x = 1 : num_clients
 
 
      clients(x).theoretical_vwd_rate = (3*clients(x).weight*sqrt(clients(x).clientVars)^(4/3)) / ((4 * clients(x).weight)^(2/3));
-     clients(x).theoretical_wld_rate = (clients(x).clientVars * delay_tot) / (2 * (sum(delays))^2);
+     clients(x).theoretical_wld_rate = (sqrt(clients(x).clientVars) * delay_tot) / (2 * (sum(delays))^2);
      clients(x).theoretical_dbldf_rate = sigma_tot^2 / (2 * num_clients * sum(delays));
 
     else
