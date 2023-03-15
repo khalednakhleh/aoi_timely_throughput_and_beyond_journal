@@ -20,8 +20,8 @@ prob = optimproblem('ObjectiveSense', 'minimize');
 
 vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', 100000);
 
-weight_min_range = 0.00000000001
-weight_max_range = 0.0000000001
+weight_min_range = 0.000000000001
+weight_max_range = 0.00000000001
 weights = (weight_max_range-weight_min_range).*rand(1, num_clients) + weight_min_range  % pick random integers in range for the number of clients we have.
 %weights = [0.000001, 0.000001, 0.0000001, 0.000001, 0.0000001]
 

@@ -11,9 +11,9 @@ if num_clients == 5 % using it in regime 3
     delay_tot = 150;
 
 elseif num_clients == 10
-   delay_tot = 600;
+   delay_tot = 400;
 elseif num_clients == 20
-   delay_tot = 2100;
+   delay_tot = 1000;
 elseif num_clients == 6
     %do nothing
 else
