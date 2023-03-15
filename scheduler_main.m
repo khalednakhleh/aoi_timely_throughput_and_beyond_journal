@@ -10,8 +10,8 @@ global mu MS varChannel clientVars delays num_clients p q weights
 global periods date_file_name lambdas clients
 
 %% Constantss
-num_clients =  5; 
-selected_policy = 1  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
+num_clients =  10; 
+selected_policy = 4  % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
 regime_selection = 3  % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
 %% Making directories
@@ -64,7 +64,7 @@ sigma_tot = sqrt(varChannel)
 if num_clients == 5 % using it in regime 3
     delay_tot = 150;
 elseif num_clients == 10
-   delay_tot = 600;
+   delay_tot = 400;
 elseif num_clients == 20
    delay_tot = 2100;
 elseif num_clients == 6
@@ -78,8 +78,10 @@ if (regime_selection == 3 && selected_policy == 6) % VWD for regime 3
     delays = floor(((sqrt(clientVars).^(2/3)) ./ (4.*weights).^(1/3)));
 elseif (regime_selection == 3 && selected_policy == 1) % WLD for regime 3
     delays = floor((sqrt(clientVars) ./sigma_tot) * delay_tot);
+    disp(delays)
 elseif (regime_selection ==3 && selected_policy == 4) % DBLDF for regime 3
     delays = floor(repelem(delay_tot / num_clients, num_clients));
+    disp(delays)
 end
 
 
