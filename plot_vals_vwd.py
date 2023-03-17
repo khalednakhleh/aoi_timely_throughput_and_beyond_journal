@@ -65,24 +65,22 @@ for delay_value in delay_total_vals:
     tot_theoretical_values.append( sum(theoretical_values) / RUNS )
 
 
-print(tot_avg_empirical_values)
-print(tot_theoretical_values)
 
 
 plt.figure(1)
 
 
-plt.plot(delay_total_vals, tot_avg_empirical_values, label='Empirical $Q_i$', zorder=1, marker='o', color='r', linestyle='solid')
-plt.plot(delay_total_vals, tot_theoretical_values, label='Theoretical $Q_i$', zorder=2, marker='x', color='k', linestyle='dotted')
+plt.plot(delay_total_vals, tot_avg_empirical_values, label='Empirical outage', zorder=1, marker='o', color='r', linestyle='solid')
+plt.plot(delay_total_vals, tot_theoretical_values, label='Theoretical outage', zorder=2, marker='x', color='k', linestyle='dotted')
 
 
 #plt.yscale('log')
 
 plt.xticks(delay_total_vals)
 
-plt.legend()
+plt.legend(frameon=False)
 plt.xlabel('Total delay $\ell$')
-plt.ylabel('Outage rate $\sum_i Q_i$')
+plt.ylabel('Outage rate $\sum_i \overline{outage}$')
 plt.savefig('num_clients_'+str(num_clients)+'_regime_selection_'+str(regime_selection)+'_runs_'+str(RUNS)+'.pdf')
 plt.show()
 

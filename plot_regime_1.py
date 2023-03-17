@@ -2,6 +2,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
+import matplotlib as mpl 
+
+mpl.use('pgf')
 
 regime_selection = 1
 num_clients = [6, 10, 20]
@@ -132,7 +135,7 @@ for current_client in num_clients:
     # set the title and axis labels
     #axs[i].set_title('N = {}'.format(current_client))
     if i == 0:
-        axs[i].set_ylabel(r'$\sum_{i=1}^{N/2} \overline{AoI}+ \sum_{j=N/2 +1}^{N} \alpha_j \cdot Q_j$', size=14)
+        axs[i].set_ylabel(r'$\sum_{i=1}^{N/2} \overline{AoI}+ \sum_{j=N/2 +1}^{N} \alpha_j \cdot \overline{outage}$', size=14)
         axs[i].legend()
 
     if i == 1:
@@ -140,14 +143,17 @@ for current_client in num_clients:
     
 
     axs[i].set_xticks(np.arange(0,timeslots+graph_interval-1,graph_interval))
-    #axs[i].set_yticks(np.arange(0,3.5,0.5))
+    handles, labels = axs[0].get_legend_handles_labels()
+    order = [0,2,1]
+    axs[i].legend([handles[idx] for idx in order],[labels[idx] for idx in order], frameon=False) 
     
     #axs[i].title()
+
     i += 1
 
 
 
-axs[0].legend(loc='lower right', bbox_to_anchor=(2.7, 1.02) , borderaxespad=0., ncol=7, frameon=False)
+#axs[0].legend(loc='lower right', bbox_to_anchor=(2.7, 1.02) , borderaxespad=0., ncol=7, frameon=False)
 
 
 # adjust the spacing between the subplots

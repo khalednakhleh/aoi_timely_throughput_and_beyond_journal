@@ -20,10 +20,10 @@ prob = optimproblem('ObjectiveSense', 'minimize');
 
 vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', 100000);
 
-weight_min_range = 0.000000000001
-weight_max_range = 0.00000000001
-weights = (weight_max_range-weight_min_range).*rand(1, num_clients) + weight_min_range  % pick random integers in range for the number of clients we have.
-%weights = [0.000001, 0.000001, 0.0000001, 0.000001, 0.0000001]
+%weight_min_range = 0.00000001
+%weight_max_range = 0.00000005
+%weights = (weight_max_range-weight_min_range).*rand(1, num_clients) + weight_min_range  % pick random integers in range for the number of clients we have.
+weights = [0.00002, 0.00008, 0.00005, 0.00002, 0.00006]
 
 
 objectiveFunction = sum((3 .* weights .* (sqrt(vars).^(4/3)))./((4 .* weights).^(2/3)));
@@ -33,7 +33,7 @@ prob.Objective = objectiveFunction;
 prob.Constraints.varConstraint = sum(sqrt(vars)) == sqrt(varChannel);
 
 
-x0.vars = rand(size(vars));
+x0.vars = zeros(size(vars));
 
 solution = solve(prob, x0)
 

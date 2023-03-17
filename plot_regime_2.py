@@ -3,20 +3,20 @@ import pandas as pd
 import numpy as np
 import matplotlib as mpl 
 
-#mpl.use('pgf')
+mpl.use('pgf')
 # for plotting regime 2.
 
 regime_selection = 2
 num_clients = [5, 10, 20]
 
 timeslots = 1000000000
-policies = [1,3,4,6]
+policies = [6,1,4]
 
 
-labels = ['WLD', 'EDF', 'DBLDF', 'VWD'] # labels must match the policies order
+#labels = ['WLD', 'DBLDF', 'VWD'] # labels must match the policies order
+labels = ['VWD', 'WLD', 'DBLDF']
 
-
-theoretical_labels = ['Theoretical WLD', 'Theoretical DBLDF', 'Theoretical VWD']
+theoretical_labels = ['Theoretical VWD']
 
 num_runs = 3
 plotting_interval = 20000000
@@ -119,24 +119,26 @@ for current_client in num_clients:
     theoretical_label_count = 0
     for current_policy in policies:
 
-        if current_policy != 3:
+
+        y = average_results(current_policy, current_client, regime_selection) # averaged value for a policy for n number of clients.
+        y = y / np.arange(1, timeslots+plotting_interval, plotting_interval)
+
+        axs[i].plot(x, y, label=labels[selected_label], color = empirical_colors[selected_label], linestyle=empirical_styles[selected_label])
+        
+        if (current_policy == 6):
             
             theoretical_value = plot_theoretical_values(current_policy, current_client, regime_selection)
             
             axs[i].axhline(xmin=0, xmax=timeslots, y=theoretical_value, color=theoretical_colors[theoretical_label_count], linestyle=theoretical_styles[theoretical_label_count], label=theoretical_labels[theoretical_label_count])
             theoretical_label_count = theoretical_label_count + 1
         
-        y = average_results(current_policy, current_client, regime_selection) # averaged value for a policy for n number of clients.
-        y = y / np.arange(1, timeslots+plotting_interval, plotting_interval)
-
-        axs[i].plot(x, y, label=labels[selected_label], color = empirical_colors[selected_label], linestyle=empirical_styles[selected_label])
         selected_label += 1
 
 
     # set the title and axis labels
     #axs[i].set_title('N = {}'.format(current_client))
     if i == 0:
-        axs[i].set_ylabel(r'$\sum_i \alpha_i \cdot Q_i$', size=14)
+        axs[i].set_ylabel(r'$\sum_i \alpha_i \cdot \overline{outage}$', size=14)
         axs[i].legend()
 
     if i == 1:
@@ -144,14 +146,17 @@ for current_client in num_clients:
     
 
     axs[i].set_xticks(np.arange(0,timeslots+graph_interval-1,graph_interval))
-    axs[i].set_yscale('log')
     
+    handles, labels = axs[0].get_legend_handles_labels()
+    order = [0,2,3,1]
+    #axs[i].set_yscale('log')
+    axs[i].legend([handles[idx] for idx in order],[labels[idx] for idx in order], frameon=False)    
     
     i += 1
 
 
 
-axs[0].legend(loc='lower right', bbox_to_anchor=(3.27, 1.02) , borderaxespad=0., ncol=7, frameon=False)
+#axs[0].legend(loc='lower right', bbox_to_anchor=(3.27, 1.02) , borderaxespad=0., ncol=7, frameon=False)
 
 
 # adjust the spacing between the subplots
