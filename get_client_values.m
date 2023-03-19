@@ -120,8 +120,8 @@ assert(sum(q < 0) == 0) % ensure that sum of elements violating condition is zer
 assert(length(lambdas) == num_clients)
 
 
-lambdas
-delays
+lambdas;
+delays;
 periods
 p
 q

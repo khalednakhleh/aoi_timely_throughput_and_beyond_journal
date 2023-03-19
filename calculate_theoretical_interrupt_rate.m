@@ -27,8 +27,8 @@ for x = 1 : num_clients
 
     elseif(regime_selection == 3)
      clients(x).theoretical_vwd_rate = (3*clients(x).weight*sqrt(clients(x).clientVars)^(4/3)) / ((4 * clients(x).weight)^(2/3));
-     clients(x).theoretical_wld_rate = ((sigma_tot^2 * clients(x).delay) / (2 * (sum(delays))^2))  + clients(x).weight * clients(x).delay^2; 
-     clients(x).theoretical_dbldf_rate = (sigma_tot^2 / (2 * num_clients^2 * clients(x).delay)) + clients(x).weight * clients(x).delay^2;
+     clients(x).theoretical_wld_rate = ( sigma_tot^5 * clients(x).delay ^ 2 + 2 * sqrt(clients(x).clientVars)^3 * clients(x).weight * sum(delays)^5 ) / (2 * sigma_tot^2 * sum(delays)^3 * sqrt(clients(x).clientVars));
+     clients(x).theoretical_dbldf_rate = (num_clients^2 * sigma_tot^2 + 2 * sum(delays)^3 * clients(x).weight) / (2 * num_clients^2 * sum(delays));
 
     else
       error("Selected regime does not have theoretical value. Exiting.");

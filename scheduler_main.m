@@ -11,7 +11,7 @@ global periods date_file_name lambdas clients
 
 %% Constantss
 num_clients =  20; 
-selected_policy = 1 % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
+selected_policy = 4 % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
 regime_selection = 3  % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
 
 %% Making directories
@@ -61,11 +61,11 @@ end
 sigma_tot = sqrt(varChannel)
 
 if num_clients == 5 % using it in regime 3
-    delay_tot = 9;
+    delay_tot = 16;
 elseif num_clients == 10
-   delay_tot = 22;
+   delay_tot = 40;
 elseif num_clients == 20
-   delay_tot = 46;
+   delay_tot = 78;
 elseif num_clients == 6
     %do nothing
 else
@@ -74,17 +74,16 @@ end
 
 if (regime_selection == 3 && selected_policy == 6) % VWD for regime 3
     disp('calculating delay for VWD')
-    delays = floor(((sqrt(clientVars).^(2/3)) ./ (4.*weights).^(1/3)));
+    delays = ceil(((sqrt(clientVars).^(2/3)) ./ (4.*weights).^(1/3)));
 elseif (regime_selection == 3 && selected_policy == 1) % WLD for regime 3
     disp('calculating delay for WLD')
-    delays = floor((sqrt(clientVars) ./sigma_tot) * delay_tot);
+    delays = ceil((sqrt(clientVars) ./sigma_tot) * delay_tot);
     disp(delays)
 elseif (regime_selection ==3 && selected_policy == 4) % DBLDF for regime 3
     disp('calculating delay for DBLDF')
-    delays = floor(repelem(delay_tot / num_clients, num_clients));
+    delays = ceil(repelem(delay_tot / num_clients, num_clients));
     disp(delays)
 end
-
 
 
 delays
