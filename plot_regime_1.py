@@ -135,12 +135,11 @@ for current_client in num_clients:
     # set the title and axis labels
     #axs[i].set_title('N = {}'.format(current_client))
     if i == 0:
-        axs[i].set_ylabel(r'$\sum_{i=1}^{N/2} \overline{AoI}+ \sum_{j=N/2 +1}^{N} \alpha_j \cdot \overline{outage}$', size=14)
         axs[i].legend()
 
-    if i == 1:
-        axs[i].set_xlabel('Timeslots', size=14)
-    
+    axs[i].set_xlabel('Timeslots $t$', size=9)
+    axs[i].set_ylabel(r'$\sum_{i=1}^{N/2} \overline{AoI}_i+ \sum_{j=N/2 +1}^{N} \alpha_j \cdot \overline{outage}_j$', size=9)
+
 
     axs[i].set_xticks(np.arange(0,timeslots+graph_interval-1,graph_interval))
     handles, labels = axs[0].get_legend_handles_labels()

@@ -8,8 +8,8 @@ function [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic_with
 % lambdas are the arrival rates
 kIterator = 100;
 
-assert( length(p) == num_clients);
-assert( length(q) == num_clients);
+assert(length(p) == num_clients);
+assert(length(q) == num_clients);
 
 
 %%%%%%%%%%%%%%%%%%% optimization %%%%%%%%%%%%%%%%%%%%%%%
@@ -20,10 +20,14 @@ prob = optimproblem('ObjectiveSense', 'minimize');
 
 vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', 100000);
 
-%weight_min_range = 0.00000001
-%weight_max_range = 0.00000005
-%weights = (weight_max_range-weight_min_range).*rand(1, num_clients) + weight_min_range  % pick random integers in range for the number of clients we have.
-weights = [0.00002, 0.00008, 0.00005, 0.00002, 0.00006]
+% for 5 clients: min is 0.0001, and max is 0.0002.
+% for 10 clients: min is 0.00001, and max is 0.00002.
+% for 20 clients: min is 0.000001 and max is 0.000002.
+
+weight_min_range = 0.000001
+weight_max_range = 0.000002
+weights = (weight_max_range-weight_min_range).*rand(1, num_clients) + weight_min_range  % pick random integers in range for the number of clients we have.
+%weights = [0.000005, 0.000005, 0.000005, 0.000005, 0.000005]
 
 
 objectiveFunction = sum((3 .* weights .* (sqrt(vars).^(4/3)))./((4 .* weights).^(2/3)));

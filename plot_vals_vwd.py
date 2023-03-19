@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl 
 
 
-#mpl.use('pgf')
+mpl.use('pgf')
 
 
 WIDTH = 8 
@@ -31,7 +31,7 @@ delay_total_vals = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] # these 
 
 UNDERLOADED_C_CONSTANT = 0.15
 
-folder_name = (f'results/clients_1_p_0.6_q_0.15_lambda_0.2/policy_{selected_policy}_regime_selection_{regime_selection}_tot_timesteps_{timesteps}_num_clients_{num_clients}_tot_delay_')
+folder_name = (f'results/clients_1_p_0.98_q_0.14_lambda_0.125/policy_{selected_policy}_regime_selection_{regime_selection}_tot_timesteps_{timesteps}_num_clients_{num_clients}_tot_delay_')
 
 
 ######################
@@ -70,8 +70,8 @@ for delay_value in delay_total_vals:
 plt.figure(1)
 
 
-plt.plot(delay_total_vals, tot_avg_empirical_values, label='Empirical outage', zorder=1, marker='o', color='r', linestyle='solid')
-plt.plot(delay_total_vals, tot_theoretical_values, label='Theoretical outage', zorder=2, marker='x', color='k', linestyle='dotted')
+plt.plot(delay_total_vals, tot_avg_empirical_values, label='Empirical outage rate', zorder=1, marker='o', color='r', linestyle='solid')
+plt.plot(delay_total_vals, tot_theoretical_values, label='Theoretical outage rate', zorder=2, marker='x', color='k', linestyle='dotted')
 
 
 #plt.yscale('log')
@@ -80,7 +80,7 @@ plt.xticks(delay_total_vals)
 
 plt.legend(frameon=False)
 plt.xlabel('Total delay $\ell$')
-plt.ylabel('Outage rate $\sum_i \overline{outage}$')
+plt.ylabel('Outage rate $\overline{outage}$')
 plt.savefig('num_clients_'+str(num_clients)+'_regime_selection_'+str(regime_selection)+'_runs_'+str(RUNS)+'.pdf')
 plt.show()
 
