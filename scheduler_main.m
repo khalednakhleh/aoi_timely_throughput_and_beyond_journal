@@ -61,11 +61,11 @@ end
 sigma_tot = sqrt(varChannel)
 
 if num_clients == 5 % using it in regime 3
-    delay_tot = 16;
+    delay_tot = 136;
 elseif num_clients == 10
-   delay_tot = 40;
+   delay_tot = 349;
 elseif num_clients == 20
-   delay_tot = 78;
+   delay_tot = 691;
 elseif num_clients == 6
     %do nothing
 else
@@ -96,7 +96,7 @@ for x = 1 : num_clients
 
    current_client_file = sprintf('/client_%d_values.txt', x);
    client_filename = strcat(date_file_name, current_client_file);
-   %save(client_filename, 'client_array', '-ascii');
+   save(client_filename, 'client_array', '-ascii');
 
 end
 
@@ -109,7 +109,6 @@ end
 
   create_clients(clients, delays, periods, p, q, num_clients, mu, clientVars, lambdas);
   calculate_theoretical_interrupt_rate(clients, num_clients, sqrt(varChannel), delays, regime_selection);
-
 
 
 vwd_sum_theoretical_value = 0;
@@ -141,7 +140,7 @@ end
 
 
 
-%save_run_results(clients, num_clients); % to save theoretical values as well.
+save_run_results(clients, num_clients); % to save theoretical values as well.
 
 
 

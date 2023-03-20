@@ -20,12 +20,20 @@ prob = optimproblem('ObjectiveSense', 'minimize');
 
 vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', 100000);
 
+% for low delay values
 % for 5 clients: min is 0.00001, and max is 0.0002.
 % for 10 clients: min is 0.000001, and max is 0.00002.
 % for 20 clients: min is 0.0000001 and max is 0.000002.
 
-weight_min_range = 0.0000001
-weight_max_range = 0.000002
+
+% for high delay values:
+% for 5 clients: min is 0.00000001, and max is 0.0000002.
+% for 10 clients: min is 0.000000001, and max is 0.00000002.
+% for 20 clients: min is 0.0000000001, and max is 0.000000002.
+
+
+weight_min_range = 0.0000000001
+weight_max_range = 0.000000002
 weights = (weight_max_range-weight_min_range).*rand(1, num_clients) + weight_min_range  % pick random integers in range for the number of clients we have.
 %weights = [0.0001, 0.00001, 0.000001, 0.0000001, 0.0000001]
 
