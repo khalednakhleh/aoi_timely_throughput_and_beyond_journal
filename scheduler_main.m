@@ -10,9 +10,10 @@ global mu MS varChannel clientVars delays num_clients p q weights
 global periods date_file_name lambdas clients
 
 %% Constantss
-num_clients =  20; 
-selected_policy = 4 % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
-regime_selection = 3  % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 3 is heavy-traffic with added delay. 
+num_clients =  5; 
+selected_policy = 6 % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
+regime_selection = 3 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 
+% 3 is heavy-traffic with added delay for vwd. 4 is heavy-traffic with added delay for wld. 5 is heavy-traffic with added delay for dbldf. 
 
 %% Making directories
 
@@ -47,7 +48,11 @@ if (regime_selection == 1)
 elseif(regime_selection == 2)
   [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic(num_clients, p, q, periods, delays);
 elseif(regime_selection == 3)
-  [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic_with_added_delay(num_clients, p, q, periods);
+  [MS, varChannel, mu, clientVars, weights, delays] = optimize_heavy_traffic_with_added_delay_vwd(num_clients, p, q, periods, delays);
+elseif(regime_selection == 4)
+  [MS, varChannel, mu, clientVars, weights, delays] = optimize_heavy_traffic_with_added_delay_wld(num_clients, p, q, periods, delay_tot);
+elseif(regime_selection == 5)
+  [MS, varChannel, mu, clientVars, weights, delays] = optimize_heavy_traffic_with_added_delay_dbldf(num_clients, p, q, periods, delay_tot);
 else
     error("ERROR: selected regime is not implemeneted. Exiting.");
 end
@@ -59,35 +64,6 @@ end
 
 
 sigma_tot = sqrt(varChannel)
-
-if num_clients == 5 % using it in regime 3
-    delay_tot = 136;
-elseif num_clients == 10
-   delay_tot = 349;
-elseif num_clients == 20
-   delay_tot = 691;
-elseif num_clients == 6
-    %do nothing
-else
-    error("number of selected clients is not in the list.");
-end
-
-if (regime_selection == 3 && selected_policy == 6) % VWD for regime 3
-    disp('calculating delay for VWD')
-    delays = ceil(((sqrt(clientVars).^(2/3)) ./ (4.*weights).^(1/3)));
-elseif (regime_selection == 3 && selected_policy == 1) % WLD for regime 3
-    disp('calculating delay for WLD')
-    delays = ceil((sqrt(clientVars) ./sigma_tot) * delay_tot);
-    disp(delays)
-elseif (regime_selection ==3 && selected_policy == 4) % DBLDF for regime 3
-    disp('calculating delay for DBLDF')
-    delays = ceil(repelem(delay_tot / num_clients, num_clients));
-    disp(delays)
-end
-
-
-delays
-clientVars
 
 
 for x = 1 : num_clients

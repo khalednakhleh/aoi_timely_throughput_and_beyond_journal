@@ -16,7 +16,8 @@ elseif num_clients == 5
 interval = 0.1;
 starting_q = 0.3;
 starting_factor = 0.9;
-initial_delay_value = [10, 20, 30, 40, 50];
+initial_delay_value = [5, 10, 15, 20, 25]
+%[10, 13, 16, 19, 22]; % for added delay setup
 %[10, 20, 30, 40, 50]; % for regime 2
 %[5, 5, 10, 20, 30]
 %[20, 30, 40, 50, 60];
