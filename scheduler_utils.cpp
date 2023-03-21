@@ -117,7 +117,7 @@ void BaseScheduler::read_values_from_file(int client_index, const std::string& f
 
     
     filepath = std::string("results/")+std::string("num_clients_")+\
-    std::to_string(params.num_clients)+std::string("_regime_")+std::to_string(params.regime_selection)+std::string("_vwd_floor/");
+    std::to_string(params.num_clients)+std::string("_regime_")+std::to_string(params.regime_selection)+std::string("/");
     
 
     std::ifstream file(filepath+fileName);
