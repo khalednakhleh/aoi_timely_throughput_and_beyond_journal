@@ -9,8 +9,8 @@ warning('off','all')
 global mu MS varChannel clientVars delays num_clients p q weights
 global periods date_file_name lambdas clients
 
-%% Constantss
-num_clients =  5; 
+%% Constants
+num_clients =  20; 
 selected_policy = 6 % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
 regime_selection = 3 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 
 % 3 is heavy-traffic with added delay for vwd. 4 is heavy-traffic with added delay for wld. 5 is heavy-traffic with added delay for dbldf. 
