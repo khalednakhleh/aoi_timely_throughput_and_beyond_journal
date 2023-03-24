@@ -10,7 +10,7 @@ global mu MS varChannel clientVars delays num_clients p q weights
 global periods date_file_name lambdas clients
 
 %% Constants
-num_clients =  20; 
+num_clients =  5; 
 selected_policy = 6 % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
 regime_selection = 3 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 
 % 3 is heavy-traffic with added delay for vwd. 4 is heavy-traffic with added delay for wld. 5 is heavy-traffic with added delay for dbldf. 
@@ -48,9 +48,9 @@ if (regime_selection == 1)
 elseif(regime_selection == 2)
   [MS, varChannel, mu, clientVars, weights] = optimize_heavy_traffic(num_clients, p, q, periods, delays);
 elseif(regime_selection == 3)
-  [MS, varChannel, mu, clientVars, weights, delays] = optimize_heavy_traffic_with_added_delay_vwd(num_clients, p, q, periods, delays);
+  [MS, varChannel, mu, clientVars, weights, delays, delay_tot] = optimize_heavy_traffic_with_added_delay_vwd(num_clients, p, q, periods, delays);
 elseif(regime_selection == 4)
-  [MS, varChannel, mu, clientVars, weights, delays] = optimize_heavy_traffic_with_added_delay_wld(num_clients, p, q, periods, delay_tot);
+  [MS, varChannel, mu, clientVars, weights, delays] = optimize_heavy_traffic_with_added_delay_wld(num_clients, p, q, periods);
 elseif(regime_selection == 5)
   [MS, varChannel, mu, clientVars, weights, delays] = optimize_heavy_traffic_with_added_delay_dbldf(num_clients, p, q, periods, delay_tot);
 else

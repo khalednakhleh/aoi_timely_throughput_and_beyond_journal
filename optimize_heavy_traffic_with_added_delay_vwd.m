@@ -3,7 +3,7 @@
 % regime
 
 
-function [MS, varChannel, mu, clientVars, weights, delays] = optimize_heavy_traffic_with_added_delay_vwd(num_clients, p, q, periods, delays)
+function [MS, varChannel, mu, clientVars, weights, delays, delay_tot] = optimize_heavy_traffic_with_added_delay_vwd(num_clients, p, q, periods, delays)
 
 % lambdas are the arrival rates
 kIterator = 100;
@@ -53,10 +53,6 @@ weights = (solution.vars)./weight_values
 delays = floor((sqrt(clientVars).^(2/3)) ./ (4.*weights).^(1/3))
 
 delay_tot = sum(delays)
-
-delays_wld = floor((sqrt(clientVars) .* delay_tot)./(sqrt(varChannel)))
-
-delay_dbldf = floor(repelem((delay_tot / num_clients), num_clients))
 
 end
 

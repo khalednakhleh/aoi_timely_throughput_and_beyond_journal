@@ -66,7 +66,8 @@ def average_results(current_policy, current_num_clients, regime_selection):
         if (current_client > np.floor(current_num_clients/2)):
             client_avg_over_runs = (delays[realtime_counter]**2) * client_avg_over_runs
             realtime_counter = realtime_counter + 1
-
+        
+        
         clients_value_per_policy.append(client_avg_over_runs)
         #print(client_avg_over_runs)
     clients_value_per_policy = np.sum(np.array(clients_value_per_policy), axis=0)
@@ -121,6 +122,8 @@ for current_client in num_clients:
     for current_policy in policies:
         y = average_results(current_policy, current_client, regime_selection) # averaged value for a policy for n number of clients.
         y = y / np.arange(1,timeslots+plotting_interval, plotting_interval)
+
+        #print(y[-1])
 
         axs[i].plot(x, y, label=labels[selected_label], color = empirical_colors[selected_label], linestyle=empirical_styles[selected_label])
 

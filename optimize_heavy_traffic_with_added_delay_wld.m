@@ -3,7 +3,7 @@
 % regime
 
 
-function [MS, varChannel, mu, clientVars, weights, delays] = optimize_heavy_traffic_with_added_delay_wld(num_clients, p, q, periods, delay_tot)
+function [MS, varChannel, mu, clientVars, weights, delays] = optimize_heavy_traffic_with_added_delay_wld(num_clients, p, q, periods)
 
 % lambdas are the arrival rates
 kIterator = 100;
@@ -20,10 +20,8 @@ prob = optimproblem('ObjectiveSense', 'minimize');
 
 vars = optimvar('vars', 1, num_clients,'Type','continuous','LowerBound',0,'UpperBound', 100000);
 
-
-weights = [   1.0e-07 * 0.675534486980956 , 1.0e-07 *  0.220490495775111 ,  1.0e-07 * 0.131730949266064  , 1.0e-07 * 0.093919063855210 ,  1.0e-07 * 0.065652121873599]
-
-
+delay_tot = 146
+weights =  1.0e-06 *  [0.199252750702208,   0.099095218915311,   0.065945182018015,   0.049414448405438,   0.039510253731204];
 
 objectiveFunction = sum( (sqrt(varChannel).^3 .*sqrt(vars) + 2 .* weights .* vars .* delay_tot.^3) ./  (2 .* delay_tot .* varChannel) );
 
@@ -53,7 +51,7 @@ mu = 1./periods;
 weights
 
 
-delays = floor((sqrt(clientVars) .* delay_tot)./(sqrt(varChannel)));
+delays = floor((sqrt(clientVars) .* delay_tot)./(sqrt(varChannel)))
 
 end
 
