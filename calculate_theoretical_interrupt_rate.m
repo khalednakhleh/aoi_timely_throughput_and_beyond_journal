@@ -2,7 +2,7 @@
 
 
 
-function calculate_theoretical_interrupt_rate(clients, num_clients, sigma_tot, delays, regime_selection)
+function calculate_theoretical_interrupt_rate(clients, num_clients, sigma_tot, delays, regime_selection, delay_tot)
 
 
 global clients num_clients
@@ -27,8 +27,11 @@ for x = 1 : num_clients
 
     elseif(regime_selection == 3)
      clients(x).theoretical_vwd_rate = (3*clients(x).weight*sqrt(clients(x).clientVars)^(4/3)) / ((4 * clients(x).weight)^(2/3));
-     clients(x).theoretical_wld_rate = (sigma_tot^3 * sqrt(clients(x).clientVars) + 2 * clients(x).weight * clients(x).clientVars * sum(delays)^3) / (2* sum(delays)*sigma_tot^2);
-     clients(x).theoretical_dbldf_rate = (clients(x).clientVars * num_clients^3 + 2 * clients(x).weight * sum(delays)^3) / (2*sum(delays)*num_clients^2);
+
+    elseif(regime_selection == 4)
+     clients(x).theoretical_wld_rate = (sigma_tot^3 * sqrt(clients(x).clientVars) + 2 * clients(x).weight * clients(x).clientVars * delay_tot^3) / (2* delay_tot*sigma_tot^2);
+    elseif(regime_selection == 5)
+     clients(x).theoretical_dbldf_rate = (sigma_tot^2 * num_clients^2 + 2 * num_clients * clients(x).weight * delay_tot^3) / (2*delay_tot*num_clients^3);
     else
       error("Selected regime does not have theoretical value. Exiting.");
      
