@@ -18,7 +18,7 @@ labels = ['VWD', 'WLD', 'DBLDF']
 
 theoretical_labels = ['Theoretical VWD']
 
-num_runs = 3
+num_runs = 5
 plotting_interval = 20000000
 
 graph_interval = 100000000 # for the x ticks 
@@ -48,7 +48,14 @@ def average_results(current_policy, current_num_clients, regime_selection):
     clients_value_per_policy = []
     for current_client in np.arange(1, current_num_clients+1):
         client_avg_over_runs = []
-        for current_run in np.arange(2, num_runs + 2):
+        RUNS_START_VAL = 27
+        for current_run in np.arange(RUNS_START_VAL, num_runs + RUNS_START_VAL):
+            # 2 then num_runs + 2
+            # 7 then num_runs + 7
+            # 13 then num_runs + 13 best no. 2
+            # 15 then num_runs + 15
+            # 22 then num_runs + 22
+            # 27 then num_runs + 27 best so far
 
 
             df = pd.read_csv(directory+f"client_{current_client}_run_{current_run}_policy_{current_policy}_regime_{regime_selection}_results.txt", header=None)

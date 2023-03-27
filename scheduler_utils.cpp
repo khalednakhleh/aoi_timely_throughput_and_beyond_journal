@@ -21,7 +21,7 @@ InputParams parse_input_params(int argc, char **argv) {
                 break;
             case 'r':
                 params.regime_selection = atoi(optarg);
-                if (params.regime_selection != 1 && params.regime_selection != 2 && params.regime_selection != 3) {
+                if (params.regime_selection != 1 && params.regime_selection != 2 && params.regime_selection != 3 && params.regime_selection != 4 && params.regime_selection != 5) {
                     std::cerr << "Error: regime selection must be 1 (half aoi clients), 2 (heavy-traffic regime), or 3 (heavy-traffic regime with added delay)." << std::endl;
                     exit(1);
                 }
