@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+/mnt/c/repos/fresher_content_journal/scheduler_main.cpp
+scheduler_main.hpp
+/mnt/c/repos/fresher_content_journal/scheduler_main.hpp
+
 /mnt/c/repos/fresher_content_journal/scheduler_main.hpp
 stdio.h
 -
@@ -37,8 +41,4 @@ iomanip
 -
 cfloat
 -
-
-/mnt/c/repos/fresher_content_journal/scheduler_utils.cpp
-scheduler_main.hpp
-/mnt/c/repos/fresher_content_journal/scheduler_main.hpp
 

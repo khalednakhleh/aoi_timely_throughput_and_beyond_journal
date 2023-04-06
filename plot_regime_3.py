@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib as mpl 
 
-#mpl.use('pgf')
+mpl.use('pgf')
 # for plotting regime 3.
 
 num_clients = [5, 10, 20]
@@ -186,12 +186,12 @@ for current_client in num_clients:
 
         axs[i].plot(x, y, label=labels[selected_label], color = empirical_colors[selected_label], linestyle=empirical_styles[selected_label])
 
+        if current_policy == 6:
+            theoretical_value = plot_theoretical_values(current_policy, current_client)
+            print(theoretical_value)
         
-        theoretical_value = plot_theoretical_values(current_policy, current_client)
-        print(theoretical_value)
-        
-        axs[i].axhline(xmin=0, xmax=timeslots, y=theoretical_value, color=theoretical_colors[theoretical_label_count], linestyle=theoretical_styles[theoretical_label_count], label=theoretical_labels[theoretical_label_count])
-        theoretical_label_count = theoretical_label_count + 1
+            axs[i].axhline(xmin=0, xmax=timeslots, y=theoretical_value, color=theoretical_colors[theoretical_label_count], linestyle=theoretical_styles[theoretical_label_count], label=theoretical_labels[theoretical_label_count])
+            theoretical_label_count = theoretical_label_count + 1
     
         selected_label += 1
 
@@ -200,7 +200,7 @@ for current_client in num_clients:
     #axs[i].set_title('N = {}'.format(current_client))
 
         
-    axs[i].legend()
+    axs[i].legend(frameon=False)
 
     axs[i].set_xlabel('Timeslots $t$', size=9)
     axs[i].set_ylabel(r'$\sum_i \overline{outage}_i + \alpha_i \cdot l_i^2$', size=9)
@@ -210,10 +210,10 @@ for current_client in num_clients:
     axs[1].set_ylim([0, 0.0002])
     axs[2].set_ylim([0, 0.0005])
     
-    #handles, labels = axs[0].get_legend_handles_labels()
+    handles, labels = axs[0].get_legend_handles_labels()
     #print(handles)
-    #order = [0,1]
-    #axs[i].legend([handles[idx] for idx in order],[labels[idx] for idx in order], frameon=False)    
+    order = [0,2,3,1]
+    axs[i].legend([handles[idx] for idx in order],[labels[idx] for idx in order], frameon=False)    
     
     i += 1
 

@@ -11,7 +11,7 @@ InputParams const params = parse_input_params(argc, argv);
 
 
 
-for (int i = 0; i < params.num_runs; i++){
+for (int i = 5; i < params.num_runs; i++){
 
 
 int seed = params.seed_value + i*43916;
