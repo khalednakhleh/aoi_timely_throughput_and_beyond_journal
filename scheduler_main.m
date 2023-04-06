@@ -12,13 +12,14 @@ global periods date_file_name lambdas clients
 %% Constants
 num_clients =  20; 
 selected_policy = 6 % 1 is WLD. 3 is EDF. 4 is DBLDF. 6 is VWD.
-regime_selection = 5 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 
+regime_selection = 6 % 1 for heavy-traffic with clients optimizing AoI (only for VWD). 2 for heavy-traffic regime. 
 % 3 is heavy-traffic with added delay for vwd. 4 is heavy-traffic with added delay for wld. 5 is heavy-traffic with added delay for dbldf. 
+% is for heavy traffic with clients optimizaing AoI and with reconfigurable delay values for timely throughput clients (only for VWD).
 
 delay_tot = 2081
 %% Making directories
 
-if regime_selection == 1
+if (regime_selection == 1 || regime_selection == 6)
 assert(selected_policy == 6)
 end
 
@@ -36,7 +37,7 @@ end
 
 %% get theoretical mean and variance values
 
-SEED = 5376943; 
+SEED = 489578; 
 
 rng(SEED);
 
@@ -54,6 +55,8 @@ elseif(regime_selection == 4)
   [MS, varChannel, mu, clientVars, weights, delays] = optimize_heavy_traffic_with_added_delay_wld(num_clients, p, q, periods, delay_tot);
 elseif(regime_selection == 5)
   [MS, varChannel, mu, clientVars, weights, delays] = optimize_heavy_traffic_with_added_delay_dbldf(num_clients, p, q, periods, delay_tot);
+elseif(regime_selection == 6)
+  [MS, varChannel, mu, clientVars, weights, delays, delay_tot] = optimize_heavy_traffic_with_aoi_clients_with_reconfiguration(num_clients, p, q, periods, delays, lambdas);
 else
     error("ERROR: selected regime is not implemeneted. Exiting.");
 end
@@ -114,7 +117,6 @@ first_client_asymptotics = asymptotics(clients(1).mc)
 else
 all_clients_table = struct2table(clients)
 end
-
 
 
 save_run_results(clients, num_clients); % to save theoretical values as well.

@@ -21,7 +21,7 @@ InputParams parse_input_params(int argc, char **argv) {
                 break;
             case 'r':
                 params.regime_selection = atoi(optarg);
-                if (params.regime_selection != 1 && params.regime_selection != 2 && params.regime_selection != 3 && params.regime_selection != 4 && params.regime_selection != 5) {
+                if (params.regime_selection != 1 && params.regime_selection != 2 && params.regime_selection != 3 && params.regime_selection != 4 && params.regime_selection != 5 && params.regime_selection != 6) {
                     std::cerr << "Error: regime selection must be 1 (half aoi clients), 2 (heavy-traffic regime), or 3 (heavy-traffic regime with added delay)." << std::endl;
                     exit(1);
                 }
@@ -227,7 +227,7 @@ int i = 0;
 
 for (auto it = my_clients.begin(); it != my_clients.end(); it++){
 
-if((params.regime_selection == 1) && (i <= floor(params.num_clients/2) - 1)){ // if the client is an AoI client (when selected regime is 1).
+if((params.regime_selection == 1 || params.regime_selection == 6) && (i <= floor(params.num_clients/2) - 1)){ // if the client is an AoI client (when selected regime is 1).
 
 if(client_to_schedule == i){
     it->activations = it->activations + 1; // used by vwd only.
@@ -294,7 +294,7 @@ std::string filename = "client_" + std::to_string(it->idx) +"_run_" + std::to_st
 
 std::ofstream outfile(filepath+filename);
     
-if(params.regime_selection == 1 && (i <= floor(params.num_clients/2) - 1)){ // storing aoi values
+if((params.regime_selection == 1 || params.regime_selection == 6) && (i <= floor(params.num_clients/2) - 1)){ // storing aoi values
  for (const auto& aoi_value : it->aoi_values_vector){
     outfile << aoi_value << "\n";
 }
