@@ -13,7 +13,7 @@ timeslots = 1000000000
 policies = [6, 7]
 labels = ['VWD', 'Stationary and DBLDF'] # labels must match the policies order
 theoretical_labels = ['Theoretical VWD']
-num_runs = 9
+num_runs = 1
 plotting_interval = 2000000
 
 graph_interval = 100000000
@@ -103,7 +103,7 @@ def plot_theoretical_values(current_policy, current_num_clients, regime_selectio
 
 
 # create a figure with three subplots side by side
-fig, axs = plt.subplots(1, 3, figsize=(15,3.5))
+fig, axs = plt.subplots(1, 3, figsize=(17,4))
 
 x = np.arange(0,timeslots+plotting_interval, plotting_interval) # timeslots 
 
@@ -136,9 +136,9 @@ for current_client in num_clients:
         axs[i].legend()
 
     axs[i].set_xlabel('Timeslots $t$', size=9)
-    axs[i].set_ylabel(r'$\sum_{i=1}^{N/2} \overline{AoI}_i+ \sum_{j=N/2 +1}^{N} \alpha_j \cdot \overline{outage}_j$', size=9)
+    axs[i].set_ylabel(r'Sum of AoI and outage rates', size=9)
 
-
+    #axs[i].set_yticklabels(axs[i].get_yticks(), weight="bold")
     axs[i].set_xticks(np.arange(0,timeslots+graph_interval-1,graph_interval))
     handles, labels = axs[0].get_legend_handles_labels()
     order = [0,2,1]

@@ -203,7 +203,7 @@ for current_client in num_clients:
     axs[i].legend(frameon=False)
 
     axs[i].set_xlabel('Timeslots $t$', size=9)
-    axs[i].set_ylabel(r'$\sum_i \overline{outage}_i + \alpha_i \cdot l_i^2$', size=9)
+    axs[i].set_ylabel(r'Sum of clients\' outage with added delay', size=9)
 
     axs[i].set_xticks(np.arange(0,timeslots+graph_interval-1,graph_interval))
     axs[0].set_ylim([0, 0.002])
@@ -223,7 +223,7 @@ for current_client in num_clients:
 
 
 # adjust the spacing between the subplots
-plt.subplots_adjust(wspace=0.3)
+plt.subplots_adjust(wspace=0.4)
 
 
 
