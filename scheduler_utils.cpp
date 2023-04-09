@@ -139,13 +139,12 @@ void BaseScheduler::read_values_from_file(int client_index, const std::string& f
 
 void BaseScheduler::get_clients_channel_states() {
     int i = 0;
-    tot_on_means = 0.0;
     for (auto it = my_clients.begin(); it != my_clients.end(); ++it) {
         
         double number = distribution(generator);
         //std::cout << it->p << " " << it->q << " " << number << std::endl;
         if (states[i]) {
-            tot_on_means = tot_on_means + it->mean;
+            
             if (number < it->p) {
                 states[i] = 0;
             }
@@ -230,7 +229,7 @@ for (auto it = my_clients.begin(); it != my_clients.end(); it++){
 if((params.regime_selection == 1 || params.regime_selection == 6) && (i <= floor(params.num_clients/2) - 1)){ // if the client is an AoI client (when selected regime is 1).
 
 if(client_to_schedule == i){
-    it->activations = it->activations + 1; // used by vwd only.
+    it->activations = it->activations + 1;
 
     it->AoI = current_timestep + 1 - it->time_since_aoi_packet_generated;
     
@@ -331,6 +330,8 @@ if(states[n] && max_deficit < it->deficit){
 n = n + 1;
 
 }
+
+//std::cout << "client to schedule is: " << client_to_schedule << std::endl;
 return client_to_schedule;
 };
 
@@ -392,21 +393,49 @@ it->deficit = ((it->mean * (double)current_timestep ) - (it->A_t + it->U_t));
 void STATIONARY_DBLDF::update_client_parameters(int current_timestep) {
 
 
+if(current_timestep % 2){ // pick client according to DBLDF
+//std::cout << "DBLDF current timestep: " << current_timestep << ". value of current timestep mod 2 is: " << current_timestep % 2 << std::endl;
 for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+    //std::cout << states[it->idx-1];
+it->deficit = ((it->mean * (double)current_timestep ) - (it->activations)); // updating the deficit for when choosing DBLDF.
+}
 
-if(current_timestep % 2){ // current timestep is odd, so do DBLDF selection rule.
+//std::cout << std::endl;
 
-it->deficit = ((it->mean * (double)current_timestep ) - (it->A_t + it->U_t)); // updating the deficit for when choosing DBLDF.
 
-}else{ // current timestep is even, so do stationary random selection rule.
+//for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+//std::cout << it->deficit << "\t";
+//}
 
-int i = 0;
+//std::cout << std::endl;
+
+
+}else{ // pick client according to stationary random
+//std::cout << "stationary random" << ". value of current timestep mod 2 is: " << current_timestep % 2 << std::endl;
 std::vector<double> on_probabilities; 
 
+
+tot_on_means = 0.0;
+
 for (auto it = my_clients.begin(); it != my_clients.end(); it++){
-if(states[i]){ on_probabilities.push_back(it->mean / tot_on_means);}
+if(states[it->idx-1]){tot_on_means += it->mean;}
+}
+
+
+for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+    //std::cout << states[it->idx-1];
+if(states[it->idx-1]){ on_probabilities.push_back(it->mean / tot_on_means);}
 else{on_probabilities.push_back(0.0);}
 }
+
+//std::cout << tot_on_means << std::endl;
+
+//for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+//std::cout << on_probabilities[it->idx-1] << "\t";
+//}
+
+
+//std::cout << std::endl;
 
 double rand_num = static_cast<double>(rand()) / RAND_MAX;
 
@@ -426,10 +455,22 @@ else{it->deficit = 0.0;}
 }
 
 
-}
+
+//for (auto it = my_clients.begin(); it != my_clients.end(); it++){
+//std::cout << it->deficit << "\t";
+//}
+
+//std::cout << std::endl;
+
+
+
+
 }
 
+
+
 }; // function DBLDF::update_client_parameters
+
 
 
 

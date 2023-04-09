@@ -98,8 +98,8 @@ end
 % for aoi clients only (generate for total number of clients even though we use floor(num_clients/2))
 
 
-lambda_max_range = 1 / ((num_clients/2) - 1);
-lambda_min_range = 0.1 / ((num_clients/2) - 1);
+lambda_max_range = 1 / (num_clients);
+lambda_min_range = 0.1 / (num_clients);
 
 lambdas = (lambda_max_range-lambda_min_range).*rand(1,num_clients) + lambda_min_range;
 
