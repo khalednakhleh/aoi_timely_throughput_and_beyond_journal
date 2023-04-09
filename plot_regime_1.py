@@ -4,7 +4,7 @@ import numpy as np
 
 import matplotlib as mpl 
 
-mpl.use('pgf')
+#mpl.use('pgf')
 
 regime_selection = 1
 num_clients = [6, 10, 20]
@@ -52,7 +52,7 @@ def average_results(current_policy, current_num_clients, regime_selection):
             value_to_plot = df.iloc[:,0]
            
         
-            if (regime_selection == 1 and current_client <= np.floor(current_num_clients/2)):
+            if (current_client <= np.floor(current_num_clients/2)):
                 
                 value_to_plot = np.cumsum(value_to_plot)
                 
@@ -64,6 +64,7 @@ def average_results(current_policy, current_num_clients, regime_selection):
         client_avg_over_runs = np.divide((np.sum(np.array(client_avg_over_runs), axis = 0)), num_runs) 
         
         if (current_client > np.floor(current_num_clients/2)):
+           
             client_avg_over_runs = (delays[realtime_counter]**2) * client_avg_over_runs
             realtime_counter = realtime_counter + 1
         
@@ -84,14 +85,8 @@ def plot_theoretical_values(current_policy, current_num_clients, regime_selectio
 
 
     df = pd.read_csv(directory+f"theoretical_values.csv") # same theoretical value across all runs
-    
-    if current_policy == 1:
-        theoretical_value = df["theoretical_wld_rate"]
 
-    elif current_policy == 4:
-        theoretical_value = df["theoretical_dbldf_rate"]
-
-    elif current_policy == 6:
+    if current_policy == 6:
         theoretical_value = df["theoretical_vwd_rate"]
     
     elif current_policy == 3:
