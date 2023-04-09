@@ -13,7 +13,7 @@ timeslots = 1000000000
 policies = [6, 7]
 labels = ['VWD', 'Stationary and DBLDF'] # labels must match the policies order
 theoretical_labels = ['Theoretical VWD']
-num_runs = 5
+num_runs = 9
 plotting_interval = 2000000
 
 graph_interval = 100000000

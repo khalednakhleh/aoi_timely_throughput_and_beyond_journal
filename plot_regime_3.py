@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib as mpl 
 
-mpl.use('pgf')
+#mpl.use('pgf')
 # for plotting regime 3.
 
 num_clients = [5, 10, 20]
@@ -16,7 +16,7 @@ labels = ['VWD', 'WLD', 'DBLDF']
 
 theoretical_labels = ['Theoretical VWD', 'Theoretical WLD', 'Theoretical DBLDF']
 
-num_runs = 5
+num_runs = 15
 plotting_interval = 2000000
 
 graph_interval = 100000000 # for the x ticks 
@@ -188,7 +188,7 @@ for current_client in num_clients:
 
         if current_policy == 6:
             theoretical_value = plot_theoretical_values(current_policy, current_client)
-            print(theoretical_value)
+            #print(theoretical_value)
         
             axs[i].axhline(xmin=0, xmax=timeslots, y=theoretical_value, color=theoretical_colors[theoretical_label_count], linestyle=theoretical_styles[theoretical_label_count], label=theoretical_labels[theoretical_label_count])
             theoretical_label_count = theoretical_label_count + 1
