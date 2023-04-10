@@ -7,14 +7,14 @@ import matplotlib as mpl
 WIDTH = 9
 HEIGHT = 7
 plt.rcParams['font.size'] = 22
-plt.rcParams['legend.fontsize'] = 26
+plt.rcParams['legend.fontsize'] = 22
 
 plt.rcParams['pdf.fonttype'] = 42
 plt.rcParams['ps.fonttype'] = 42
 plt.rcParams['font.family'] = 'Times New Roman'
 
 
-#mpl.use('pgf')
+mpl.use('pgf')
 # for plotting regime 2.
 
 regime_selection = 2
@@ -142,13 +142,13 @@ for current_client in num_clients:
         y = average_results(current_policy, current_client, regime_selection) # averaged value for a policy for n number of clients.
         y = y / np.arange(1, timeslots+plotting_interval, plotting_interval)
 
-        plt.plot(x, y, label=labels[selected_label], color = empirical_colors[selected_label], linestyle=empirical_styles[selected_label])
+        plt.plot(x, y, label=labels[selected_label], color = empirical_colors[selected_label], linestyle=empirical_styles[selected_label],  linewidth=2)
         
         if (current_policy == 6):
             
             theoretical_value = plot_theoretical_values(current_policy, current_client, regime_selection)
             
-            plt.hlines(xmin=0, xmax=timeslots, y=theoretical_value, color=theoretical_colors[theoretical_label_count], linestyle=theoretical_styles[theoretical_label_count], label=theoretical_labels[theoretical_label_count])
+            plt.hlines(xmin=0, xmax=timeslots, y=theoretical_value, color=theoretical_colors[theoretical_label_count], linewidth=2, linestyle=theoretical_styles[theoretical_label_count], label=theoretical_labels[theoretical_label_count])
             theoretical_label_count = theoretical_label_count + 1
         
         selected_label += 1
@@ -160,11 +160,13 @@ for current_client in num_clients:
         
         plt.legend(frameon=False)
 
-    plt.xlabel('Timeslots $t$', size=14, weight="bold")
-    plt.ylabel(r'Sum of clients outage rate', size=14, weight="bold")
+    plt.xlabel('Timeslots $t$', weight="bold")
+    plt.ylabel(r'Sum of clients outage rate', weight="bold")
 
     plt.xticks(np.arange(0,timeslots+graph_interval-1,graph_interval))
-    
+    plt.yticks(weight='bold', fontsize=20)
+    plt.xticks(weight='bold', fontsize=20)
+
     #handles, labels = plt.get_legend_handles_labels()
     #order = [0,2,3,1]
     #axs[i].set_yscale('log')
@@ -184,6 +186,6 @@ for current_client in num_clients:
 
 
 
-plt.savefig(f"regime_{regime_selection}.pdf")
+plt.savefig(f"regime_{regime_selection}_num_clients_{num_clients[0]}.pdf")
 # show the plot
 plt.show()

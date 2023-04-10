@@ -6,8 +6,20 @@ import matplotlib as mpl
 
 #mpl.use('pgf')
 
+WIDTH = 9
+HEIGHT = 7
+plt.rcParams['font.size'] = 22
+plt.rcParams['legend.fontsize'] = 22
+
+plt.rcParams['pdf.fonttype'] = 42
+plt.rcParams['ps.fonttype'] = 42
+plt.rcParams['font.family'] = 'Times New Roman'
+
+
+
+
 regime_selection = 1
-num_clients = [6, 10, 20]
+num_clients = [6]#, 10, 20]
 
 timeslots = 1000000000
 policies = [6, 7]
@@ -103,7 +115,7 @@ def plot_theoretical_values(current_policy, current_num_clients, regime_selectio
 
 
 # create a figure with three subplots side by side
-fig, axs = plt.subplots(1, 3, figsize=(17,4))
+fig = plt.figure(figsize=(WIDTH, HEIGHT), dpi= 50)
 
 x = np.arange(0,timeslots+plotting_interval, plotting_interval) # timeslots 
 
@@ -120,11 +132,11 @@ for current_client in num_clients:
 
         #print(y[-1])
 
-        axs[i].plot(x, y, label=labels[selected_label], color = empirical_colors[selected_label], linestyle=empirical_styles[selected_label])
+        plt.plot(x, y, label=labels[selected_label], color = empirical_colors[selected_label], linewidth=2, linestyle=empirical_styles[selected_label])
 
         if current_policy != 7:
             theoretical_value = plot_theoretical_values(current_policy, current_client, regime_selection)
-            axs[i].axhline(xmin=0, xmax=timeslots, y=theoretical_value, color=theoretical_colors[theoretical_label_count], linestyle=theoretical_styles[theoretical_label_count], label=theoretical_labels[theoretical_label_count])
+            plt.hlines(xmin=0, xmax=timeslots, y=theoretical_value,linewidth=2, color=theoretical_colors[theoretical_label_count], linestyle=theoretical_styles[theoretical_label_count], label=theoretical_labels[theoretical_label_count])
             theoretical_label_count = theoretical_label_count + 1
 
         selected_label += 1
@@ -132,17 +144,19 @@ for current_client in num_clients:
 
     # set the title and axis labels
     #axs[i].set_title('N = {}'.format(current_client))
-    if i == 0:
-        axs[i].legend()
+    
+    plt.legend(frameon=False)
 
-    axs[i].set_xlabel('Timeslots $t$', size=9)
-    axs[i].set_ylabel(r'Sum of AoI and outage rates', size=9)
+    plt.xlabel('Timeslots $t$', weight="bold")
+    plt.ylabel(r'Sum of AoI and weighted outage rates', weight="bold")
 
-    #axs[i].set_yticklabels(axs[i].get_yticks(), weight="bold")
-    axs[i].set_xticks(np.arange(0,timeslots+graph_interval-1,graph_interval))
-    handles, labels = axs[0].get_legend_handles_labels()
-    order = [0,2,1]
-    axs[i].legend([handles[idx] for idx in order],[labels[idx] for idx in order], frameon=False) 
+    plt.xticks(np.arange(0,timeslots+graph_interval-1,graph_interval))
+    #handles, labels = axs[0].get_legend_handles_labels()
+    #order = [0,2,1]
+    #axs[i].legend([handles[idx] for idx in order],[labels[idx] for idx in order], frameon=False) 
+    plt.xticks(np.arange(0,timeslots+graph_interval-1,graph_interval))
+    plt.yticks(weight='bold', fontsize=20)
+    plt.xticks(weight='bold', fontsize=20)
     
     #axs[i].title()
 
@@ -154,9 +168,9 @@ for current_client in num_clients:
 
 
 # adjust the spacing between the subplots
-plt.subplots_adjust(wspace=0.3)
+#plt.subplots_adjust(wspace=0.3)
 
-plt.savefig(f"regime_{regime_selection}.pdf")
+plt.savefig(f"regime_{regime_selection}_num_clients_{num_clients[0]}.pdf")
 
 # show the plot
 plt.show()
