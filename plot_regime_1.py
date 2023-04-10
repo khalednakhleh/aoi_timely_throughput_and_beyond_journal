@@ -4,7 +4,7 @@ import numpy as np
 
 import matplotlib as mpl 
 
-#mpl.use('pgf')
+mpl.use('pgf')
 
 WIDTH = 9
 HEIGHT = 7
@@ -16,19 +16,17 @@ plt.rcParams['ps.fonttype'] = 42
 plt.rcParams['font.family'] = 'Times New Roman'
 
 
-
-
 regime_selection = 1
 num_clients = [6]#, 10, 20]
 
-timeslots = 1000000000
+timeslots = 100000000
 policies = [6, 7]
-labels = ['VWD', 'Stationary and DBLDF'] # labels must match the policies order
+labels = ['VWD', 'Stationary-DBLDF'] # labels must match the policies order
 theoretical_labels = ['Theoretical VWD']
 num_runs = 1
-plotting_interval = 2000000
+plotting_interval = 1000000
 
-graph_interval = 100000000
+graph_interval = 10000000
 delays_six_clients = [10,20,30] 
 delays_ten_clients = [15, 25, 35, 45, 55]
 delays_twenty_clients = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]

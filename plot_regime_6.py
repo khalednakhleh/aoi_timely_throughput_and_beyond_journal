@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib as mpl 
 
-#mpl.use('pgf')
+mpl.use('pgf')
 # for plotting regime 6.
 
 
@@ -18,29 +18,29 @@ plt.rcParams['font.family'] = 'Times New Roman'
 
 
 
-num_clients = [6, 10, 20]
+num_clients = [20]#, 10, 20]
 
-timeslots = 1000000000
+timeslots = 100000000
 policies = [6, 7]
-labels = ['VWD', 'Stationary and DBLDF'] # labels must match the policies order
+labels = ['VWD', 'Stationary-DBLDF'] # labels must match the policies order
 theoretical_labels = ['Theoretical VWD']
 
 
 regime_selection = 6
 
 num_runs = 1
-plotting_interval = 2000000
+plotting_interval = 1000000
 
-graph_interval = 100000000 # for the x ticks 
+graph_interval = 10000000 # for the x ticks 
 
-delays_six_clients = [10, 20, 29] 
-delays_ten_clients = [14, 24, 34, 44, 54]
-delays_twenty_clients = [9, 19, 29, 39, 49, 59, 70, 79, 89, 99]
+delays_six_clients = [5, 10, 14] 
+delays_ten_clients = [11, 14, 18, 20, 23]
+delays_twenty_clients = [9, 14, 20, 24, 29, 34, 39, 44, 50, 54]
 
 
-weights_six_clients =  [9.80279441478085e-07, 5.81851170971903e-07, 3.96673223396391e-07]
-weights_ten_clients =  [3.14292494140222e-07, 6.85664918805355e-08, 2.45658677529466e-08, 1.14255329762261e-08, 6.2639066683733e-09]
-weights_twenty_clients = [1.30585364207337e-07, 1.67334081657107e-08, 4.86016536970435e-09, 2.08661676338772e-09, 1.07480405789521e-09, 6.13771449616618e-10, 3.899147077301e-10, 2.55858626564563e-10, 1.89325665966863e-10, 1.32999225076437e-10]
+weights_six_clients =  [3.74168634179267e-06, 3.79955570224954e-06, 4.24819730401659e-06]
+weights_ten_clients =  [4.12695932266658e-07, 2.78694807991575e-07, 1.93997836467727e-07, 1.29736259671297e-07, 1.00534296029578e-07]
+weights_twenty_clients = [1.3103464001012e-07, 3.94815193160431e-08, 1.64711960463104e-08, 8.58560252903221e-09, 4.97506075074181e-09, 3.11189875512256e-09, 2.09906133103661e-09, 1.45254025023862e-09, 1.06327714780477e-09, 8.0711335180729e-10]
 
 
 
